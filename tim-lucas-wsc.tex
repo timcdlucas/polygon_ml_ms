@@ -24,35 +24,10 @@
 
 
 \begin{center}
-{Tim C. D. Lucas*}\\
-{Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - timcdlucas@gmail.com}\\ 
-\vspace{0.2cm}
+{Tim C. D. Lucas\textsuperscript{1}; Anita Nandi\textsuperscript{1}; Michele Nguyen\textsuperscript{1}; 
+Susan Rumisha\textsuperscript{1}; Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel J. Weiss\textsuperscript{1};}\\
+{1. Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - timcdlucas@gmail.com}\\ 
 
-{Anita Nandi}\\
-{Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - anita.nandi@bdi.ox.ac.uk }\\ 
-
-\vspace{0.1cm}
-
-{Michele Nguyen}\\
-{Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - michele.nguyen@bdi.ox.ac.uk }\\ 
-
-\vspace{0.1cm}
-
-{Susan Rumisha}\\
-{Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - susan.rumisha@bdi.ox.ac.uk }\\ 
-
-\vspace{0.1cm}
-
-{Ewan Cameron}\\
-{Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - dr.ewan.cameron@gmail.com }\\ 
-
-\vspace{0.1cm}
-{Pete Gething}\\
-{Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - peter.gething@bdi.ox.ac.uk }\\ 
-
-\vspace{0.1cm}
-{Daniel J. Weiss}\\
-{Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - daniel.weiss@bdi.ox.ac.uk }\\ 
 
 \end{center}
 
@@ -91,7 +66,7 @@ Here we propose training the level zero machine learning models on point-level, 
 As case studies we use data from Colombia and Madagascar as these countries have  good routine surveillance data.
 
 
-{\bf 2. Methods}
+{\bf 2. Methodology}
 
 We used two data sources that reflect malaria burden; point prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Colombia and Madagascar as case examples as they both have good surveillance data.
@@ -172,23 +147,32 @@ Our primary performance metric was correlation between observed and predicted da
 {\bf 3. Results}
 
 
+In both Colombia and Madagascar, and in both the random and spatial cross-validation scheme, the model using only machine learning predictions as covariates was the best performing model (Figure~\ref{f:scatter}, Table~\ref{t:results}).
+As expected models performed better in the random cross-validation scheme than the spatial cross-validation scheme in all cases.
+Furthermore the predictive ability of the all models in Colombia in the spatial cross-validation scheme was poor.
+This shows that spatial random field is an important component of the model even when using machine learning models.
+
+
+
+
 \begin{figure}
 \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \includegraphics[width=\textwidth]{figs/cv1_scatter.png}
-        \caption{}
-        \label{fig:gull}
+        \caption{Random cross-validation}
+        \label{fig:cv1}
     \end{subfigure}
     \begin{subfigure}[b]{0.49\textwidth}
         \includegraphics[width=\textwidth]{figs/cv2_scatter.png}
-        \caption{}
-        \label{fig:gull}
+        \caption{Spatial cross-validation}
+        \label{fig:cv1}
     \end{subfigure}
-\caption{{\bf Observed-predicted plots for random cross-validation experiments.}
-A) Indonesia, B) Senegal, C) Madagascar. Square root prevalence.
-Results from all three models are included with the points only model being shown in orange, the downscaling model being shown in blue and the combined model being shown in green.
+\caption{
+  Observed data against predictions for cross-validation hold-out samples on a square root transformed scale.
+  a) Seven-fold random cross-validation.
+  b) Three-fold spatial cross-validation with folds indicated by colour.
 }
-\label{randompredobspointfacet}
+\label{f:scatter}
 \end{figure}
 
 
@@ -203,12 +187,26 @@ Results from all three models are included with the points only model being show
 \end{figure}
 
 
-xxx  \\
+\begin{table}
+\caption{Pearson correlations between observed and predicted values. }
+\centering
+\begin{tabular}{lllll}
+Cross-validation scheme & Country &  Covariates &  ML &  Covs + ML \\
+\hline 
+ Random &  Colombia &  0.45 &  \textbf{0.55} &  0.54 \\
+ Random &  Madagascar &  0.70 &  \textbf{0.76} &  0.75 \\
+ Spatial &  Colombia &  0.05 &  \textbf{0.18} &  0.10 \\
+ Spatial &  Madagascar &  0.22 &  \textbf{0.63} &  0.61 
+\end{tabular}
+\label{t:results}
+\end{table}
+
+
 
 {\bf 5. Conclusions}
 
 
-xxx\\
+
 
 {\bf References}\\
 
@@ -218,3 +216,12 @@ xxx\\
 
 
 \end{document}
+
+
+
+
+
+
+
+
+

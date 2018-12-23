@@ -5,6 +5,11 @@
 \usepackage{geometry}
 \usepackage{subcaption}
 
+\usepackage{natbib}
+
+%\setcitestyle{authoryear}
+
+
 \geometry{verbose,tmargin=30mm,bmargin=25mm,lmargin=25mm,rmargin=25mm}
 \input{figures.tex}
 \pagestyle{empty}
@@ -24,7 +29,7 @@
 
 
 \begin{center}
-{Tim C. D. Lucas\textsuperscript{1}; Anita Nandi\textsuperscript{1}; Michele Nguyen\textsuperscript{1}; 
+{Tim C. D. Lucas*\textsuperscript{1}; Anita Nandi\textsuperscript{1}; Michele Nguyen\textsuperscript{1}; 
 Susan Rumisha\textsuperscript{1}; Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel J. Weiss\textsuperscript{1};}\\
 {1. Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - timcdlucas@gmail.com}\\ 
 
@@ -54,14 +59,14 @@ This is where the abstract is placed. It should include a statement about the pr
 %While prevalence points should not be primary data source, they should still be used.
 %One way is ML.
 
-High-resolution maps of malaria risk are vital for elimination but mapping malaria in low burden countries presents new challenges as traditional mapping of prevalence from cluster-level surveys \cite{gething2011new, bhatt2017improved, gething2012long} are often not effective due to the large sample sizes needed to for accurate estimates at low prevalence rates and because of the lack of nationally representative prevalence surveys in low burden countries \cite{sturrock2016mapping, sturrock2014fine}. 
-Routine surveillance data of malaria case counts, often aggregated over administrative regions defined by geographic polygons, is becoming more widely available and of better quality and recent work has focussed on methods for estimating high-resolution malaria risk from these data \cite{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}. 
+High-resolution maps of malaria risk are vital for elimination but mapping malaria in low burden countries presents new challenges as traditional mapping of prevalence from cluster-level surveys \citep{gething2011new, bhatt2017improved, gething2012long} are often not effective due to the large sample sizes needed to for accurate estimates at low prevalence rates and because of the lack of nationally representative prevalence surveys in low burden countries \citep{sturrock2016mapping, sturrock2014fine}. 
+Routine surveillance data of malaria case counts, often aggregated over administrative regions defined by geographic polygons, is becoming more widely available and of better quality and recent work has focussed on methods for estimating high-resolution malaria risk from these data \citep{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}. 
 However, the aggregating of cases over space means that the data may be relatively uninformative, especially if the case counts are aggregated over large or heterogenous areas. 
 Given these restrictions, modelling any of the non linearities known to be important in malaria estimation is difficult. 
 A model that combines point surveys and aggregated surveillance data, and therefore leverages the strength of both, has great potential.
  
 One approach for combining these data is to use prevalence point-surveys to train a suite of machine learning models, and then use predictions from these models as covariates in a model trained on polygon-level incidence data. 
-This process of stacking models has proven effective in many realms however typical stacking uses a single dataset on a consistent scale \cite{sill2009feature, bhatt2017improved}. 
+This process of stacking models has proven effective in many realms however typical stacking uses a single dataset on a consistent scale \citep{sill2009feature, bhatt2017improved}. 
 Here we propose training the level zero machine learning models on point-level, binomial prevalence data and stacking these models with a polygon-level, Poisson incidence model. 
 As case studies we use data from Colombia and Madagascar as these countries have  good routine surveillance data.
 
@@ -71,14 +76,14 @@ As case studies we use data from Colombia and Madagascar as these countries have
 We used two data sources that reflect malaria burden; point prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Colombia and Madagascar as case examples as they both have good surveillance data.
 
-The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from, 1990 onwards \cite{bhatt2015effect}. 
-As the prevalence surveys cover different age ranges they were standardised to an age range of 2-10 using the model from \cite{smith2007standardizing}. 
+The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from, 1990 onwards \citep{bhatt2015effect}. 
+As the prevalence surveys cover different age ranges they were standardised to an age range of 2-10 using the model from \citep{smith2007standardizing}. 
 For Colombia we used all points from South America while for Madagascar we used only Madagascan data.
 
-The polygon level surveillance data were collated from various government reports. To account for underreporting of clinical cases due to lack of treatment seeking, missed case reports and cases that sought medical attention outside the public health systems, the methods in \cite{cibulskis2011worldwide} were used. Where species specific reports were given, these were used. For reports where no species specific, national estimates of the ratio between \emph{P. falciparum} and \emph{P. vivax} cases were used to calculate \emph{P. falciparum} only cases. To minimise temporal effects we selected, for each country, one year of surveillance data. 
+The polygon level surveillance data were collated from various government reports. To account for underreporting of clinical cases due to lack of treatment seeking, missed case reports and cases that sought medical attention outside the public health systems, the methods in \citep{cibulskis2011worldwide} were used. Where species specific reports were given, these were used. For reports where no species specific, national estimates of the ratio between \emph{P. falciparum} and \emph{P. vivax} cases were used to calculate \emph{P. falciparum} only cases. To minimise temporal effects we selected, for each country, one year of surveillance data. 
 We used surveillance data from 2015 for Colombia and data from 2013 for Indonesia.
 
-Raster surfaces of population for the years 2005, 2010 and 2015, were created using a hybrid of data from GPWv4 \cite{gpw4} and WorldPop \cite{tatem2017worldpop}, with the latter taking priority for those pixels where both had population data. 
+Raster surfaces of population for the years 2005, 2010 and 2015, were created using a hybrid of data from GPWv4 \citep{gpw4} and WorldPop \citep{tatem2017worldpop}, with the latter taking priority for those pixels where both had population data. 
 Final population rasters were created by linear interpolation of the surrounding five-yearly rasters. 
 Finally, for each year, national population estimates from the UN were raked over the interpolated population surfaces. 
 
@@ -88,14 +93,14 @@ After preliminary analyses, tassel cap brightness and urban land cover were remo
 The covariates were standardised to have a mean of zero and a standard deviation of one. 
 These covariates were used for both the machine learning models and the polygon-level models.
 
-For each region we fitted five models via caret \cite{caret}: elastic net \cite{enet}, Random Forest \cite{wright2015ranger}, projection pursuit regression \cite{friedman1981projection}, neural networks \cite{nnet} and boosted regression trees \cite{gbm}.
+For each region we fitted five models via caret \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees \citep{gbm}.
 Our response variable was prevalence and we weighted the data by sample size (i.e. the number of people tested for malaria in each survey.
 For each model we ran 5 fold cross validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
 %The parameters tried can be seen in Table S1.
 Predictions from these models were then made across Colombia and Madagascar.
 These predictions were finally inverse logit transformed so that they are on the correct scale.
 
-The top level model is a disaggregation regression model \cite{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}.
+The top level model is a disaggregation regression model \citep{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}.
 This model is defined by a likelihood at the level of the polygon with covariates and a spatial random field at the pixel-level. 
 Values at the polygon-level are given the subscript $a$ while pixel level values are indexed with $b$.
 
@@ -109,7 +114,7 @@ This polygon-level likelihood is linked to the pixel level linear predictor by
 $$i_a = \frac{ \sum(i_b \mathrm{pop}_b)}{\sum  \mathrm{pop}_b} $$
 $$i_b = \mathrm{p2i}(p_b)$$
 
-where $\mathrm{p2i}$ is from a model that was published previously \cite{cameron2015defining} which defines a function
+where $\mathrm{p2i}$ is from a model that was published previously \citep{cameron2015defining} which defines a function
 $${p2i}: f\left(P\right) = 2.616P - 3.596P^2 + 1.594P^3.$$
 
 The fact that the model passes through prevalence space allows predictions of prevalence to be made at the same time as predictions of incidence rate.
@@ -125,12 +130,12 @@ $$\eta_b = \beta_0 + \beta X  + u(s, \rho, \sigma_u) + v_j(\sigma_v)$$
 The Gaussian spatial effect $u(s, \rho, \sigma_u)$ has a Mat\'ern covariance function and two hyper parameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
 The iid random effect, $v_j \sim \operatorname{Norm}(0, \sigma_v)$, modelled both missing covariates and extra-Poisson sampling error
 
-Finally, we complete the model by setting priors on the parameters $\beta_0, \beta, \rho$ and $\sigma_u$ and $\sigma_v$. We assigned $\rho$ and $\sigma_u$ a joint penalised complexity prior \cite{fuglstad2018constructing} such that $P(\rho < 1) = 0.00001$ and $P(\sigma_u > 1) = 0.00001$. 
-We believe that a large proportion of the variance of malaria prevalence and incidence cannot be explained by a linear combination of the covariates selected \cite{bhatt2017improved}, so we set this prior such that the random field could explain most of the range of the data.
+Finally, we complete the model by setting priors on the parameters $\beta_0, \beta, \rho$ and $\sigma_u$ and $\sigma_v$. We assigned $\rho$ and $\sigma_u$ a joint penalised complexity prior \citep{fuglstad2018constructing} such that $P(\rho < 1) = 0.00001$ and $P(\sigma_u > 1) = 0.00001$. 
+We believe that a large proportion of the variance of malaria prevalence and incidence cannot be explained by a linear combination of the covariates selected \citep{bhatt2017improved}, so we set this prior such that the random field could explain most of the range of the data.
 
-We assigned $\sigma_v$ a penalised complexity prior \cite{simpson2017penalising} such that $P(\sigma_v > 0.05) = 0.0000001$. This was based on a comparison of the variance of Poisson random variables, with rates given by the number of cases observed, and an independently derived upper and lower bound for the case counts using the approach defined in \cite{cibulskis2011worldwide}. We found that an iid effect with a standard deviation of 0.05 would be able to account for the discrepancy between the assumed Poisson error and the independently derived error.
+We assigned $\sigma_v$ a penalised complexity prior \citep{simpson2017penalising} such that $P(\sigma_v > 0.05) = 0.0000001$. This was based on a comparison of the variance of Poisson random variables, with rates given by the number of cases observed, and an independently derived upper and lower bound for the case counts using the approach defined in \citep{cibulskis2011worldwide}. We found that an iid effect with a standard deviation of 0.05 would be able to account for the discrepancy between the assumed Poisson error and the independently derived error.
 Finally, we set regularising priors on the regression coefficients $\beta_i \sim \operatorname{ Norm}(0, 0.4)$. 
-The models were implemented and fitted using Template Model Builder \cite{TMB} in R \cite{R}
+The models were implemented and fitted using Template Model Builder \citep{TMB} in R \citep{R}
 
 We compared the performance of the models with three sets of covariates.
 Firstly, we used the environmental and anthropogenic covariates, centered and standardised.
@@ -172,7 +177,7 @@ The difference in performance between the best and worst models was always small
     \begin{subfigure}[b]{0.49\textwidth}
         \includegraphics[width=\textwidth]{figs/cv2_scatter.png}
         \caption{Spatial cross-validation}
-        \label{fig:cv1}
+        \label{fig:cv2}
     \end{subfigure}
 \caption{
   Observed data against predictions for cross-validation hold-out samples on a square root transformed scale.
@@ -237,10 +242,9 @@ Here we only used data from the region of interest (South America fit the Colomb
 However, the global dataset is much larger than these subsets.
 Training some base level models on local s data and some on the global dataset and then combining predictions from all these models has potential to further improve model performance.
 
-{\bf References}\\
 
 \bibliography{Malaria} 
-\bibliographystyle{plain}
+\bibliographystyle{apalike}
 
 
 

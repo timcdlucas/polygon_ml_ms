@@ -154,14 +154,23 @@ Our primary performance metric was correlation between observed and predicted da
 Overall, model performance was good in Madagascar under both random and spatial cross-validation (Figure~\ref{f:scatter}).
 Model performance was reasonable in Colombia under random cross-validation but poor under spatial cross-validation (Figure~\ref{f:scatter}).
 This indicates that the covariates alone cannot explain malaria incidence in this area.
-Mapped predictions of the best performing model look reasonable and are not unduly dominated by the random field.
+Mapped predictions of the best performing model look reasonable and are not unduly dominated by the random field (Figure~\ref{f:map}).
 
 The model using only machine learning predictions as covariates was the best performing model in both countries and both cross-validation schemes (Table~\ref{t:results}).
 As expected models performed better in the random cross-validation scheme than the spatial cross-validation scheme in all cases.
 The difference in performance between the best and worst models was always smaller than the difference between the random and spatial cross-validation schemes.
 
+The cross-validation results for the machine learning models are shown in Table~\ref{t:ml results}.
+Also in Table~\ref{t:ml results} is the means (across folds) of the  regression coefficients for these models from the polygon-level models that used only predictions from machine learning models as covariates.
+Predictive performance was similar across different models, with Random Forest performing best in Madagascar and neural networks, Random Forests and elastic net performing equally well on Colombia.
+The estimated regression parameters are similar between the random and spatial cross-validation schemes.
+However, the best performing machibe learning models do not have the largest estimated regression coefficients.
+Also of note is that some models were estimated to have a negative relationship (conditional on the presence of the other models) with polygon incidence.
+
 % models were quite good except spatial colombia
 % which model performed best
+% Random field parameters?
+% coverage
 % which ml model was best Vs parameters.
 % parameters are negative and don't sum to one
 %
@@ -195,7 +204,7 @@ The difference in performance between the best and worst models was always small
 \caption{
   Left: Observed polygon data for Colombia. Grey indicates incidence of zero. Right: Out-of-sample predictions for the random cross-validation, machine learning model only model. For each cross-validation fold, predictions are made for the held out data. These predictions are all plotted which together covers the entire study area.
 }
-\label{randompredobspointfacet}
+\label{f:map}
 \end{figure}
 
 

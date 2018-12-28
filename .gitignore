@@ -1,0 +1,12 @@
+*.aux
+*.log
+*.pdf
+*.bbl
+*.blg
+*.jpg
+*.svg
+*.docx
+*.zip
+*.bib.bak
+Template_paper_ISI_2017/*
+

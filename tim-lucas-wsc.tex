@@ -30,7 +30,10 @@
 
 \begin{center}
 {Tim C. D. Lucas*\textsuperscript{1}; Anita Nandi\textsuperscript{1}; Michele Nguyen\textsuperscript{1}; 
-Susan Rumisha\textsuperscript{1}; Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel J. Weiss\textsuperscript{1}.}\\
+Susan Rumisha\textsuperscript{1}; 
+Katherine E. Battle\textsuperscript{1}; Rosalind E. Howes\textsuperscript{1}; 
+Chantal Hendriks\textsuperscript{1}; Andre Python\textsuperscript{1}; Penny Hancock\textsuperscript{1}; 
+Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel~J.~Weiss\textsuperscript{1}.}\\
 {1. Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - timcdlucas@gmail.com}\\ 
 
 
@@ -81,11 +84,11 @@ Here we propose training the level zero machine learning models on point-level, 
 We used two data sources that reflect malaria burden; point-prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Colombia and Madagascar as case examples as they both have good surveillance data.
 The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect}.  % ceck todo
-As the prevalence surveys cover different age ranges they were standardised to an age range of 2-10 using the model from \citep{smith2007standardizing}. 
-For Colombia we used all points from South America (n = todo) while for Madagascar we used only Madagascan data (n = todo).
+As the prevalence surveys cover different age ranges they were standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}. 
+For Colombia we used all points from South America (n = 522) while for Madagascar we used only Madagascan data (n = 1505).
 The polygon level surveillance data were collated from various government reports. 
 To account for underreporting of clinical cases due to lack of treatment seeking, missed case reports and cases that sought medical attention outside the public health systems, the methods in \citep{cibulskis2011worldwide} were used. Where species specific reports were given, these were used. For reports where no species specific, national estimates of the ratio between \emph{P. falciparum} and \emph{P. vivax} cases were used to calculate \emph{P. falciparum} only cases. To minimise temporal effects we selected, for each country, one year of surveillance data. 
-We used surveillance data from 2015 for Colombia (n = todo) and data from todo for Madagascar (n = todo).
+We used surveillance data from 2015 for Colombia (n = 952) and data from todo for Madagascar (n = 110).
 
 Raster surfaces of population for the years 2005, 2010 and 2015, were created using a hybrid of data from GPWv4 \citep{gpw4} and WorldPop \citep{tatem2017worldpop}, with the latter taking priority for those pixels where both had population data. 
 Final population rasters were created by linear interpolation of the surrounding five-yearly rasters. 

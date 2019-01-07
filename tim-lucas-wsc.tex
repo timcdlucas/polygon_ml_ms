@@ -80,20 +80,17 @@ Here we propose training the level zero machine learning models on point-level, 
 
 We used two data sources that reflect malaria burden; point-prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Colombia and Madagascar as case examples as they both have good surveillance data.
-
-The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from, 1990 onwards \citep{bhatt2015effect}. 
+The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect}.  % ceck todo
 As the prevalence surveys cover different age ranges they were standardised to an age range of 2-10 using the model from \citep{smith2007standardizing}. 
-For Colombia we used all points from South America while for Madagascar we used only Madagascan data.
-
-The polygon level surveillance data were collated from various government reports. To account for underreporting of clinical cases due to lack of treatment seeking, missed case reports and cases that sought medical attention outside the public health systems, the methods in \citep{cibulskis2011worldwide} were used. Where species specific reports were given, these were used. For reports where no species specific, national estimates of the ratio between \emph{P. falciparum} and \emph{P. vivax} cases were used to calculate \emph{P. falciparum} only cases. To minimise temporal effects we selected, for each country, one year of surveillance data. 
-We used surveillance data from 2015 for Colombia and data from 2013 for Indonesia.
+For Colombia we used all points from South America (n = todo) while for Madagascar we used only Madagascan data (n = todo).
+The polygon level surveillance data were collated from various government reports. 
+To account for underreporting of clinical cases due to lack of treatment seeking, missed case reports and cases that sought medical attention outside the public health systems, the methods in \citep{cibulskis2011worldwide} were used. Where species specific reports were given, these were used. For reports where no species specific, national estimates of the ratio between \emph{P. falciparum} and \emph{P. vivax} cases were used to calculate \emph{P. falciparum} only cases. To minimise temporal effects we selected, for each country, one year of surveillance data. 
+We used surveillance data from 2015 for Colombia (n = todo) and data from todo for Madagascar (n = todo).
 
 Raster surfaces of population for the years 2005, 2010 and 2015, were created using a hybrid of data from GPWv4 \citep{gpw4} and WorldPop \citep{tatem2017worldpop}, with the latter taking priority for those pixels where both had population data. 
 Final population rasters were created by linear interpolation of the surrounding five-yearly rasters. 
-Finally, for each year, national population estimates from the UN were raked over the interpolated population surfaces. 
 
-We considered an initial suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included land surface temperature annual mean and standard deviation, enhanced vegetation index, mosquito temperature suitability index, elevation, tassel cap brightness, tassel cap wetness, accessibility to cities, night lights and proportion of urban land cover. 
-Elevation, land surface temperature standard deviation, accessibility to cities and night lights were all log transformed to reduce skewness. 
+We considered an initial suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included the annual mean and log standard deviation of land surface temperature, enhanced vegetation index, mosquito temperature suitability index, elevation, tassel cap brightness, tassel cap wetness, log accessibility to cities, log night lights and proportion of urban land cover. 
 After preliminary analyses, tassel cap brightness and urban land cover were removed as they were highly correlated with other variables. 
 The covariates were standardised to have a mean of zero and a standard deviation of one. 
 These covariates were used for both the machine learning models and the polygon-level models.
@@ -103,18 +100,18 @@ Our response variable was prevalence and we weighted the data by sample size (i.
 For each model we ran 5 fold cross validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
 %The parameters tried can be seen in Table S1.
 Predictions from these models were then made across Colombia and Madagascar.
-These predictions were finally inverse logit transformed so that they are on the correct scale.
+These predictions were finally inverse logit transformed so that they are on the correct scale for the top level model.
 
 The top level model is a disaggregation regression model \citep{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}.
 This model is defined by a likelihood at the level of the polygon with covariates and a spatial random field at the pixel-level. 
 Values at the polygon-level are given the subscript $a$ while pixel level values are indexed with $b$.
 
-The polygon case count data, $y_j$ is given a Poisson likelihood
+The polygon case count data, $y_a$ is given a Poisson likelihood
 
 $$y_a \sim \operatorname{Pois}(i_a\mathrm{pop_a})$$
 
 where $i_a$ is the estimated polygon incidence rate and $\mathrm{pop_a}$ is the observed polygon population-at-risk. 
-This polygon-level likelihood is linked to the pixel level linear predictor by 
+This polygon-level likelihood is linked to the pixel level prevealence 
 
 $$i_a = \frac{ \sum(i_b \mathrm{pop}_b)}{\sum  \mathrm{pop}_b} $$
 $$i_b = \mathrm{p2i}(p_b)$$
@@ -122,23 +119,25 @@ $$i_b = \mathrm{p2i}(p_b)$$
 where $\mathrm{p2i}$ is from a model that was published previously \citep{cameron2015defining} which defines a function
 $${p2i}: f\left(P\right) = 2.616P - 3.596P^2 + 1.594P^3.$$
 
-The fact that the model passes through prevalence space allows predictions of prevalence to be made at the same time as predictions of incidence rate.
-Furthermore, it means that the predictions from the machine learning models are on an appropriate scale.
+The fact that the model passes through prevalence space allows predictions of prevalence to be made at the same time as predictions of incidence rate and that the predictions from the machine learning models are on an appropriate scale.
 The linear predictor of the model, $\eta_b$, is related to prevalence by a typical logit link function.
 
 $$p_b = \operatorname{logit}^{-1}(\eta_b)$$
 
-The linear predictor is composed of an intercept, covariates, a spatial, Gaussian random and an iid random effects.
+The linear predictor is composed of an intercept, covariates, a spatial, Gaussian random field and an iid random effect.
 
 $$\eta_b = \beta_0 + \beta X  + u(s, \rho, \sigma_u) + v_j(\sigma_v)$$
 
-The Gaussian spatial effect $u(s, \rho, \sigma_u)$ has a Mat\'ern covariance function and two hyper parameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
+The Gaussian spatial effect $u(s, \rho, \sigma_u)$ has a Mat\'ern covariance function and two hyperparameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
 The iid random effect, $v_j \sim \operatorname{Norm}(0, \sigma_v)$, modelled both missing covariates and extra-Poisson sampling error
 
-Finally, we complete the model by setting priors on the parameters $\beta_0, \beta, \rho$ and $\sigma_u$ and $\sigma_v$. We assigned $\rho$ and $\sigma_u$ a joint penalised complexity prior \citep{fuglstad2018constructing} such that $P(\rho < 1) = 0.00001$ and $P(\sigma_u > 1) = 0.00001$. 
-We believe that a large proportion of the variance of malaria prevalence and incidence cannot be explained by a linear combination of the covariates selected \citep{bhatt2017improved}, so we set this prior such that the random field could explain most of the range of the data.
+Finally, we complete the model by setting priors on the parameters $\beta_0, \beta, \rho$ and $\sigma_u$ and $\sigma_v$. 
+We assigned $\rho$ and $\sigma_u$ a joint penalised complexity prior \citep{fuglstad2018constructing} such that $P(\rho < 1) = 0.00001$ and $P(\sigma_u > 1) = 0.00001$. 
+We set this prior such that the random field could explain most of the range of the data if required.
 
-We assigned $\sigma_v$ a penalised complexity prior \citep{simpson2017penalising} such that $P(\sigma_v > 0.05) = 0.0000001$. This was based on a comparison of the variance of Poisson random variables, with rates given by the number of cases observed, and an independently derived upper and lower bound for the case counts using the approach defined in \citep{cibulskis2011worldwide}. We found that an iid effect with a standard deviation of 0.05 would be able to account for the discrepancy between the assumed Poisson error and the independently derived error.
+We assigned $\sigma_v$ a penalised complexity prior \citep{simpson2017penalising} such that $P(\sigma_v > 0.05) = 0.0000001$. 
+This was based on a comparison of the variance of Poisson random variables, with rates given by the number of cases observed, and an independently derived upper and lower bound for the case counts using the approach defined in \citep{cibulskis2011worldwide}. 
+We found that an iid effect with a standard deviation of 0.05 would be able to account for the discrepancy between the assumed Poisson error and the independently derived error.
 Finally, we set regularising priors on the regression coefficients $\beta_i \sim \operatorname{ Norm}(0, 0.4)$. 
 The models were implemented and fitted using Template Model Builder \citep{TMB} in R \citep{R}
 
@@ -159,18 +158,19 @@ Our primary performance metric was correlation between observed and predicted da
 Overall, model performance was good in Madagascar under both random and spatial cross-validation (Figure~\ref{f:scatter}).
 Model performance was reasonable in Colombia under random cross-validation but poor under spatial cross-validation (Figure~\ref{f:scatter}).
 This indicates that the covariates alone cannot explain malaria incidence in this area.
-Mapped predictions of the best performing model look reasonable and are not unduly dominated by the random field (Figure~\ref{f:map}).
+Mapped predictions of the best performing model in Colombia look reasonable and are not unduly dominated by the random field (Figure~\ref{f:map}).
 
 The model using only machine learning predictions as covariates was the best performing model in both countries and both cross-validation schemes (Table~\ref{t:results}).
 As expected models performed better in the random cross-validation scheme than the spatial cross-validation scheme in all cases.
+The difference between the covariate only model and the machine learning predictions only model was greater in the spatial cross-validation scheme than the random cross-validation.
 The difference in performance between the best and worst models was always smaller than the difference between the random and spatial cross-validation schemes.
 
 The cross-validation results for the machine learning models are shown in Table~\ref{t:mlresults}.
-Also in Table~\ref{t:mlresults} is the means (across folds) of the  regression coefficients for these models from the polygon-level models that used only predictions from machine learning models as covariates.
-Predictive performance was similar across different models, with Random Forest performing best in Madagascar and neural networks, Random Forests and elastic net performing equally well on Colombia.
+Also in Table~\ref{t:mlresults} is the means (across folds) of the  regression coefficients (i.e. the weights of the machine learning models in the level zero model) from the polygon-level models that used only predictions from machine learning models as covariates.
+Predictive performance was similar across different models, with Random Forest performing best in Madagascar and neural networks, Random Forests and elastic net performing equally well in Colombia.
 The estimated regression parameters are similar between the random and spatial cross-validation schemes.
-However, the best performing machibe learning models do not have the largest estimated regression coefficients.
-Also of note is that some models were estimated to have a negative relationship (conditional on the presence of the other models) with polygon incidence.
+However, the best performing machine learning models do not have the largest estimated regression coefficients as would be expected if prevalence and incidence were completely correlated.
+Also of note is that some models were estimated to have a negative relationship (conditional on the inclusion of predictions from other machine learning models) with polygon incidence.
 
 % models were quite good except spatial colombia
 % which model performed best
@@ -229,11 +229,12 @@ Cross-validation scheme & Country &  Covariates &  ML &  Covs + ML \\
 
 
 \begin{table}
-\caption{ML model results and fitted parameters. }
+\caption{Machine learning model results and means of fitted parameters across $k$ model. }
 \centering
+\small
 \begin{tabular}{l|rrr|rrr}
                &&      Madagascar &&      &                                     Colombia&    \\
-Model          & PR RMSE & Poly beta 1 & Poly beta 2 & PR RMSE & Poly beta 1  & Poly beta 2\\
+Model          & ML RMSE & Random CV $\bar{\beta}_i$ & Spatial CV $\bar{\beta}_i$  & ML RMSE & Random CV $\bar{\beta}_i$  & Spatial CV $\bar{\beta}_i$  \\
 \hline
 nnet           & 0.113      &  0.031         &  0.025         & \textbf{0.058}& -0.250          & -0.246          \\
 RF   &  \textbf{0.100}      &  0.337         &  0.350         & \textbf{0.058}&  0.782          &  0.742          \\
@@ -249,12 +250,12 @@ ppr            & 0.110      & -0.233         & -0.204         & 0.059         & 
 
 {\bf 5. Conclusions}
 
-Overall, we have shown that using predictions from machine learning models trained on prevalence points is better than using environmental covariates.
-This increased performance comes despite the data being on different scales, the data being measurements of different aspects of malaria transmission and despite the imperfect model we have used to translate the between the two scales.
+Overall, our experiments suggest that using predictions from machine learning models trained on prevalence points is better than using environmental covariates when fitting disaggregation models of malaria incidence.
+This increased performance comes despite the data being on different scales, the data being measurements of different aspects of malaria transmission and despite the imperfect model we have used to translate between the two scales.
 However, the poor performance in the spatial cross-validation schemes highlights that better spatial coverage of data would improve predictions more than the improved model we have suggested.
 
-While we have used a small suite if covariates, the fact that models such as Random Forest and elastic net can have many covariates means we could include a much larger set of environmental variables.
-This is in strong contrast to previous downscaling models which had to use a very small number of covariates due to the relatively small number of polygons available and because data associated with polygons is under-powered for learning many parameters.
+While we have used a small suite of covariates, the fact that models such as Random Forest and elastic net can have many covariates means we could include a much larger set of environmental variables.
+This is in strong contrast to previous downscaling models which had to use a very small number of covariates due to the relatively small number of polygons available and because data associated with polygons is underpowered for learning many parameters \citep{sturrock2014fine}.
 
 
 % this method is an improvement
@@ -265,14 +266,14 @@ This is in strong contrast to previous downscaling models which had to use a ver
 % sum to one stacking
 % global ml models, local experts
 
-Our top-level polygon model is not technically stacking as we have not contrained the regression parameters to be positive now or added a sum-to-constraint.
+Our top-level polygon model is not technically stacking as we have not contrained the regression parameters to be positive nor included a sum-to-one constraint.
 We did not include these constraints because the base models and the meta model are trained on response data on different scales.
 However, future work could examine whether using a positive constraint on the regression parameters improves performance.
 
-Another area of potential improvement is ranking varying the data used to train the base level learners.
-Here we only used data from the region of interest (South America fit the Colombia model and Madagascar for the Madagascar model).
+Another area of potential improvement is varying the data used to train the base level learners.
+Here we only used data from the region of interest (South America for the Colombia model and Madagascar for the Madagascar model).
 However, the global dataset is much larger than these subsets.
-Training some base level models on local s data and some on the global dataset and then combining predictions from all these models has potential to further improve model performance.
+Training some base level models on local data and some on the global dataset and then combining predictions from all these models has potential to further improve model performance.
 
 
 \bibliography{Malaria} 

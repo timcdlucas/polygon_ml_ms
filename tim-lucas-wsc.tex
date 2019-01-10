@@ -102,7 +102,7 @@ These covariates were used for both the machine learning models and the polygon-
 
 For each region we fitted five models via caret \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees \citep{gbm}.
 Our response variable was prevalence and we weighted the data by sample size (i.e. the number of people tested for malaria in each survey.
-For each model we ran 5 fold cross validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
+For each model we ran 5 fold cross-validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
 %The parameters tried can be seen in Table S1.
 Predictions from these models were then made across Colombia and Madagascar.
 These predictions were finally inverse logit transformed so that they are on the linear predictor scale of the top level model.
@@ -119,7 +119,7 @@ $$i_a = \frac{ \sum(i_b \mathrm{pop}_b)}{\sum  \mathrm{pop}_b} $$
 $$i_b = \mathrm{p2i}(p_b)$$
 where $\mathrm{p2i}$ is from a model that was published previously \citep{cameron2015defining} which defines a function
 $${p2i}: f\left(P\right) = 2.616P - 3.596P^2 + 1.594P^3.$$
-The fact that the model passes through prevalence space means that the predictions from the machine learning models are on an appropriate scale.
+The fact that the model passes through prevalence space means that the predictions from the machine learning models can be appropriately scaled.
 The linear predictor of the model is related to prevalence by a typical logit link function and includes an intercept, covariates, a spatial, Gaussian, random field and an iid random effect.
 $$p_b = \operatorname{logit}^{-1}\left(\beta_0 + \beta X  + u(s, \rho, \sigma_u) + v_j(\sigma_v)\right)$$
 The Gaussian spatial effect $u(s, \rho, \sigma_u)$ has a Mat\'ern covariance function and two hyperparameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
@@ -127,7 +127,7 @@ The iid random effect, $v_j \sim \operatorname{Norm}(0, \sigma_v)$, modelled bot
 
 Finally, we complete the model by setting priors on the parameters $\beta_0, \beta, \rho$ and $\sigma_u$ and $\sigma_v$. 
 We assigned $\rho$ and $\sigma_u$ a joint penalised complexity prior \citep{fuglstad2018constructing} such that $P(\rho < 1) = 0.00001$ and $P(\sigma_u > 1) = 0.00001$. 
-This prior encodes our a priori preference for a simpler, smoother random field.
+This prior encodes our \emph{a priori} preference for a simpler, smoother random field.
 We set this prior such that the random field could explain most of the range of the data if required.
 
 We assigned $\sigma_v$ a penalised complexity prior \citep{simpson2017penalising} such that $P(\sigma_v > 0.05) = 0.0000001$. 
@@ -141,7 +141,7 @@ Firstly, we used the environmental and anthropogenic covariates, centered and st
 Secondly, we used just the predictions from the machine learning models.
 Finally we combined these two sets of covariates.
 
-To compare the three models we used two cross validation schemes. 
+To compare the three models we used two cross-validation schemes. 
 In the first, polygon incidence data was randomly split into six cross-validation folds.
 In the second, polygon incidence data was split spatially into three folds (via k-means clustering on the polygon centroids).
 This cross-validation experiment is testing the models’ ability to make predictions far from data where the spatial random field is not informative.
@@ -150,10 +150,11 @@ Our primary performance metric was correlation between observed and predicted da
 
 {\bf 3. Results}
 
-Overall, model performance was good in Madagascar under both random and spatial cross-validation (Figure~\ref{f:scatter}, Table~\ref{t:results}).
-Model performance was reasonable in Colombia under random cross-validation but poor under spatial cross-validation (Figure~\ref{f:scatter}, Table~\ref{t:results}).
-This indicates that the covariates alone cannot explain malaria incidence in this area.
-Mapped predictions of the best performing model in Colombia look reasonable and are not unduly dominated by the random field (Figure~\ref{f:map}).
+Figure~\ref{f:scatter} shows the model performance under random and spatial cross-validation for both Madagascar and Colombia. 
+The poor model performance in Colombia under spatial cross-validation indicates that the covariates alone cannot explain malaria incidence in this area. 
+For all other models that use the machine learning predictions as covariates, correlations of 0.54 -- 0.76, between observed and predicted data, are obtained (Table~\ref{t:results}).
+Input data and mapped out-of-sample predictions in Colombia, of the best performing model, are shown in in Figure~\ref{f:map}.
+
 
 The model using only machine learning predictions as covariates was the best performing model in both countries and both cross-validation schemes (Table~\ref{t:results}).
 As expected models performed better in the random cross-validation scheme than the spatial cross-validation scheme in all cases.
@@ -245,13 +246,13 @@ ppr            & 0.110      & -0.233         & -0.204         & 0.059         & 
 
 {\bf 5. Conclusions}
 
-Overall, our experiments suggest that using predictions from machine learning models trained on prevalence points is better than using environmental covariates when fitting disaggregation models of malaria incidence.
+Overall, our experiments suggest that using predictions from machine learning models trained on prevalence points provides more accurate predictions than using environmental covariates when fitting disaggregation models of malaria incidence.
 This increased performance comes despite the data being on different scales, the data being measurements of different aspects of malaria transmission and despite the imperfect model we have used to translate between the two scales.
-However, the poor performance in the spatial cross-validation schemes highlights that better spatial coverage of data would improve predictions more than the improved model we have suggested.
+However, the reduced model accuracy in the spatial cross-validation schemes, relative to the random cross-validation scheme, highlights that better spatial coverage of data would improve predictions more than the improved model we have suggested.
 
-While we have used a small suite of covariates, the fact that models such as Random Forest and elastic net can have many covariates means we could include a much larger set of environmental variables.
-This is in strong contrast to previous downscaling models which had to use a very small number of covariates due to the relatively small number of polygons available and because data associated with polygons is underpowered for learning many parameters \citep{sturrock2014fine}.
 
+Due to the low power of typical aggregated incidence datasets, previous analysis using disaggregation regression had to use a small number of covariates \citep{sturrock2014fine}.
+However, the increased amount of data provided by using prevalence points, and the the fact that model such as Random Forest and elastic net can use many coviariates means future work could include many more covariates, potentially increasing predictive performance further.
 
 % this method is an improvement
 % still reliant on spatial field

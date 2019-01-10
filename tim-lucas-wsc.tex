@@ -84,13 +84,14 @@ Here we propose training the level zero machine learning models on point-level, 
 We used two data sources that reflect malaria burden; point-prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Colombia and Madagascar as case examples as they both have good surveillance data.
 The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect, guerra2007assembling}.  % ceck todo
-As the prevalence surveys cover different age ranges they were standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}. 
-For Colombia we used all points from South America (n = 522) while for Madagascar we used only Madagascan data (n = 1505).
+For Colombia we used all points from South America (n = 522) while for Madagascar we used only Malagasy data (n = 1505).
+We chose these geographic regions based on a trade-off between wanting a large sample size but wanting data from geographically similar areas.
+As the prevalence surveys cover different age ranges they were standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}.
 The polygon incidence data were collected from government reports and standardised using methods defined in \cite{cibulskis2011worldwide}.
 This standardisation step accounts for missed cases due to lack of treatment seeking, missing case reports, and cases that sought medical attention outside the public health systems \citep{battle2016treatment}.
 For reports where cases were not reported at the species level, national estimates of the ratio between \emph{Plasmodium falciparum} and \emph{P. vivax} cases were used to calculate \emph{P. falciparum} only cases. 
 To minimise temporal effects we selected, for each country, one year of surveillance data. 
-We used surveillance data from 2015 for Colombia (n = 952) and data from 2013 for Madagascar (n = 110).
+We used surveillance data from 2015 for Colombia (n = 952) and data from 2013 for Madagascar (n = 110) as these years had the most data in each case.
 
 Raster surfaces of population for the years 2005, 2010 and 2015, were created using data from GPWv4 \citep{gpw4} and WorldPop \citep{tatem2017worldpop}, with the latter taking priority for those pixels where both had population data. 
 Population rasters for the remaining years were created by linear interpolation. 
@@ -120,10 +121,10 @@ $$i_b = \mathrm{p2i}(p_b)$$
 where $\mathrm{p2i}$ is from a model that was published previously \citep{cameron2015defining} which defines a function
 $${p2i}: f\left(P\right) = 2.616P - 3.596P^2 + 1.594P^3.$$
 The fact that the model passes through prevalence space means that the predictions from the machine learning models can be appropriately scaled.
-The linear predictor of the model is related to prevalence by a typical logit link function and includes an intercept, covariates, a spatial, Gaussian, random field and an iid random effect.
+The linear predictor of the model is related to prevalence by a typical logit link function and includes an intercept, $\beta_0$, covariates, $X$ with regression parameters $\beta$, a spatial, Gaussian, random field, $u(s, \rho, \sigma_u)$, and an iid random effect, $v_j(\sigma_v)$.
 $$p_b = \operatorname{logit}^{-1}\left(\beta_0 + \beta X  + u(s, \rho, \sigma_u) + v_j(\sigma_v)\right)$$
-The Gaussian spatial effect $u(s, \rho, \sigma_u)$ has a Mat\'ern covariance function and two hyperparameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
-The iid random effect, $v_j \sim \operatorname{Norm}(0, \sigma_v)$, modelled both missing covariates and extra-Poisson sampling error
+The Gaussian spatial effect has a Mat\'ern covariance function and two hyperparameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
+The iid random effect modelled both missing covariates and extra-Poisson sampling error.
 
 Finally, we complete the model by setting priors on the parameters $\beta_0, \beta, \rho$ and $\sigma_u$ and $\sigma_v$. 
 We assigned $\rho$ and $\sigma_u$ a joint penalised complexity prior \citep{fuglstad2018constructing} such that $P(\rho < 1) = 0.00001$ and $P(\sigma_u > 1) = 0.00001$. 
@@ -134,11 +135,11 @@ We assigned $\sigma_v$ a penalised complexity prior \citep{simpson2017penalising
 This was based on a comparison of the variance of Poisson random variables, with rates given by the number of cases observed, and an independently derived upper and lower bound for the case counts using the approach defined in \citep{cibulskis2011worldwide}. 
 We found that an iid effect with a standard deviation of 0.05 would be able to account for the discrepancy between the assumed Poisson error and the independently derived error.
 Finally, we set regularising priors on the regression coefficients $\beta_i \sim \operatorname{ Norm}(0, 0.4)$. 
-The models were implemented and fitted using Template Model Builder \citep{TMB} in R \citep{R}
+The models were implemented and fitted using Template Model Builder \citep{TMB} in R \citep{R}.
 
-We compared the performance of the models with three sets of covariates.
+We compared the performance of the models with three sets of covariates, $X$.
 Firstly, we used the environmental and anthropogenic covariates, centered and standardised.
-Secondly, we used just the predictions from the machine learning models.
+Secondly, we used the predictions from the machine learning models.
 Finally we combined these two sets of covariates.
 
 To compare the three models we used two cross-validation schemes. 

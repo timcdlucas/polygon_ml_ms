@@ -49,7 +49,7 @@ Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel~J.~Weis
 
 Maps of infection risk are a vital tool for the elimination of malaria.
 Routine surveillance data of malaria case counts, often aggregated over administrative regions, is becoming more widely available and can better measure low malaria risk than prevalence surveys.
-However, aggregation of case counts over large, heterogenous areas means that these data are often underpowered for learning relationships between the environment and malaria risk.
+However, aggregation of case counts over large, heterogeneous areas means that these data are often underpowered for learning relationships between the environment and malaria risk.
 A model that combines point surveys and aggregated surveillance data could have the benefits of both but must be able to account for the fact that these two data types are different malariometric units.
 Here, we train multiple machine learning models on point surveys and then combine the predictions from these with a geostatistical disaggregation model that uses routine surveillance data.
 We find that, in tests using data from Colombia and Madagascar, using a disaggregation regression model to combine predictions from machine learning models trained on point surveys improves model accuracy relative to using the environmental covariates directly.
@@ -70,7 +70,7 @@ We find that, in tests using data from Colombia and Madagascar, using a disaggre
 
 High-resolution maps of malaria risk are vital for elimination but mapping malaria in low burden countries presents new challenges as traditional mapping of prevalence from cluster-level surveys \citep{gething2011new, bhatt2017improved, gething2012long, bhatt2015effect} is often not effective  because, firstly, so few individuals are infected that most surveys will detect zero cases, and secondly, because of the lack of nationally representative prevalence surveys in low burden countries \citep{sturrock2016mapping, sturrock2014fine}. 
 Routine surveillance data of malaria case counts, often aggregated over administrative regions defined by geographic polygons, is becoming more reliable and more widely available \citep{sturrock2016mapping} and recent work has focussed on methods for estimating high-resolution malaria risk from these data \citep{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}. 
-However, the aggregation of cases over space means that the data may be relatively uninformative, especially if the case counts are aggregated over large or heterogenous areas, because it is unclear where within the polygon, and in which environments, the cases occurred. 
+However, the aggregation of cases over space means that the data may be relatively uninformative, especially if the case counts are aggregated over large or heterogeneous areas, because it is unclear where within the polygon, and in which environments, the cases occurred. 
 This data is therefore often under-powered for fitting flexible, non-linear models as is required for accurate malaria maps \citep{bhatt2017improved, bhatt2015effect}. 
 A model that combines point surveys and aggregated surveillance data, and therefore leverages the strength of both, has great potential.
  
@@ -82,7 +82,7 @@ Here we propose training the level zero machine learning models on point-level, 
 {\bf 2. Methodology}
 
 We used two data sources that reflect \emph{Plasmodium falciparum} malaria transmission; point-prevalence surveys and polygon-level, aggregated incidence data. 
-We selected Colombia and Madagascar as case examples as they both have fairly complete, publically available, surveillance data at a finer geographical resolution than admin 1.
+We selected Colombia and Madagascar as case examples as they both have fairly complete, publicly available, surveillance data at a finer geographical resolution than admin 1.
 The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect, guerra2007assembling}.  % ceck todo
 For Colombia we used all points from South America (n = 522) while for Madagascar we used only Malagasy data (n = 1505).
 We chose these geographic regions based on a trade-off between wanting a large sample size but wanting data from geographically similar areas.
@@ -115,7 +115,7 @@ Values at the polygon-level are given the subscript $a$ while pixel level values
 The polygon case count data, $y_a$ is given a Poisson likelihood
 $$y_a \sim \operatorname{Pois}(i_a\mathrm{pop_a})$$
 where $i_a$ is the estimated polygon incidence rate and $\mathrm{pop_a}$ is the observed polygon population-at-risk. 
-This polygon-level likelihood is linked to the pixel level prevealence 
+This polygon-level likelihood is linked to the pixel level prevalence 
 $$i_a = \frac{ \sum(i_b \mathrm{pop}_b)}{\sum  \mathrm{pop}_b} $$
 $$i_b = \mathrm{p2i}(p_b)$$
 where $\mathrm{p2i}$ is from a model that was published previously \citep{cameron2015defining} which defines a function

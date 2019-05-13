@@ -11,6 +11,23 @@ I haven't decided whether I should replace that preprint with this document when
 
 
 We aim to expand the WSC analysis in a few ways.
-1. We will consider briefly whether constraining betas > 0 is useful. Then we will either switch to beta > 0 or keep as is for the full analysis.
-2. We want to include globally fitted ML models. So we will look at models with covariates from local ML, global ML and both.
-3. Expand to some extra countries. TBD.
+1. We want to include globally fitted ML models. So we will look at models with covariates from local ML, global ML and both.
+2. Expand to some extra countries. Add indonesia and Senegal. If Brazil isn't super slow add that as well.
+
+
+3. We considered briefly whether constraining betas > 0 is useful. A prelim analysis on MDG and COL suggests it is not. Which is perhaps surprising but maybe not interesting enough to follow further.
+
+
+## Journal decision
+
+From Pete:
+Journal Royal Stat Society 
+Proceeding Royal Soc Interfaces
+PLoS Comp Biol
+
+PLoS comp biol was plan for other paper.
+
+Stacked generalisation is at Interface.
+
+
+

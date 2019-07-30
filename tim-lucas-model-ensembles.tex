@@ -76,6 +76,17 @@ A model that combines point surveys and aggregated surveillance data, and theref
  
 One approach for combining these data is to use prevalence point-surveys to train a suite of machine learning models, and then use predictions from these models as covariates in a model trained on polygon-level incidence data. 
 This process of stacking models has proven effective in many realms however typical stacking uses a single dataset on a consistent scale \citep{sill2009feature, bhatt2017improved}. 
+% more about stacking
+% good for bias variance
+% SDM examples. any others?
+
+Diversity of predictions is good.
+Diversity of models
+Diversity of data. global local.
+
+Different scales. is it transfer learning?
+
+
 Here we propose training the level zero machine learning models on point-level, binomial prevalence data and stacking these models with a polygon-level, Poisson incidence model. 
 
 
@@ -84,9 +95,8 @@ Here we propose training the level zero machine learning models on point-level, 
 We used two data sources that reflect \emph{Plasmodium falciparum} malaria transmission; point-prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Colombia and Madagascar as case examples as they both have fairly complete, publicly available, surveillance data at a finer geographical resolution than admin 1.
 The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect, guerra2007assembling}.  % ceck todo
-For Colombia we used all points from South America (n = 522) while for Madagascar we used only Malagasy data (n = 1505).
-We chose these geographic regions based on a trade-off between wanting a large sample size but wanting data from geographically similar areas.
 The prevalence points were then standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}.
+
 The polygon incidence data were collected from government reports and standardised using methods defined in \cite{cibulskis2011worldwide}.
 This standardisation step accounts for missed cases due to lack of treatment seeking, missing case reports, and cases that sought medical attention outside the public health systems \citep{battle2016treatment}.
 For reports where cases were not reported at the species level, national estimates of the ratio between \emph{P. falciparum} and \emph{P. vivax} cases were used to calculate \emph{P. falciparum} only cases. 
@@ -101,10 +111,14 @@ These covariates were used for both the machine learning models and the polygon-
 Raster surfaces of population for the years 2005, 2010 and 2015, were created using data from WorldPop \citep{tatem2017worldpop} and from GPWv4 \citep{gpw4} where WorldPop did not have values. 
 Population rasters for the remaining years were created by linear interpolation. 
 
-For each country we fitted five models via \emph{caret} \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees \citep{gbm}.
+
+For each country we fitted 5 models via \emph{caret} \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees \citep{gbm}.
+These models were fitted to both the full malaria prevalence dataset and to more regional subsets of the data.
+For Colombia we used all points from South America (n = 522) while for Madagascar we used only Malagasy data (n = 1505).
+We chose these geographic regions based on a trade-off between wanting a large sample size but wanting data from geographically similar areas.
 Our response variable was prevalence and we weighted the data by sample size (i.e.\thinspace the number of people tested for malaria in each survey.
 For each model we ran  five-fold cross-validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
-%The parameters tried can be seen in Table S1.
+The parameters tried can be seen in Table S1.
 Predictions from these models were then made across Colombia and Madagascar respectively.
 These predictions were finally inverse logit transformed so that they are on the linear predictor scale of the top level model.
 
@@ -126,6 +140,9 @@ $$p_b = \operatorname{logit}^{-1}\left(\beta_0 + \beta X  + u(s, \rho, \sigma_u)
 The Gaussian spatial effect has a Mat\'ern covariance function and two hyperparameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
 The \emph{iid} random effect models both missing covariates and extra-Poisson sampling error.
 
+This is not true stacking because we don't constrain betas to be positive.
+preliminary analyses indicated that this didn't improve performance.
+
 Finally, we complete the model by setting priors on the parameters $\beta_0, \beta, \rho$ and $\sigma_u$ and $\sigma_v$. 
 We assigned $\rho$ and $\sigma_u$ a joint penalised complexity prior \citep{fuglstad2018constructing} such that $P(\rho < 1) = 0.00001$ and $P(\sigma_u > 1) = 0.00001$. 
 This prior encoded our \emph{a priori} preference for a simpler, smoother random field.
@@ -137,16 +154,20 @@ We found that an \emph{iid} effect with a standard deviation of 0.05 would be ab
 Finally, we set regularising priors on the regression coefficients $\beta_i \sim \operatorname{ Norm}(0, 0.4)$. 
 The models were implemented and fitted using Template Model Builder \citep{TMB} in R \citep{R}.
 
-We compared the performance of the models with three sets of covariates, $X$.
-Firstly, we used the environmental and anthropogenic covariates, centered and standardised.
-Secondly, we used the predictions from the machine learning models.
-Finally we combined these two sets of covariates.
+We compared the performance of the models with four sets of covariates, $X$.
+Firstly, we used the environmental and anthropogenic covariates, centered and standardised as a baseline model.
+Secondly, we used the predictions from the machine learning models trained on regional data.
+Thirdly, we used predictions from the machine learning models trained on the global data.
+Finally we combined predictions from the machine learning models trained on regional data and global data.
+Preliminary analyses showed that combining environmental covariates with machine learning predictions was not effective so we did not pursue this further.
 
-To compare the three models we used two cross-validation schemes. 
+
+To compare the four models we used two cross-validation schemes. 
 In the first, polygon incidence data was randomly split into six cross-validation folds.
 In the second, polygon incidence data was split spatially into three folds (via k-means clustering on the polygon centroids).
 This spatial cross-validation scheme is testing the models' ability to make predictions far from data where the spatial random field is not informative.
 Our primary performance metric was correlation between observed and predicted data.
+We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
 
 
 {\bf 3. Results}
@@ -172,6 +193,8 @@ Cross-validation scheme & Country &  Covariates &  ML &  Covs + ML \\
 \end{table}
 
 
+% to do table of coverage.
+
 The model using only machine learning predictions as covariates was the best performing model in both countries and both cross-validation schemes (Table~\ref{t:results}).
 As expected, models performed better in the random cross-validation scheme than the spatial cross-validation scheme.
 The difference between the covariate only model and the machine learning predictions only model was greater in the spatial cross-validation scheme than in the random cross-validation.
@@ -179,10 +202,13 @@ The improvement in performance between the worst and best models was always smal
 
 
 Predictive performance of machine learning models was similar, with Random Forest performing best in Madagascar and neural networks, Random Forests and elastic net performing equally well in Colombia (Table~\ref{t:mlresults}).
-The means (across folds) of the  regression coefficients (i.e.\thinspace the weights of the machine learning models in the level zero model) from the polygon-level models that used only predictions from machine learning models as covariates can also be seen in Table~\ref{t:mlresults}.
+The regression coefficients (i.e.\thinspace the weights of the machine learning models in the level zero model) from the polygon-level models that used only predictions from machine learning models as covariates can also be seen in Table~\ref{t:mlresults}.
 The estimated regression parameters are similar between the random and spatial cross-validation schemes.
 However, the best performing machine learning models do not have the largest estimated regression coefficients as would be expected if prevalence and incidence were completely correlated.
 Also of note is that some models were estimated to have a negative relationship with incidence (conditional on the inclusion of predictions from other machine learning models).
+% Compare plots of global vs local. eg amazon predicted low by global.
+% Look at \betas for global and local.
+
 
 % models were quite good except spatial colombia
 % which model performed best
@@ -225,6 +251,8 @@ Also of note is that some models were estimated to have a negative relationship 
 \end{figure}
 
 
+% copy Sam's plot. predictions from ml and stacked.
+
 
 \begin{table}
 \caption{Machine learning model results and means of fitted parameters (i.e.\thinspace model weights) across cross-validation folds of the machine learning predictions only model. }
@@ -243,7 +271,65 @@ ppr            & 0.110      & -0.233         & -0.204         & 0.059         & 
 \label{t:mlresults}
 \end{table}
 
+% reconsider. scatter plot?
+% rmse ~ beta. facet as country, colour as global vs local. do on full model not CV. Need to include global vs local.
+%
+% Or table:
+% Country Model       RMSE beta_local beta_global beta_local+global
+% MDG     RF local    12   0.1        -           0.2    
+% MDG     RF global   14   -          0.4         0.3
+% COL     nnet local  200  0.01       -           0.0001   
 
+
+\begin{table}
+\caption{Machine learning model results and means of fitted parameters (i.e.\thinspace model weights) across cross-validation folds of the machine learning predictions only model. }
+\centering
+\small
+\begin{tabular}{ll|rrrr}
+     Country          & Model &      RMSE & $\beta_l $ &   $\beta_g$   &  $\beta_{g+l}$                                 \\ \hline
+Madagascar & RF_l & 0.100 & 0.337 &-&\\
+Madagascar & RF_g &  & - &&\\
+Madagascar & GBM_l & 0.109 & 0.450 & - &\\
+Madagascar & GBM_g &  & - &&\\
+Madagascar & enet_l & 0.100 & 0.326 &-&\\
+Madagascar & enet_g &  & - &&\\
+Madagascar & nnet_l & 0.113 & 0.031 &-&\\
+Madagascar & nnet_g &  & - &&\\
+Madagascar & ppr_l & 0.110 & -0.233 &-&\\
+Madagascar & ppr_g &  &  &&\vspace{0.3cm}\\ 
+Colombia & RF_l & 0.100 & 0.337 &-&\\
+Colombia & RF_g &  & - &&\\
+Colombia & GBM_l & 0.109 & 0.450 & - &\\
+Colombia & GBM_g &  & - &&\\
+Colombia & enet_l & 0.100 & 0.326 &-&\\
+Colombia & enet_g &  & - &&\\
+Colombia & nnet_l & 0.113 & 0.031 &-&\\
+Colombia & nnet_g &  & - &&\\
+Colombia & ppr_l & 0.110 & -0.233 &-&\\
+Colombia & ppr_g &  &  &&\vspace{0.3cm}\\ 
+Senegal & RF_l & 0.100 & 0.337 &-&\\
+Senegal & RF_g &  & - &&\\
+Senegal & GBM_l & 0.109 & 0.450 & - &\\
+Senegal & GBM_g &  & - &&\\
+Senegal & enet_l & 0.100 & 0.326 &-&\\
+Senegal & enet_g &  & - &&\\
+Senegal & nnet_l & 0.113 & 0.031 &-&\\
+Senegal & nnet_g &  & - &&\\
+Senegal & ppr_l & 0.110 & -0.233 &-&\\
+Senegal & ppr_g &  &  &&\vspace{0.3cm}\\ 
+Indonesia & RF_l & 0.100 & 0.337 &-&\\
+Indonesia & RF_g &  & - &&\\
+Indonesia & GBM_l & 0.109 & 0.450 & - &\\
+Indonesia & GBM_g &  & - &&\\
+Indonesia & enet_l & 0.100 & 0.326 &-&\\
+Indonesia & enet_g &  & - &&\\
+Indonesia & nnet_l & 0.113 & 0.031 &-&\\
+Indonesia & nnet_g &  & - &&\\
+Indonesia & ppr_l & 0.110 & -0.233 &-&\\
+Indonesia & ppr_g &  &  &&\\
+\end{tabular}
+\label{t:mlresults}
+\end{table}
 
 
 {\bf 5. Conclusions}

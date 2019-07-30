@@ -31,8 +31,7 @@
 \begin{center}
 {Tim C. D. Lucas*\textsuperscript{1}; Anita Nandi\textsuperscript{1}; Michele Nguyen\textsuperscript{1}; 
 Susan Rumisha\textsuperscript{1}; 
-Katherine E. Battle\textsuperscript{1}; Rosalind E. Howes\textsuperscript{1}; 
-Chantal Hendriks\textsuperscript{1}; Andre Python\textsuperscript{1}; Penny Hancock\textsuperscript{1}; 
+Katherine E. Battle\textsuperscript{1}; Rosalind E. Howes\textsuperscript{1}; Andre Python\textsuperscript{1}; Penny Hancock\textsuperscript{1}; Punam Someone\textsuperscript{1};
 Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel~J.~Weiss\textsuperscript{1}.}\\
 {1. Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - timcdlucas@gmail.com}\\ 
 
@@ -47,12 +46,13 @@ Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel~J.~Weis
 
 % This is where the abstract is placed. It should include a statement about the problem being addressed in the presentation (and paper, if submitted). Continue with a discussion of why it is important to address this problem. This may be followed by some summary information about the models and methods developed and/or used to address the problem. Conclude with a description of the key results and contributions that will be covered in the presentation (and paper).\\
 
-Maps of infection risk are a vital tool for the elimination of malaria.
-Routine surveillance data of malaria case counts, often aggregated over administrative regions, is becoming more widely available and can better measure low malaria risk than prevalence surveys.
-However, aggregation of case counts over large, heterogeneous areas means that these data are often underpowered for learning relationships between the environment and malaria risk.
+Maps of infection rate are one of the core tools needed for the elimination of malaria.
+Reliable routine surveillance data of malaria incidence is becoming more widely available and can better measure low malaria risk than prevalence surveys.
+However, these data are often aggregated over large, heterogeneous areas which means that they are often underpowered for learning complex relationships between the environment and malaria risk.
+In contrast, point prevalence surveys are directly linked to loval environmental conditions but are not common in many areas of the world that are working towards elimination.
 A model that combines point surveys and aggregated surveillance data could have the benefits of both but must be able to account for the fact that these two data types are different malariometric units.
 Here, we train multiple machine learning models on point surveys and then combine the predictions from these with a geostatistical disaggregation model that uses routine surveillance data.
-We find that, in tests using data from Colombia and Madagascar, using a disaggregation regression model to combine predictions from machine learning models trained on point surveys improves model accuracy relative to using the environmental covariates directly.
+We find that, in four national case studies, using a disaggregation regression model to combine predictions from machine learning models trained on point surveys improves model accuracy relative to using the environmental covariates directly.                                  
 
 {\bf Keywords}: Spatial statistics; Ensemble; Stacking; Epidemiology.
 }\\
@@ -76,9 +76,15 @@ A model that combines point surveys and aggregated surveillance data, and theref
  
 One approach for combining these data is to use prevalence point-surveys to train a suite of machine learning models, and then use predictions from these models as covariates in a model trained on polygon-level incidence data. 
 This process of stacking models has proven effective in many realms however typical stacking uses a single dataset on a consistent scale \citep{sill2009feature, bhatt2017improved}. 
+Stacking improves predictions by controlling bias and variance; as long as suitably diverse models are averaged, they will have different biases while high variance in models should be averaged out even in relatively similar models.
+This understanding of how stacking improves model performance indicates that diversity in models is important for stacking to be effective.
+Diversity in models is typically created in two ways: by using diverse training datasets (as in Random Forests for example) and by using functionally different models (for example by averaging tree based models and neural networks).
+
 % more about stacking
 % good for bias variance
 % SDM examples. any others?
+
+
 
 Diversity of predictions is good.
 Diversity of models
@@ -260,46 +266,46 @@ Also of note is that some models were estimated to have a negative relationship 
 \small
 \begin{tabular}{ll|rrrr}
      Country          & Model &      RMSE & $\beta_l $ &   $\beta_g$   &  $\beta_{g+l}$                                 \\ \hline
-Madagascar & RF_l & 0.100 & 0.337 &-&\\
-Madagascar & RF_g &  & - &&\\
-Madagascar & GBM_l & 0.109 & 0.450 & - &\\
-Madagascar & GBM_g &  & - &&\\
-Madagascar & enet_l & 0.100 & 0.326 &-&\\
-Madagascar & enet_g &  & - &&\\
-Madagascar & nnet_l & 0.113 & 0.031 &-&\\
-Madagascar & nnet_g &  & - &&\\
-Madagascar & ppr_l & 0.110 & -0.233 &-&\\
-Madagascar & ppr_g &  &  &&\vspace{0.3cm}\\ 
-Colombia & RF_l & 0.100 & 0.337 &-&\\
-Colombia & RF_g &  & - &&\\
-Colombia & GBM_l & 0.109 & 0.450 & - &\\
-Colombia & GBM_g &  & - &&\\
-Colombia & enet_l & 0.100 & 0.326 &-&\\
-Colombia & enet_g &  & - &&\\
-Colombia & nnet_l & 0.113 & 0.031 &-&\\
-Colombia & nnet_g &  & - &&\\
-Colombia & ppr_l & 0.110 & -0.233 &-&\\
-Colombia & ppr_g &  &  &&\vspace{0.3cm}\\ 
-Senegal & RF_l & 0.100 & 0.337 &-&\\
-Senegal & RF_g &  & - &&\\
-Senegal & GBM_l & 0.109 & 0.450 & - &\\
-Senegal & GBM_g &  & - &&\\
-Senegal & enet_l & 0.100 & 0.326 &-&\\
-Senegal & enet_g &  & - &&\\
-Senegal & nnet_l & 0.113 & 0.031 &-&\\
-Senegal & nnet_g &  & - &&\\
-Senegal & ppr_l & 0.110 & -0.233 &-&\\
-Senegal & ppr_g &  &  &&\vspace{0.3cm}\\ 
-Indonesia & RF_l & 0.100 & 0.337 &-&\\
-Indonesia & RF_g &  & - &&\\
-Indonesia & GBM_l & 0.109 & 0.450 & - &\\
-Indonesia & GBM_g &  & - &&\\
-Indonesia & enet_l & 0.100 & 0.326 &-&\\
-Indonesia & enet_g &  & - &&\\
-Indonesia & nnet_l & 0.113 & 0.031 &-&\\
-Indonesia & nnet_g &  & - &&\\
-Indonesia & ppr_l & 0.110 & -0.233 &-&\\
-Indonesia & ppr_g &  &  &&\\
+Madagascar & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
+Madagascar & RF\textsubscript{g} &  & - &&\\
+Madagascar & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\
+Madagascar & GBM\textsubscript{g} &  & - &&\\
+Madagascar & enet\textsubscript{l} & 0.100 & 0.326 &-&\\
+Madagascar & enet\textsubscript{g} &  & - &&\\
+Madagascar & nnet\textsubscript{l} & 0.113 & 0.031 &-&\\
+Madagascar & nnet\textsubscript{g} &  & - &&\\
+Madagascar & ppr\textsubscript{l} & 0.110 & -0.233 &-&\\
+Madagascar & ppr\textsubscript{g} &  &  &&\vspace{0.3cm}\\ 
+Colombia & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
+Colombia & RF\textsubscript{g} &  & - &&\\
+Colombia & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\
+Colombia & GBM\textsubscript{g} &  & - &&\\
+Colombia & enet\textsubscript{l} & 0.100 & 0.326 &-&\\
+Colombia & enet\textsubscript{g} &  & - &&\\
+Colombia & nnet\textsubscript{l} & 0.113 & 0.031 &-&\\
+Colombia & nnet\textsubscript{g} &  & - &&\\
+Colombia & ppr\textsubscript{l} & 0.110 & -0.233 &-&\\
+Colombia & ppr\textsubscript{g} &  &  &&\vspace{0.3cm}\\ 
+Senegal & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
+Senegal & RF\textsubscript{g} &  & - &&\\
+Senegal & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\
+Senegal & GBM\textsubscript{g} &  & - &&\\
+Senegal & enet\textsubscript{l} & 0.100 & 0.326 &-&\\
+Senegal & enet\textsubscript{g} &  & - &&\\
+Senegal & nnet\textsubscript{l} & 0.113 & 0.031 &-&\\
+Senegal & nnet\textsubscript{g} &  & - &&\\
+Senegal & ppr\textsubscript{l} & 0.110 & -0.233 &-&\\
+Senegal & ppr\textsubscript{g} &  &  &&\vspace{0.3cm}\\ 
+Indonesia & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
+Indonesia & RF\textsubscript{g} &  & - &&\\
+Indonesia & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\
+Indonesia & GBM\textsubscript{g} &  & - &&\\
+Indonesia & enet\textsubscript{l} & 0.100 & 0.326 &-&\\
+Indonesia & enet\textsubscript{g} &  & - &&\\
+Indonesia & nnet\textsubscript{l} & 0.113 & 0.031 &-&\\
+Indonesia & nnet\textsubscript{g} &  & - &&\\
+Indonesia & ppr\textsubscript{l} & 0.110 & -0.233 &-&\\
+Indonesia & ppr\textsubscript{g} &  &  &&\\
 \end{tabular}
 \label{t:mlresults}
 \end{table}

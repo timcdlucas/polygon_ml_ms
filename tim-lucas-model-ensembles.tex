@@ -258,33 +258,6 @@ Also of note is that some models were estimated to have a negative relationship 
 \caption{Machine learning model results and means of fitted parameters (i.e.\thinspace model weights) across cross-validation folds of the machine learning predictions only model. }
 \centering
 \small
-\begin{tabular}{l|rrr|rrr}
-               &&      Madagascar &&      &                                     Colombia&    \\
-Model          & ML RMSE & Random CV $\bar{\beta}_i$ & Spatial CV $\bar{\beta}_i$  & ML RMSE & Random CV $\bar{\beta}_i$  & Spatial CV $\bar{\beta}_i$  \\
-\hline
-nnet           & 0.113      &  0.031         &  0.025         & \textbf{0.058}& -0.250          & -0.246          \\
-RF   &  \textbf{0.100}      &  0.337         &  0.350         & \textbf{0.058}&  0.782          &  0.742          \\
-gbm            & 0.109      &  \textbf{0.450}&  \textbf{0.402}& 0.066         &  \textbf{0.835} &  \textbf{0.775} \\
-enet           & 0.116      &  0.326         &  0.307         & \textbf{0.058}& -0.563          & -0.369          \\
-ppr            & 0.110      & -0.233         & -0.204         & 0.059         &  0.210          &  0.166          \\
-\end{tabular}
-\label{t:mlresults}
-\end{table}
-
-% reconsider. scatter plot?
-% rmse ~ beta. facet as country, colour as global vs local. do on full model not CV. Need to include global vs local.
-%
-% Or table:
-% Country Model       RMSE beta_local beta_global beta_local+global
-% MDG     RF local    12   0.1        -           0.2    
-% MDG     RF global   14   -          0.4         0.3
-% COL     nnet local  200  0.01       -           0.0001   
-
-
-\begin{table}
-\caption{Machine learning model results and means of fitted parameters (i.e.\thinspace model weights) across cross-validation folds of the machine learning predictions only model. }
-\centering
-\small
 \begin{tabular}{ll|rrrr}
      Country          & Model &      RMSE & $\beta_l $ &   $\beta_g$   &  $\beta_{g+l}$                                 \\ \hline
 Madagascar & RF_l & 0.100 & 0.337 &-&\\

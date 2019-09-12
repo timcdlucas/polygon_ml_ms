@@ -199,6 +199,25 @@ Cross-validation scheme & Country &  Covariates &  ML &  Covs + ML \\
 \end{table}
 
 
+\begin{table}[h!]
+\caption{Pearson correlations between observed and predicted values. }
+\centering
+\begin{tabular}{llrrrr}
+Cross-validation scheme & Country &  Covariates &  ML\textsubscript{l} &  ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
+\hline 
+ Random &  Colombia & 0.58& 0.51 &   & 0.53 \\
+ Random &  Madagascar &  0.70 &  \textbf{0.73} &   0.70 & 0.71 \\
+ Random &  Senegal &  0.58 &  0.11 &  0.30 & 0.08 \\
+ Random &  Indonesia &   &   &   &  \\
+ Spatial &  Colombia &  0.12 &  0.09 &   & 0.10\\
+ Spatial &  Madagascar &  0.22 &  \textbf{0.66} &  0.63 & 0.60\\
+ Spatial &  Senegal &  0.63 &  0.27 &  0.36 & 0.35 \\
+ Spatial &  Indonesia &   &   &   &  \\
+\end{tabular}
+\label{t:results}
+\end{table}
+
+
 % to do table of coverage.
 
 The model using only machine learning predictions as covariates was the best performing model in both countries and both cross-validation schemes (Table~\ref{t:results}).
@@ -267,15 +286,15 @@ Also of note is that some models were estimated to have a negative relationship 
 \begin{tabular}{ll|rrrr}
      Country          & Model &      RMSE & $\beta_l $ &   $\beta_g$   &  $\beta_{g+l}$                                 \\ \hline
 Madagascar & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
-Madagascar & RF\textsubscript{g} &  & - &&\\
+Madagascar & RF\textsubscript{g} &  0.169 & - &&\\
 Madagascar & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\
-Madagascar & GBM\textsubscript{g} &  & - &&\\
+Madagascar & GBM\textsubscript{g} &  0.178& - &&\\
 Madagascar & enet\textsubscript{l} & 0.100 & 0.326 &-&\\
-Madagascar & enet\textsubscript{g} &  & - &&\\
+Madagascar & enet\textsubscript{g} & 0.233 & - &&\\
 Madagascar & nnet\textsubscript{l} & 0.113 & 0.031 &-&\\
-Madagascar & nnet\textsubscript{g} &  & - &&\\
+Madagascar & nnet\textsubscript{g} &  0.220 & - &&\\
 Madagascar & ppr\textsubscript{l} & 0.110 & -0.233 &-&\\
-Madagascar & ppr\textsubscript{g} &  &  &&\vspace{0.3cm}\\ 
+Madagascar & ppr\textsubscript{g} & 0.205 &  &&\vspace{0.3cm}\\ 
 Colombia & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
 Colombia & RF\textsubscript{g} &  & - &&\\
 Colombia & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\

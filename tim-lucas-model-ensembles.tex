@@ -178,7 +178,7 @@ We also examined the calibration of models by calculating the proportion of held
 
 {\bf 3. Results}
 
-Figure~\ref{f:scatter} shows the model performance under random and spatial cross-validation for both Madagascar and Colombia. 
+Figures~\ref{f:scatter1} and \ref{f:scatter2} show the model performance under random and spatial cross-validation for all countries. 
 The poor model performance in Colombia under spatial cross-validation indicates that the covariates alone cannot explain malaria incidence in this area. 
 For all other models that use the machine learning predictions as covariates, correlations between observed and predicted data of 0.54 -- 0.76 were achieved (Table~\ref{t:results}).
 Input data and mapped out-of-sample predictions of the best performing model, in Colombia, are shown in in Figure~\ref{f:map}.
@@ -285,23 +285,20 @@ Also of note is that some models were estimated to have a negative relationship 
 % differences between models was less than difference between data.
 
 \begin{figure}
-\centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figs/cv1_scatter.png}
-        \caption{Random cross-validation}
-        \label{fig:cv1}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{figs/cv2_scatter.png}
-        \caption{Spatial cross-validation}
-        \label{fig:cv2}
-    \end{subfigure}
+  \includegraphics[width=\textwidth]{figs/cv1_scatter.png}
 \caption{
   Observed data against predictions for cross-validation hold-out samples on a square root transformed scale.
-  a) Six-fold random cross-validation.
-  b) Three-fold spatial cross-validation with folds indicated by colour.
 }
-\label{f:scatter}
+\label{f:scatter1}
+\end{figure}
+
+
+\begin{figure}
+  \includegraphics[width=\textwidth]{figs/cv2_scatter.png}
+\caption{
+  Observed data against predictions for cross-validation hold-out samples on a square root transformed scale.
+}
+\label{f:scatter1}
 \end{figure}
 
 
@@ -323,48 +320,29 @@ Also of note is that some models were estimated to have a negative relationship 
 \caption{Machine learning model results and means of fitted parameters (i.e.\thinspace model weights) across cross-validation folds of the machine learning predictions only model. }
 \centering
 \small
-\begin{tabular}{ll|rr}
-     Country          & Model &      RMSE & $\beta$ \\ \hline
-Madagascar & RF\textsubscript{l} & 0.100 & 0.337 \\
-Madagascar & GBM\textsubscript{l} & 0.105 & 0.450 \\
-Madagascar & enet\textsubscript{l} & 0.116 & 0.326 \\
-Madagascar & nnet\textsubscript{l} & 0.113 & 0.031 \\
-Madagascar & ppr\textsubscript{l} & 0.109 & -0.233\vspace{0.3cm}\\ 
-Madagascar & RF\textsubscript{g} &  0.169 & - \\
-Madagascar & GBM\textsubscript{g} &  0.178& - \\
-Madagascar & enet\textsubscript{g} & 0.233 & - \\
-Madagascar & nnet\textsubscript{g} &  0.220 & - \\
-Madagascar & ppr\textsubscript{g} & 0.205 &   \vspace{0.3cm}\\
-Colombia & RF\textsubscript{l} & 0.100 & 0.337 \\
-Colombia & GBM\textsubscript{l} & 0.109 & 0.450  \\
-Colombia & enet\textsubscript{l} & 0.100 & 0.326 \\
-Colombia & nnet\textsubscript{l} & 0.113 & 0.031 \\
-Colombia & ppr\textsubscript{l} & 0.110 & -0.233\vspace{0.3cm}\\
-Colombia & RF\textsubscript{g} & 0.169 & -\\
-Colombia & GBM\textsubscript{g} & 0.178 & - \\
-Colombia & enet\textsubscript{g} & 0.233 & - \\
-Colombia & nnet\textsubscript{g} & 0.220 & - \\
-Colombia & ppr\textsubscript{g} & 0.205 & \vspace{0.3cm}\\ 
-Senegal & RF\textsubscript{l} & 0.100 & 0.337 \\
-Senegal & GBM\textsubscript{l} & 0.109 & 0.450 \\
-Senegal & enet\textsubscript{l} & 0.100 & 0.326 \\
-Senegal & nnet\textsubscript{l} & 0.113 & 0.031 \\
-Senegal & ppr\textsubscript{l} & 0.110 & -0.233\vspace{0.3cm}\\
-Senegal & RF\textsubscript{g} & 0.169 & \\
-Senegal & GBM\textsubscript{g} & 0.178 & - \\
-Senegal & enet\textsubscript{g} & 0.233 & - \\
-Senegal & nnet\textsubscript{g} & 0.220 & - \\
-Senegal & ppr\textsubscript{g} & 0.205 & \vspace{0.3cm} \\ 
-Indonesia & RF\textsubscript{l} & 0.100 & 0.337 \\
-Indonesia & GBM\textsubscript{l} & 0.109 & 0.450 \\
-Indonesia & enet\textsubscript{l} & 0.100 & 0.326\\
-Indonesia & nnet\textsubscript{l} & 0.113 & 0.031 \\
-Indonesia & ppr\textsubscript{l} & 0.110 & -0.233\vspace{0.3cm}\\
-Indonesia & RF\textsubscript{g} & 0.169 & \\
-Indonesia & GBM\textsubscript{g} & 0.178 & \\
-Indonesia & enet\textsubscript{g} &0.233  &\\
-Indonesia & nnet\textsubscript{g} &0.220  &\\
-Indonesia & ppr\textsubscript{g} & 0.205 &  \\
+\begin{tabular}{ll|rr|rr}
+     Country          & Model &      RMSE\textsubscript{l} & $\beta_l$ & RMSE\textsubscript{g} & $\beta_g$ \\ \hline
+Madagascar & RF & \textbf{0.100} & 0.538 &  \textbf{0.169} & \textbf{0.529}\\
+Madagascar & GBM & 0.105 & \textbf{0.570} & 0.178& 0.432 \\
+Madagascar & enet & 0.116 & 0.301 &0.233 & 0.262 \\
+Madagascar & nnet & 0.113 & 0.033 &0.220 & 0.364 \\
+Madagascar & ppr & 0.109 & 0.469 & 0.205 &  0.403\vspace{0.3cm}\\ 
+Colombia & RF & \textbf{0.068} & 0.505 &  \textbf{0.169} & \textbf{0.522}\\
+Colombia & GBM & 0.073 & \textbf{0.879} & 0.178& -0.231  \\
+Colombia & enet & 0.070 & 0.079 &0.233 & 0.080 \\
+Colombia & nnet & 0.070 & -0.008 &0.220 & 0.144 \\
+Colombia & ppr & 0.070 & 0.530 & 0.205 &  0.468\vspace{0.3cm}\\
+Senegal & RF & \textbf{0.092} & \textbf{0.339} & \textbf{0.169} & \textbf{0.425} \\
+Senegal & GBM & 0.099 & 0.261& 0.178& 0.408 \\
+Senegal & enet& 0.103 & 0.344  &0.233 & 0.205 \\
+Senegal & nnet & 0.099 & 0.254 &0.220 & 0.190 \\
+Senegal & ppr & 0.098 & 0.268& 0.205 &  0.126\vspace{0.3cm}\\
+Indonesia & RF& \textbf{0.081} & 0.447 & \textbf{0.169} & 0.178\\
+Indonesia & GBM & 0.085 & 0.357 & 0.178& 0.289 \\
+Indonesia & enet & 0.091 & 0.303 &0.233 & \textbf{0.526} \\
+Indonesia & nnet & 0.089 & \textbf{0.506} &0.220 & 0.316 \\
+Indonesia & ppr & 0.089 & 0.364 & 0.205 &  0.089\vspace{0.3cm}\\
+
 \end{tabular}
 \label{t:mlresults}
 \end{table}

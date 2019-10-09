@@ -323,48 +323,48 @@ Also of note is that some models were estimated to have a negative relationship 
 \caption{Machine learning model results and means of fitted parameters (i.e.\thinspace model weights) across cross-validation folds of the machine learning predictions only model. }
 \centering
 \small
-\begin{tabular}{ll|rrrr}
-     Country          & Model &      RMSE & $\beta_l $ &   $\beta_g$   &  $\beta_{g+l}$                                 \\ \hline
-Madagascar & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
-Madagascar & RF\textsubscript{g} &  0.169 & - &&\\
-Madagascar & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\
-Madagascar & GBM\textsubscript{g} &  0.178& - &&\\
-Madagascar & enet\textsubscript{l} & 0.100 & 0.326 &-&\\
-Madagascar & enet\textsubscript{g} & 0.233 & - &&\\
-Madagascar & nnet\textsubscript{l} & 0.113 & 0.031 &-&\\
-Madagascar & nnet\textsubscript{g} &  0.220 & - &&\\
-Madagascar & ppr\textsubscript{l} & 0.110 & -0.233 &-&\\
-Madagascar & ppr\textsubscript{g} & 0.205 &  &&\vspace{0.3cm}\\ 
-Colombia & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
-Colombia & RF\textsubscript{g} &  & - &&\\
-Colombia & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\
-Colombia & GBM\textsubscript{g} &  & - &&\\
-Colombia & enet\textsubscript{l} & 0.100 & 0.326 &-&\\
-Colombia & enet\textsubscript{g} &  & - &&\\
-Colombia & nnet\textsubscript{l} & 0.113 & 0.031 &-&\\
-Colombia & nnet\textsubscript{g} &  & - &&\\
-Colombia & ppr\textsubscript{l} & 0.110 & -0.233 &-&\\
-Colombia & ppr\textsubscript{g} &  &  &&\vspace{0.3cm}\\ 
-Senegal & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
-Senegal & RF\textsubscript{g} &  & - &&\\
-Senegal & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\
-Senegal & GBM\textsubscript{g} &  & - &&\\
-Senegal & enet\textsubscript{l} & 0.100 & 0.326 &-&\\
-Senegal & enet\textsubscript{g} &  & - &&\\
-Senegal & nnet\textsubscript{l} & 0.113 & 0.031 &-&\\
-Senegal & nnet\textsubscript{g} &  & - &&\\
-Senegal & ppr\textsubscript{l} & 0.110 & -0.233 &-&\\
-Senegal & ppr\textsubscript{g} &  &  &&\vspace{0.3cm}\\ 
-Indonesia & RF\textsubscript{l} & 0.100 & 0.337 &-&\\
-Indonesia & RF\textsubscript{g} &  & - &&\\
-Indonesia & GBM\textsubscript{l} & 0.109 & 0.450 & - &\\
-Indonesia & GBM\textsubscript{g} &  & - &&\\
-Indonesia & enet\textsubscript{l} & 0.100 & 0.326 &-&\\
-Indonesia & enet\textsubscript{g} &  & - &&\\
-Indonesia & nnet\textsubscript{l} & 0.113 & 0.031 &-&\\
-Indonesia & nnet\textsubscript{g} &  & - &&\\
-Indonesia & ppr\textsubscript{l} & 0.110 & -0.233 &-&\\
-Indonesia & ppr\textsubscript{g} &  &  &&\\
+\begin{tabular}{ll|rr}
+     Country          & Model &      RMSE & $\beta$ \\ \hline
+Madagascar & RF\textsubscript{l} & 0.100 & 0.337 \\
+Madagascar & GBM\textsubscript{l} & 0.105 & 0.450 \\
+Madagascar & enet\textsubscript{l} & 0.116 & 0.326 \\
+Madagascar & nnet\textsubscript{l} & 0.113 & 0.031 \\
+Madagascar & ppr\textsubscript{l} & 0.109 & -0.233\vspace{0.3cm}\\ 
+Madagascar & RF\textsubscript{g} &  0.169 & - \\
+Madagascar & GBM\textsubscript{g} &  0.178& - \\
+Madagascar & enet\textsubscript{g} & 0.233 & - \\
+Madagascar & nnet\textsubscript{g} &  0.220 & - \\
+Madagascar & ppr\textsubscript{g} & 0.205 &   \vspace{0.3cm}\\
+Colombia & RF\textsubscript{l} & 0.100 & 0.337 \\
+Colombia & GBM\textsubscript{l} & 0.109 & 0.450  \\
+Colombia & enet\textsubscript{l} & 0.100 & 0.326 \\
+Colombia & nnet\textsubscript{l} & 0.113 & 0.031 \\
+Colombia & ppr\textsubscript{l} & 0.110 & -0.233\vspace{0.3cm}\\
+Colombia & RF\textsubscript{g} & 0.169 & -\\
+Colombia & GBM\textsubscript{g} & 0.178 & - \\
+Colombia & enet\textsubscript{g} & 0.233 & - \\
+Colombia & nnet\textsubscript{g} & 0.220 & - \\
+Colombia & ppr\textsubscript{g} & 0.205 & \vspace{0.3cm}\\ 
+Senegal & RF\textsubscript{l} & 0.100 & 0.337 \\
+Senegal & GBM\textsubscript{l} & 0.109 & 0.450 \\
+Senegal & enet\textsubscript{l} & 0.100 & 0.326 \\
+Senegal & nnet\textsubscript{l} & 0.113 & 0.031 \\
+Senegal & ppr\textsubscript{l} & 0.110 & -0.233\vspace{0.3cm}\\
+Senegal & RF\textsubscript{g} & 0.169 & \\
+Senegal & GBM\textsubscript{g} & 0.178 & - \\
+Senegal & enet\textsubscript{g} & 0.233 & - \\
+Senegal & nnet\textsubscript{g} & 0.220 & - \\
+Senegal & ppr\textsubscript{g} & 0.205 & \vspace{0.3cm} \\ 
+Indonesia & RF\textsubscript{l} & 0.100 & 0.337 \\
+Indonesia & GBM\textsubscript{l} & 0.109 & 0.450 \\
+Indonesia & enet\textsubscript{l} & 0.100 & 0.326\\
+Indonesia & nnet\textsubscript{l} & 0.113 & 0.031 \\
+Indonesia & ppr\textsubscript{l} & 0.110 & -0.233\vspace{0.3cm}\\
+Indonesia & RF\textsubscript{g} & 0.169 & \\
+Indonesia & GBM\textsubscript{g} & 0.178 & \\
+Indonesia & enet\textsubscript{g} &0.233  &\\
+Indonesia & nnet\textsubscript{g} &0.220  &\\
+Indonesia & ppr\textsubscript{g} & 0.205 &  \\
 \end{tabular}
 \label{t:mlresults}
 \end{table}

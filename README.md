@@ -25,9 +25,6 @@ Journal Royal Stat Society
 Proceeding Royal Soc Interfaces
 PLoS Comp Biol
 
-PLoS comp biol was plan for other paper.
-
-Stacked generalisation is at Interface.
-
+Lets go interface.
 
 

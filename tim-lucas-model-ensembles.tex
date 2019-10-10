@@ -326,19 +326,19 @@ Indonesia & ppr & 0.089 & 0.364 & 0.205 &  0.089\vspace{0.3cm}\\
 
 
 \begin{table}[h!]
-\caption{Covarage of 80\% credible intervals. }
+\caption{Covarage of 80\% credible intervals. Values outside 0.7--0.9 are shown in bold.}
 \centering
-\begin{tabular}{llrrrr}
-CV & Country &  Enviro & ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
+\begin{tabular}{llrrrrr}
+CV & Country &  Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
 \hline 
- Random &  Colombia &  \\
- Spatial &  Colombia &  \\
- Random &  Madagascar &  \\
- Spatial &  Madagascar & \\
- Random &  Senegal & \\
- Spatial &  Senegal &  \\
- Random &  Indonesia &  \\
- Spatial &  Indonesia &   \\
+ Colombia & Random & \textbf{0.28} & \textbf{0.28} & \textbf{0.29} & \textbf{0.29} & \textbf{0.29} \\
+ Madagascar &  Random & 0.80 & 0.77& 0.75& 0.77& 0.76 \\
+ Senegal & Random &0.79 & 0.79& 0.79& 0.79& 0.82 \\
+ Indonesia & Random &0.80 & 0.81& 0.78& 0.79& 0.77  \\
+ Colombia &  Spatial & \textbf{0.31} & \textbf{0.34}  & \textbf{0.32} & \textbf{0.34} & \textbf{0.34}  \\
+ Madagascar & Spatial & \textbf{0.65} & 0.74& 0.70& 0.75 & 0.76   \\
+ Senegal & Spatial & 0.85 & \textbf{0.91}& 0.85& \textbf{0.94} & 0.85  \\
+  Indonesia & Spatial & 0.80 & 0.78& 0.78& 0.76& 0.75  \\
 \end{tabular}
 \label{t:results2}
 \end{table}

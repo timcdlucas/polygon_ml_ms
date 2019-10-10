@@ -37,30 +37,26 @@ Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel~J.~Weis
 
 
 \end{center}
+\section{Abstract}
 
-\begin{center}
-{\bf Abstract}
-\end{center}
 
-\setlength{\parindent}{0pt}
 
 % This is where the abstract is placed. It should include a statement about the problem being addressed in the presentation (and paper, if submitted). Continue with a discussion of why it is important to address this problem. This may be followed by some summary information about the models and methods developed and/or used to address the problem. Conclude with a description of the key results and contributions that will be covered in the presentation (and paper).\\
 
 Maps of infection rate are one of the core tools needed for the elimination of malaria.
-Reliable routine surveillance data of malaria incidence is becoming more widely available and can better measure low malaria risk than prevalence surveys.
+Reliable routine surveillance data of malaria incidence is becoming more widely available and can better measure low malaria risk than prevalence point-surveys.
 However, these data are often aggregated over large, heterogeneous areas which means that they are often underpowered for learning complex relationships between the environment and malaria risk.
-In contrast, point prevalence surveys are directly linked to loval environmental conditions but are not common in many areas of the world that are working towards elimination.
+In contrast, prevalence point-surveys are directly linked to loval environmental conditions but are not common in many areas of the world.
 A model that combines point surveys and aggregated surveillance data could have the benefits of both but must be able to account for the fact that these two data types are different malariometric units.
-Here, we train multiple machine learning models on point surveys and then combine the predictions from these with a geostatistical disaggregation model that uses routine surveillance data.
-We find that, in four national case studies, using a disaggregation regression model to combine predictions from machine learning models trained on point surveys improves model accuracy relative to using the environmental covariates directly.                                  
+Here, we train multiple machine learning models on prevalence point-surveys and then combine the predictions from these with a geostatistical disaggregation model that uses routine surveillance data.
+We find that, in four national case studies, using a disaggregation regression model to combine predictions from machine learning models trained on point surveys improves model accuracy relative to a baseline disaggregation regression model that uses the environmental covariates only.                                  
 
 {\bf Keywords}: Spatial statistics; Ensemble; Stacking; Epidemiology.
 }\\
 
 
-\setlength{\parindent}{0pt}
 
-{\bf 1. Introduction}
+\section{Introduction}
 
 
 %We need to switch to downscaling models
@@ -68,39 +64,36 @@ We find that, in four national case studies, using a disaggregation regression m
 %While prevalence points should not be primary data source, they should still be used.
 %One way is ML.
 
-High-resolution maps of malaria risk are vital for elimination but mapping malaria in low burden countries presents new challenges as traditional mapping of prevalence from cluster-level surveys \citep{gething2011new, bhatt2017improved, gething2012long, bhatt2015effect} is often not effective  because, firstly, so few individuals are infected that most surveys will detect zero cases, and secondly, because of the lack of nationally representative prevalence surveys in low burden countries \citep{sturrock2016mapping, sturrock2014fine}. 
+High-resolution maps of malaria risk are vital for control and elimination \citep{weiss2019mapping, battle2019mapping}.
+However, mapping malaria in lower burden countries presents new challenges as traditional mapping of prevalence from cluster-level surveys \citep{weiss2019mapping, bhatt2017improved, battle2019mapping, bhatt2015effect} is often not effective for two reasons.
+Firstly, so few individuals are infected that most surveys will detect zero cases \citep{sturrock2016mapping}.
+Secondly, there is a lack of nationally representative prevalence surveys in low burden countries \citep{sturrock2016mapping, sturrock2014fine}. 
 Routine surveillance data of malaria case counts, often aggregated over administrative regions defined by geographic polygons, is becoming more reliable and more widely available \citep{sturrock2016mapping} and recent work has focussed on methods for estimating high-resolution malaria risk from these data \citep{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}. 
 However, the aggregation of cases over space means that the data may be relatively uninformative, especially if the case counts are aggregated over large or heterogeneous areas, because it is unclear where within the polygon, and in which environments, the cases occurred. 
 This data is therefore often under-powered for fitting flexible, non-linear models as is required for accurate malaria maps \citep{bhatt2017improved, bhatt2015effect}. 
-A model that combines point surveys and aggregated surveillance data, and therefore leverages the strength of both, has great potential.
- 
-One approach for combining these data is to use prevalence point-surveys to train a suite of machine learning models, and then use predictions from these models as covariates in a model trained on polygon-level incidence data. 
-This process of stacking models has proven effective in many realms however typical stacking uses a single dataset on a consistent scale \citep{sill2009feature, bhatt2017improved}. 
+A model that combines prevalence point-surveys and aggregated surveillance data, and therefore leverages the strength of both, has great potential.
+
+Model stacking has proven effective in many realms \citep{sill2009feature, bhatt2017improved, hao2019review}. 
 Stacking improves predictions by controlling bias and variance; as long as suitably diverse models are averaged, they will have different biases while high variance in models should be averaged out even in relatively similar models.
 This understanding of how stacking improves model performance indicates that diversity in models is important for stacking to be effective.
 Diversity in models is typically created in two ways: by using diverse training datasets (as in Random Forests for example) and by using functionally different models (for example by averaging tree based models and neural networks).
+One important trade-off in spatial modelling is whether to use local data (with a smaller sample size but that is likely to be representative of the area of study) or global data that have a larger sample size but a less close association with the areas of study.
+In the context of malaria mapping, we can think about diversity of training data in this context and expect that stacking seperate models trained on local and global data will also increase the diversity of predictions in a useful way.
 
-% more about stacking
-% good for bias variance
-% SDM examples. any others?
-
-
-
-Diversity of predictions is good.
-Diversity of models
-Diversity of data. global local.
-
-Different scales. is it transfer learning?
+Here we propose training a suite of level-zero machine learning models on point-level, binomial prevalence data and stacking these models with a polygon-level, Poisson incidence model.
+This modelling scheme has similarities to previous stacking methods used for malaria mapping \citep{bhatt2017improved}.
+However, as the response data in the level-zero models and the stacker are on different scales (prevalence is a proportion while incidence is a rate) there are a number of important differences.
+Notably, we cannot simply take a weighted average of the predictions from the level-zero models; they need to be transformed to the incidence scale and some additional flexibility to allow for mispecification of this transform needs to be allowed.
+To test the effectiveness of this approach we use data from four countries: Madagascar, Colombia, Indonesia and Senegal.
+We train the machine learning models on both local and global data and examine a number of different combinations of covariates: just local or global machine learning predictions, or combining the two or combining local machine learning predictions with the raw environmental covariates.
+While there isn't one consistently best model, we find that in nearly all cases, using some information from local machine learning models improves model performance.
 
 
-Here we propose training the level zero machine learning models on point-level, binomial prevalence data and stacking these models with a polygon-level, Poisson incidence model. 
-
-
-{\bf 2. Methodology}
+\section{Methods}
 
 We used two data sources that reflect \emph{Plasmodium falciparum} malaria transmission; point-prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Colombia and Madagascar as case examples as they both have fairly complete, publicly available, surveillance data at a finer geographical resolution than admin 1.
-The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect, guerra2007assembling}.  % ceck todo
+The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect, guerra2007assembling, pfeffer2018ma}.  % ceck todo
 The prevalence points were then standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}.
 
 The polygon incidence data were collected from government reports and standardised using methods defined in \cite{cibulskis2011worldwide}.
@@ -176,7 +169,7 @@ Our primary performance metric was correlation between observed and predicted da
 We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
 
 
-{\bf 3. Results}
+\section{Results}
 
 Figures~\ref{f:scatter1} and \ref{f:scatter2} show the model performance under random and spatial cross-validation for all countries. 
 The poor model performance in Colombia under spatial cross-validation indicates that the covariates alone cannot explain malaria incidence in this area. 
@@ -298,14 +291,14 @@ Also of note is that some models were estimated to have a negative relationship 
 \caption{
   Observed data against predictions for cross-validation hold-out samples on a square root transformed scale.
 }
-\label{f:scatter1}
+\label{f:scatter2}
 \end{figure}
 
 
 
 \begin{figure}
 \centering
-\includegraphics[trim={0 30mm 0 40mm}, width = 0.55\textwidth]{figs/col_obs_pred_map_ml.png} %\caption{Indonesia spatial crossvalidation} 
+\includegraphics[trim={0 30mm 0 40mm}, width = 0.8\textwidth]{figs/col_obs_pred_map_ml.png} %\caption{Indonesia spatial crossvalidation} 
 \caption{
   Left: Observed data for Colombia (grey for zero incidence). Right: Out-of-sample predictions for the random cross-validation, machine learning only model. For each cross-validation fold, predictions are made for the held out data which are then combined to make a single surface.
 }
@@ -317,7 +310,7 @@ Also of note is that some models were estimated to have a negative relationship 
 
 
 \begin{table}
-\caption{Machine learning model results and means of fitted parameters (i.e.\thinspace model weights) across cross-validation folds of the machine learning predictions only model. }
+\caption{Machine learning model results and fitted parameters (i.e.\thinspace model weights) of the machine learning predictions only models (local only and global only). }
 \centering
 \small
 \begin{tabular}{ll|rr|rr}
@@ -347,8 +340,9 @@ Indonesia & ppr & 0.089 & 0.364 & 0.205 &  0.089\vspace{0.3cm}\\
 \label{t:mlresults}
 \end{table}
 
+\section{Discussion}
 
-{\bf 5. Conclusions}
+\section{Conclusions}
 
 Overall, our experiments suggest that using predictions from machine learning models trained on prevalence points provides more accurate predictions than using environmental covariates when fitting disaggregation models of malaria incidence.
 This increased performance comes despite the data being on different scales, the data being measurements of different aspects of malaria transmission and despite the imperfect model we have used to translate between the two scales.

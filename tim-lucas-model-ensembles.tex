@@ -348,72 +348,72 @@ Country &  CV & Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & M
 
 
 
-%\begin{table}
-%\caption{Fitted regression parameters of the environmental and machine learning covariates for thee models: just environmental variables, just local machine learning models and the combination of the two.}
-%\centering
-%\tiny
-%\begin{tabular}{ll|rrr}
-%Country    & Variable &  $\beta_{enviro}$   & $\beta_l$ & $\beta_{enviro+l}$\\ \hline
-%Madagascar & LST mean & 0.100 & 0.538 &  0.169\\
-%Madagascar & EVI & 0.105 & 0.570 & 0.178 \\
-%Madagascar & TSI & 0.116 & 0.301 &0.233  \\
-%Madagascar & access & 0.113 & 0.033 &0.220  \\
-%Madagascar & Elev & 0.109 & 0.469 & 0.205\\ 
-%Madagascar & LST sd & 0.116 & 0.301 &0.233  \\
-%Madagascar & VIIRS & 0.113 & 0.033 &0.220  \\
-%Madagascar & TCW & 0.109 & 0.469 & 0.205\\ 
-%Madagascar & RF & 0.100 & 0.538 &  0.169\\
-%Madagascar & GBM & 0.105 & 0.570 & 0.178 \\
-%Madagascar & enet & 0.116 & 0.301 &0.233  \\
-%Madagascar & nnet & 0.113 & 0.033 &0.220  \\
-%Madagascar & ppr & 0.109 & 0.469 & 0.205\vspace{0.2cm}\\ 
-%Colombia & LST mean & 0.100 & 0.538 &  0.169\\
-%Colombia & EVI & 0.105 & 0.570 & 0.178 \\
-%Colombia & TSI & 0.116 & 0.301 &0.233  \\
-%Colombia & access & 0.113 & 0.033 &0.220  \\
-%Colombia & Elev & 0.109 & 0.469 & 0.205\\ 
-%Colombia & LST sd & 0.116 & 0.301 &0.233  \\
-%Colombia & VIIRS & 0.113 & 0.033 &0.220  \\
-%Colombia & TCW & 0.109 & 0.469 & 0.205\\ 
-%Colombia & RF & 0.068 & 0.505 &  0.169 \\
-%Colombia & GBM & 0.073 & 0.879 & 0.178 \\
-%Colombia & enet & 0.070 & 0.079 &0.233 \\
-%Colombia & nnet & 0.070 & -0.008 &0.220  \\
-%Colombia & ppr & 0.070 & 0.530 & 0.205 \vspace{0.2cm}\\
-%Senegal & LST mean & 0.100 & 0.538 &  0.169\\
-%Senegal & EVI & 0.105 & 0.570 & 0.178 \\
-%Senegal & TSI & 0.116 & 0.301 &0.233  \\
-%Senegal & access & 0.113 & 0.033 &0.220  \\
-%Senegal & Elev & 0.109 & 0.469 & 0.205\\ 
-%Senegal & LST sd & 0.116 & 0.301 &0.233  \\
-%Senegal & VIIRS & 0.113 & 0.033 &0.220  \\
-%Senegal & TCW & 0.109 & 0.469 & 0.205\\ 
-%Senegal & RF & 0.092 & 0.339 & 0.169  \\
-%Senegal & GBM & 0.099 & 0.261& 0.178 \\
-%Senegal & enet& 0.103 & 0.344  &0.233  \\
-%Senegal & nnet & 0.099 & 0.254 &0.220 \\
-%Senegal & ppr & 0.098 & 0.268& 0.205 \vspace{0.2cm}\\
-%Indonesia & LST mean & 0.100 & 0.538 &  0.169\\
-%Indonesia & EVI & 0.105 & 0.570 & 0.178 \\
-%Indonesia & TSI & 0.116 & 0.301 &0.233  \\
-%Indonesia & access & 0.113 & 0.033 &0.220  \\
-%Indonesia & Elev & 0.109 & 0.469 & 0.205\\ 
-%Indonesia & LST sd & 0.116 & 0.301 &0.233  \\
-%Indonesia & VIIRS & 0.113 & 0.033 &0.220  \\
-%Indonesia & TCW & 0.109 & 0.469 & 0.205\\ 
-%Indonesia & RF& 0.081 & 0.447 & 0.169 \\
-%Indonesia & GBM & 0.085 & 0.357 & 0.178\\
-%Indonesia & enet & 0.091 & 0.303 &0.233  \\
-%Indonesia & nnet & 0.089 & 0.506 &0.220  \\
-%Indonesia & ppr & 0.089 & 0.364 & 0.205 \\
-%
-%
-%
-%\end{tabular}
-%\label{t:mlresults}
-%\end{table}
-%
-%
+\begin{table}
+\caption{Fitted regression parameters of the environmental and machine learning covariates for thee models: just environmental variables, just local machine learning models and the combination of the two.}
+\centering
+\tiny
+\begin{tabular}{ll|rrr}
+Country    & Variable &  $\beta_{enviro}$   & $\beta_l$ & $\beta_{enviro+l}$\\ \hline
+Madagascar & LST mean & 0.17 &  &  -0.01\\
+Madagascar & EVI & 0.32 &  & -0.04 \\
+Madagascar & TSI & 0.42 &  &0.06  \\
+Madagascar & access & 0.34 &  &0.00  \\
+Madagascar & Elev & -0.14 &  & 0.00\\ 
+Madagascar & LST sd & -0.78 &  &-0.04  \\
+Madagascar & VIIRS & -0.1 &  &-0.52  \\
+Madagascar & TCW & -0.22 &  & -0.06\\ 
+Madagascar & RF &  & 0.29 &  0.01\\
+Madagascar & GBM &  & 0.52 & 0.25 \\
+Madagascar & enet &  & 0.31 &0.09  \\
+Madagascar & nnet &  & 0.43 &0.14  \\
+Madagascar & ppr &  & 0.49 & 0.22\vspace{0.2cm}\\ 
+Colombia & LST mean &-0.12  &  & -0.22\\
+Colombia & EVI &  -0.08&  & 0.17\\
+Colombia & TSI &  0.54&  & -0.06\\
+Colombia & access &  0.35&  &0.00 \\
+Colombia & Elev &  0.47&  & 0.00\\
+Colombia & LST sd & -0.11 &  & -0.10\\
+Colombia & VIIRS & 0.24 &  & 0.01\\
+Colombia & TCW &  0.21&  & 0.00\\
+Colombia & RF &  & 0.36 & -0.18\\
+Colombia & GBM &  & 0.54 & 0.26\\
+Colombia & enet &  & 0.32 & -0.34\\
+Colombia & nnet &  &0.33  & -0.09\\
+Colombia & ppr &  & 0.54 & 0.01\vspace{0.2cm}\\
+Senegal & LST mean &-0.04  &  &-0.02\\
+Senegal & EVI &  0.33&  & 0.30\\
+Senegal & TSI &  -0.58&  &  -0.59\\
+Senegal & access & -0.03 &  &  -0.05\\
+Senegal & Elev &  0.42&  &0.37\\ 
+Senegal & LST sd &  0.21&  & 0.10 \\
+Senegal & VIIRS &  0.13&  &  0.13\\
+Senegal & TCW & 0.08 &  &-0.01\\ 
+Senegal & RF &  & 0.34 &  0.20\\
+Senegal & GBM &  &  0.28& 0.05\\
+Senegal & enet &  &  0.27&  -0.05\\
+Senegal & nnet &  & 0.29 &-0.09 \\
+Senegal & ppr &  &  0.35& 0.25\vspace{0.2cm}\\
+Indonesia & LST mean & -0.32 &  &-0.34\\
+Indonesia & EVI &  0.49&  & 0.36\\
+Indonesia & TSI &  0.58&  &0.52\\
+Indonesia & access &0.33 &  & 0.06 \\
+Indonesia & Elev& -0.06&  &-0.13\\ 
+Indonesia & LST sd & -0.23 &  & -0.33\\
+Indonesia & VIIRS &  -0.12&  & 0.03\\
+Indonesia & TCW& 0.12 &  &0.10\\ 
+Indonesia & RF &  & 0.32 & 0.06\\
+Indonesia & GBM &  &  0.38&0.03\\
+Indonesia & enet &  &  0.49&  0.56\\
+Indonesia & nnet &  &  0.36&  0.18\\
+Indonesia & ppr &  &  0.45& 0.32\\
+
+
+
+\end{tabular}
+\label{t:mlresults}
+\end{table}
+
+
 
 \section{Discussion}
 

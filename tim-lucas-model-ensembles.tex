@@ -181,6 +181,19 @@ We also examined the calibration of models by calculating the proportion of held
 
 \section{Results}
 
+Table \ref{t:results} gives the correlation between observed and held out data (under random and spatially cross-validation) for models that use environmental covariates only, local machine learning models only and a combination of the two.
+Many of the differences in performance are rather marginal.
+Overall, in only one case (random cross-validation in Senegal) is Enviro the best performing model while under spatially cross-validation in Senegal Enviro and Envir + ML\textsubscript{l} perform equally well.
+Of the remaining six cases, in three cases ML\textsubscript{l} performs best and in three cases Envir + ML\textsubscript{l} performs best.
+The greatest benefits in predictive performance occur under spatial cross validation and in the cases when the Enviro model is particularly poor.
+
+Table \ref{t:results2} gives the correlation between observed and held out data (under random and spatially cross-validation) for models that use environmental covariates only, global machine learning models only and a combination of the local and global machine learning models.
+In five cases, Enviro is the best or tied best performing model.
+In only one case in the ML\textsubscript{g} model the best.
+Comparing across Tables \ref{t:results} and \ref{t:results2} we can see that ML\textsubscript{g} is never the best performing model.
+In only three cases (Spatial Colombia, Spatial Senegal and Spatial Indonesia) does ML\textsubscript{g} outperform ML\textsubscript{l}.
+
+
 Figures~\ref{f:scatter1} and \ref{f:scatter2} show the model performance under random and spatial cross-validation for all countries. 
 
 

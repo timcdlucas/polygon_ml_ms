@@ -329,7 +329,7 @@ Indonesia & ppr & 0.089 & 0.364 & 0.205 &  0.089\vspace{0.3cm}\\
 \caption{Covarage of 80\% credible intervals. Values outside 0.7--0.9 are shown in bold.}
 \centering
 \begin{tabular}{llrrrrr}
-CV & Country &  Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
+Country &  CV & Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
 \hline 
  Colombia & Random & \textbf{0.28} & \textbf{0.28} & \textbf{0.29} & \textbf{0.29} & \textbf{0.29} \\
  Madagascar &  Random & 0.80 & 0.77& 0.75& 0.77& 0.76 \\
@@ -344,6 +344,76 @@ CV & Country &  Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & M
 \end{table}
 
 
+
+
+
+
+%\begin{table}
+%\caption{Fitted regression parameters of the environmental and machine learning covariates for thee models: just environmental variables, just local machine learning models and the combination of the two.}
+%\centering
+%\tiny
+%\begin{tabular}{ll|rrr}
+%Country    & Variable &  $\beta_{enviro}$   & $\beta_l$ & $\beta_{enviro+l}$\\ \hline
+%Madagascar & LST mean & 0.100 & 0.538 &  0.169\\
+%Madagascar & EVI & 0.105 & 0.570 & 0.178 \\
+%Madagascar & TSI & 0.116 & 0.301 &0.233  \\
+%Madagascar & access & 0.113 & 0.033 &0.220  \\
+%Madagascar & Elev & 0.109 & 0.469 & 0.205\\ 
+%Madagascar & LST sd & 0.116 & 0.301 &0.233  \\
+%Madagascar & VIIRS & 0.113 & 0.033 &0.220  \\
+%Madagascar & TCW & 0.109 & 0.469 & 0.205\\ 
+%Madagascar & RF & 0.100 & 0.538 &  0.169\\
+%Madagascar & GBM & 0.105 & 0.570 & 0.178 \\
+%Madagascar & enet & 0.116 & 0.301 &0.233  \\
+%Madagascar & nnet & 0.113 & 0.033 &0.220  \\
+%Madagascar & ppr & 0.109 & 0.469 & 0.205\vspace{0.2cm}\\ 
+%Colombia & LST mean & 0.100 & 0.538 &  0.169\\
+%Colombia & EVI & 0.105 & 0.570 & 0.178 \\
+%Colombia & TSI & 0.116 & 0.301 &0.233  \\
+%Colombia & access & 0.113 & 0.033 &0.220  \\
+%Colombia & Elev & 0.109 & 0.469 & 0.205\\ 
+%Colombia & LST sd & 0.116 & 0.301 &0.233  \\
+%Colombia & VIIRS & 0.113 & 0.033 &0.220  \\
+%Colombia & TCW & 0.109 & 0.469 & 0.205\\ 
+%Colombia & RF & 0.068 & 0.505 &  0.169 \\
+%Colombia & GBM & 0.073 & 0.879 & 0.178 \\
+%Colombia & enet & 0.070 & 0.079 &0.233 \\
+%Colombia & nnet & 0.070 & -0.008 &0.220  \\
+%Colombia & ppr & 0.070 & 0.530 & 0.205 \vspace{0.2cm}\\
+%Senegal & LST mean & 0.100 & 0.538 &  0.169\\
+%Senegal & EVI & 0.105 & 0.570 & 0.178 \\
+%Senegal & TSI & 0.116 & 0.301 &0.233  \\
+%Senegal & access & 0.113 & 0.033 &0.220  \\
+%Senegal & Elev & 0.109 & 0.469 & 0.205\\ 
+%Senegal & LST sd & 0.116 & 0.301 &0.233  \\
+%Senegal & VIIRS & 0.113 & 0.033 &0.220  \\
+%Senegal & TCW & 0.109 & 0.469 & 0.205\\ 
+%Senegal & RF & 0.092 & 0.339 & 0.169  \\
+%Senegal & GBM & 0.099 & 0.261& 0.178 \\
+%Senegal & enet& 0.103 & 0.344  &0.233  \\
+%Senegal & nnet & 0.099 & 0.254 &0.220 \\
+%Senegal & ppr & 0.098 & 0.268& 0.205 \vspace{0.2cm}\\
+%Indonesia & LST mean & 0.100 & 0.538 &  0.169\\
+%Indonesia & EVI & 0.105 & 0.570 & 0.178 \\
+%Indonesia & TSI & 0.116 & 0.301 &0.233  \\
+%Indonesia & access & 0.113 & 0.033 &0.220  \\
+%Indonesia & Elev & 0.109 & 0.469 & 0.205\\ 
+%Indonesia & LST sd & 0.116 & 0.301 &0.233  \\
+%Indonesia & VIIRS & 0.113 & 0.033 &0.220  \\
+%Indonesia & TCW & 0.109 & 0.469 & 0.205\\ 
+%Indonesia & RF& 0.081 & 0.447 & 0.169 \\
+%Indonesia & GBM & 0.085 & 0.357 & 0.178\\
+%Indonesia & enet & 0.091 & 0.303 &0.233  \\
+%Indonesia & nnet & 0.089 & 0.506 &0.220  \\
+%Indonesia & ppr & 0.089 & 0.364 & 0.205 \\
+%
+%
+%
+%\end{tabular}
+%\label{t:mlresults}
+%\end{table}
+%
+%
 
 \section{Discussion}
 

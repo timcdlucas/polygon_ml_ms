@@ -31,7 +31,7 @@
 \begin{center}
 {Tim C. D. Lucas*\textsuperscript{1}; Anita Nandi\textsuperscript{1}; Michele Nguyen\textsuperscript{1}; 
 Susan Rumisha\textsuperscript{1}; 
-Katherine E. Battle\textsuperscript{1}; Rosalind E. Howes\textsuperscript{1}; Andre Python\textsuperscript{1}; Penny Hancock\textsuperscript{1}; Punam Someone\textsuperscript{1};
+Katherine E. Battle\textsuperscript{1}; Rosalind E. Howes\textsuperscript{1}; Andre Python\textsuperscript{1}; Penny Hancock\textsuperscript{1}; Punam Amratia\textsuperscript{1};
 Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel~J.~Weiss\textsuperscript{1}.}\\
 {1. Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - timcdlucas@gmail.com}\\ 
 
@@ -119,6 +119,7 @@ For Colombia we used all points from South America (locations = 522, individuals
 We chose these geographic regions based on a trade-off between wanting a large sample size but wanting data from geographically similar areas.
 Our response variable was prevalence and we weighted the data by sample size (i.e.\thinspace the number of people tested for malaria in each survey.
 For each model we ran  five-fold cross-validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
+Root mean square error (RMSE) was used to select the best performing model.
 Predictions from these models were then made across each country respectively.
 These predictions were finally empirical logit transformed so that they are on the linear predictor scale of the top level model.
 An empirical logit was used rather than a standard logit as there were many predictions of exactly zero.
@@ -181,24 +182,8 @@ We also examined the calibration of models by calculating the proportion of held
 
 \section{Results}
 
-Table \ref{t:results} gives the correlation between observed and held out data (under random and spatially cross-validation) for models that use environmental covariates only, local machine learning models only and a combination of the two.
-Many of the differences in performance are rather marginal.
-Overall, in only one case (random cross-validation in Senegal) is Enviro the best performing model while under spatially cross-validation in Senegal Enviro and Envir + ML\textsubscript{l} perform equally well.
-Of the remaining six cases, in three cases ML\textsubscript{l} performs best and in three cases Envir + ML\textsubscript{l} performs best.
-The greatest benefits in predictive performance occur under spatial cross validation and in the cases when the Enviro model is particularly poor.
 
-Table \ref{t:results2} gives the correlation between observed and held out data (under random and spatially cross-validation) for models that use environmental covariates only, global machine learning models only and a combination of the local and global machine learning models.
-In five cases, Enviro is the best or tied best performing model.
-In only one case in the ML\textsubscript{g} model the best.
-Comparing across Tables \ref{t:results} and \ref{t:results2} we can see that ML\textsubscript{g} is never the best performing model.
-In only three cases (Spatial Colombia, Spatial Senegal and Spatial Indonesia) does ML\textsubscript{g} outperform ML\textsubscript{l}.
-
-
-Figures~\ref{f:scatter1} and \ref{f:scatter2} show the model performance under random and spatial cross-validation for all countries. 
-
-
-
-\begin{table}[h!]
+\begin{table}[t!]
 \caption{Pearson correlations between observed and predicted values. }
 \centering
 \begin{tabular}{llrrrr}
@@ -218,9 +203,46 @@ Country &  Cross-validation & Enviro &  ML\textsubscript{l} &  Enviro + ML\texts
 
 
 
+Table \ref{t:results} gives the correlation between observed and held out data (under random and spatially cross-validation) for models that use environmental covariates only, local machine learning models only and a combination of the two.
+Many of the differences in performance are rather marginal.
+Overall, in only one case (random cross-validation in Senegal) is Enviro the best performing model while under spatially cross-validation in Senegal Enviro and Envir + ML\textsubscript{l} perform equally well.
+Of the remaining six cases, in three cases ML\textsubscript{l} performs best and in three cases Envir + ML\textsubscript{l} performs best.
+The greatest benefits in predictive performance occur under spatial cross validation and in the cases when the Enviro model is particularly poor.
+
+Table \ref{t:results2} gives the correlation between observed and held out data (under random and spatially cross-validation) for models that use environmental covariates only, global machine learning models only and a combination of the local and global machine learning models.
+In five cases, Enviro is the best or tied best performing model.
+In only one case in the ML\textsubscript{g} model the best.
+Comparing across Tables \ref{t:results} and \ref{t:results2} we can see that ML\textsubscript{g} is never the best performing model.
+In only three cases (Spatial Colombia, Spatial Senegal and Spatial Indonesia) does ML\textsubscript{g} outperform ML\textsubscript{l}.
 
 
-\begin{table}[h!]
+Figures~\ref{f:scatter1} shows scatter plots of the model performance under random cross-validation for all countries and all models.
+Figures~\ref{f:scatter2} shows scatter plots of the model performance under spatial cross-validation for all countries and all models.
+It can be seen that without environmental covariates, the models in Madagascar fail to predict very high or very low values correctly.
+Figure~\ref{f:map} shows the input data and out-of-sample predictions of the ML\textsubscript{l} model in Colombia.
+Table~\ref{t:coverage} shows the out-of-sample coverage of the 80\% credible intervals for all models, countries and cross-validation schemes.
+The coverage in Colombia is very poor with no models achieving a coverage above 0.4.
+Otherwise the coverage is generally acceptable with most values lying between 0.7 and 0.9.
+Over there is a general tendancy for models to be slightly over confident.
+
+
+We can examine the relationship between the RMSE of the machine learning models to their fitted regression coefficients (weights).
+These values are given in Table~\ref{t:mlresults} (with the RMSE of the global models being copied four times).
+In all five sets of machine learning models, Random Forest performs the best.
+While we have not forced $\beta_i > 0$, the priors for these coefficients were positive.
+In nearly all cases the fitted values are positive.
+If the prevalence data and incidence data are not biased relative to each other we would expect the models with the lowest RMSE to also have the biggest regression coefficient.
+This occurs in four cases where Random Forest has the lowest RMSE and the biggest coefficient.
+In a further two cases, Random Forest has the lowest RMSE but GBM has the highest coefficient.
+The predictions from Random Forest and GBM are highly correlated in part because they both perform well and because they are both tree based models.
+Finally, it can be seen that relationship between RMSE and regression coefficients is much weaker in Indonesia.
+For the models trained on local data a neural network has the highest fitted coefficient while for the models trained on global data an elastic net has the highest fitted coefficient.
+These model both produce very smooth estimates relative to the tree based methods.
+
+
+
+
+\begin{table}[t!]
 \caption{Pearson correlations between observed and predicted values. }
 \centering
 \begin{tabular}{llrrrr}
@@ -289,6 +311,26 @@ Country &  Cross-validation & Enviro &   ML\textsubscript{g} & ML\textsubscript{
 \end{figure}
 
 
+\begin{table}[h!]
+\caption{Covarage of 80\% credible intervals. Values outside 0.7--0.9 are shown in bold.}
+\centering
+\begin{tabular}{llrrrrr}
+Country &  CV & Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
+\hline 
+ Colombia & Random & \textbf{0.28} & \textbf{0.28} & \textbf{0.29} & \textbf{0.29} & \textbf{0.29} \\
+ Madagascar &  Random & 0.80 & 0.77& 0.75& 0.77& 0.76 \\
+ Senegal & Random &0.79 & 0.79& 0.79& 0.79& 0.82 \\
+ Indonesia & Random &0.80 & 0.81& 0.78& 0.79& 0.77  \\
+ Colombia &  Spatial & \textbf{0.31} & \textbf{0.34}  & \textbf{0.32} & \textbf{0.34} & \textbf{0.34}  \\
+ Madagascar & Spatial & \textbf{0.65} & 0.74& 0.70& 0.75 & 0.76   \\
+ Senegal & Spatial & 0.85 & \textbf{0.91}& 0.85& \textbf{0.94} & 0.85  \\
+  Indonesia & Spatial & 0.80 & 0.78& 0.78& 0.76& 0.75  \\
+\end{tabular}
+\label{t:coverage}
+\end{table}
+
+
+
 
 \begin{table}
 \caption{Machine learning model results and fitted parameters (i.e.\thinspace model weights) of the machine learning predictions only models (local only and global only). }
@@ -321,26 +363,6 @@ Indonesia & ppr & 0.089 & 0.364 & 0.205 &  0.089\vspace{0.3cm}\\
 \label{t:mlresults}
 \end{table}
 
-
-
-
-\begin{table}[h!]
-\caption{Covarage of 80\% credible intervals. Values outside 0.7--0.9 are shown in bold.}
-\centering
-\begin{tabular}{llrrrrr}
-Country &  CV & Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
-\hline 
- Colombia & Random & \textbf{0.28} & \textbf{0.28} & \textbf{0.29} & \textbf{0.29} & \textbf{0.29} \\
- Madagascar &  Random & 0.80 & 0.77& 0.75& 0.77& 0.76 \\
- Senegal & Random &0.79 & 0.79& 0.79& 0.79& 0.82 \\
- Indonesia & Random &0.80 & 0.81& 0.78& 0.79& 0.77  \\
- Colombia &  Spatial & \textbf{0.31} & \textbf{0.34}  & \textbf{0.32} & \textbf{0.34} & \textbf{0.34}  \\
- Madagascar & Spatial & \textbf{0.65} & 0.74& 0.70& 0.75 & 0.76   \\
- Senegal & Spatial & 0.85 & \textbf{0.91}& 0.85& \textbf{0.94} & 0.85  \\
-  Indonesia & Spatial & 0.80 & 0.78& 0.78& 0.76& 0.75  \\
-\end{tabular}
-\label{t:results2}
-\end{table}
 
 
 
@@ -416,14 +438,22 @@ Indonesia & ppr &  &  0.45& 0.32\\
 
 \section{Discussion}
 
-\section{Conclusions}
 
 Overall, our experiments suggest that using predictions from machine learning models trained on prevalence points provides more accurate predictions than using environmental covariates when fitting disaggregation models of malaria incidence.
 This increased performance comes despite the data being on different scales, the data being measurements of different aspects of malaria transmission and despite the imperfect model we have used to translate between the two scales.
-However, the reduced model accuracy in the spatial cross-validation schemes, relative to the random cross-validation scheme, highlights that better spatial coverage of data would improve predictions more than the improved model we have suggested.
+However, there is no clear best model between ML\textsubscript{l} and Enviro + ML\textsubscript{l}.
+Therefore, when using these methods, both of these models should be fitted and the most predictive model selected for a given dataset.
+Furthermore, many of the performance improvements are rather marginal. 
+However, in a few cases such as Colombia and Madagascar under spatial cross-validation the performance boost is large.
+For example, using just environmental covariates in Colombia under spatial cross-validation gives a correlation between observed and predicted data of 0.12.
+Such a model would be unusable for any applied or policy work.
+In contrast, using the predictions from the machine learning models trained on local data gives a correlation value of 0.33, which while still poor is possibly useable.
 
-Due to the low power of typical aggregated incidence datasets, previous analyses using disaggregation regression used a small number of covariates \citep{sturrock2014fine}.
-However, as models such as Random Forest and elastic net can robustly handle high dimensional data, future work could include many more covariates, potentially increasing predictive performance.
+As expected, the model performance was generally worse under spatial cross-validation than under random cross-validation.
+This implies that the models are still relying heavily on the spatial Gaussian random field.
+Furthermore, the difference between random and spatial cross-validation is usually bigger than the difference between different models.
+This suggests that better data coverage is more important than which specific model is used.
+
 
 % this method is an improvement
 % still reliant on spatial field
@@ -431,16 +461,35 @@ However, as models such as Random Forest and elastic net can robustly handle hig
 % allows broad suite of covariates
 
 % sum to one stacking
+
 % global ml models, local experts
+
+Overall, the models fitted using predictions from machine learning models trained on the global database of prevalence point-surveys were less good than those using predictions from machine learning models trained on local data.
+This in itself is not particularly surprising.
+However, it does indicate that continental scale models should consider using a mosaic of locally trained machine learning models for example.
+What is more surprising is that using both the ML\textsubscript{l} and ML\textsubscript{g} covariates together did not improve performance given that this approach of creating diverse predictions is a core element of stacking methodology.
 
 While the approach presented here is related to stacking, it differs in that we have not constrained the regression parameters to be positive nor included a sum-to-one constraint i.e.\thinspace the result is not simply a weighted average of the level zero model predictions.
 We did not include these constraints because the base models and the meta model are trained on response data on different scales.
-However, future work could examine whether using a positive constraint on the regression parameters improves performance.
+However, given our priors, nearly all the fitted regression coefficients in models with only machine learning predictions were positive.
+Therefore, in practice these models are working in a way similar to standard stacking.
+However, the coefficients certainly do not sum to one, and fitted intercepts are very small to account for this.
 
-Another area of potential improvement is varying the data used to train the base level learners.
-Here we only used data from the region of interest.
-However, the global dataset is much larger than these subsets.
-Training some base level models on local data and some on the global dataset and then combining predictions from all these models has potential to further improve model performance.
+
+Due to the low power of typical aggregated incidence datasets, previous analyses using disaggregation regression used a small number of covariates \citep{sturrock2014fine}.
+However, as models such as Random Forest and elastic net can robustly handle high dimensional data, future work could include many more covariates in the machine learning models, potentially increasing predictive performance.
+However, to make comparisons more easy, here we have used the same environmental covariates in the machine learning models and in the Enviro disaggregation regression models.
+
+
+
+\section{Conclusions}
+
+Overall we find that including predictions from machine learning models trained on prevalence point-surveys typically improves the performance of disaggregation regression models for malaria incidence.
+Training the machine learning models on local data gave much better performance, but how local the data should be remains an open question.
+As more countries start providing timely and accurate routine surveillance data of malaria cases disaggregation regression may become more popular.
+We have here presented a method for improving these models by using ancillary data.
+
+
 
 \section*{Acknowledgments}
 The authors acknowledge the National Malaria Control Programme of Madagascar for sharing their routine case data for this analysis.

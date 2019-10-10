@@ -94,6 +94,7 @@ While there isn't one consistently best model, we find that in nearly all cases,
 We used two data sources that reflect \emph{Plasmodium falciparum} malaria transmission; point-prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Madagascar, Colombia, Indonesia and Senegal as case examples as they all have fairly complete, publicly available, surveillance data at a finer geographical resolution than admin 1.
 The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect, guerra2007assembling, pfeffer2018ma}.
+While the data cover a large time period, we did not model time explicitely but future work could include this component.
 The prevalence points were then standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}.
 
 The polygon incidence data were collected from government reports and standardised using methods defined in \cite{cibulskis2011worldwide}.
@@ -202,16 +203,16 @@ Figures~\ref{f:scatter1} and \ref{f:scatter2} show the model performance under r
 \caption{Pearson correlations between observed and predicted values. }
 \centering
 \begin{tabular}{llrrrr}
-Cross-validation scheme & Country &  Enviro &  ML\textsubscript{l} &  Enviro + ML\textsubscript{l} \\
+Country &  Cross-validation & Enviro &  ML\textsubscript{l} &  Enviro + ML\textsubscript{l} \\
 \hline 
- Random &  Colombia & 0.59 & 0.59 & \textbf{0.61} \\
- Spatial &  Colombia &  0.12 &  \textbf{0.33} &  0.25\\
- Random &  Madagascar &  0.70 &  \textbf{0.73} & 0.69 \\
- Spatial &  Madagascar &  0.22 &  \textbf{0.66} & 0.18\\
- Random &  Senegal &  \textbf{0.58} &  0.51 & 0.57 \\
- Spatial &  Senegal &  \textbf{0.63} &  0.27 &  \textbf{0.63} \\
- Random &  Indonesia &  0.52 &  0.48 &  \textbf{0.59} \\
- Spatial &  Indonesia &  0.45 &  0.44 &  \textbf{0.51} \\
+ Colombia & Random &  0.59 & 0.59 & \textbf{0.61} \\
+ Colombia &  Spatial &  0.12 &  \textbf{0.33} &  0.25\\
+ Madagascar & Random &   0.70 &  \textbf{0.73} & 0.69 \\
+ Madagascar &  Spatial &  0.22 &  \textbf{0.66} & 0.18\\
+ Senegal &  Random &  \textbf{0.58} &  0.51 & 0.57 \\
+ Senegal &  Spatial &  \textbf{0.63} &  0.27 &  \textbf{0.63} \\
+ Indonesia &  Random &  0.52 &  0.48 &  \textbf{0.59} \\
+ Indonesia &  Spatial &  0.45 &  0.44 &  \textbf{0.51} \\
 \end{tabular}
 \label{t:results}
 \end{table}
@@ -224,16 +225,16 @@ Cross-validation scheme & Country &  Enviro &  ML\textsubscript{l} &  Enviro + M
 \caption{Pearson correlations between observed and predicted values. }
 \centering
 \begin{tabular}{llrrrr}
-Cross-validation scheme & Country &  Covariates &   ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
+Country &  Cross-validation & Enviro &   ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
 \hline 
- Random &  Colombia & \textbf{0.59} &0.58 & 0.56 \\
- Spatial &  Colombia &  0.12 &  0.18 & \textbf{0.34}\\
- Random &  Madagascar &  0.70 &  0.70 & \textbf{0.71} \\
- Spatial &  Madagascar &  0.22 &  \textbf{0.63} & 0.60\\
- Random &  Senegal &  \textbf{0.58} &  0.30 & 0.08 \\
- Spatial &  Senegal &  \textbf{0.63} & 0.36 & 0.35 \\
- Random &  Indonesia &  \textbf{0.52} & 0.46 & 0.32 \\
- Spatial &  Indonesia &  \textbf{0.45} & 0.41 & \textbf{0.45} \\
+ Colombia & Random &  \textbf{0.59} &0.58 & 0.56 \\
+ Colombia &  Spatial &  0.12 &  0.18 & \textbf{0.34}\\
+ Madagascar &  Random &  0.70 &  0.70 & \textbf{0.71} \\
+ Madagascar &  Spatial &  0.22 &  \textbf{0.63} & 0.60\\
+ Senegal &  Random &  \textbf{0.58} &  0.30 & 0.08 \\
+ Senegal &  Spatial &  \textbf{0.63} & 0.36 & 0.35 \\
+ Indonesia &  Random &  \textbf{0.52} & 0.46 & 0.32 \\
+ Indonesia &  Spatial &  \textbf{0.45} & 0.41 & \textbf{0.45} \\
 \end{tabular}
 \label{t:results2}
 \end{table}
@@ -320,6 +321,29 @@ Indonesia & ppr & 0.089 & 0.364 & 0.205 &  0.089\vspace{0.3cm}\\
 \end{tabular}
 \label{t:mlresults}
 \end{table}
+
+
+
+
+\begin{table}[h!]
+\caption{Covarage of 80\% credible intervals. }
+\centering
+\begin{tabular}{llrrrr}
+CV & Country &  Enviro & ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
+\hline 
+ Random &  Colombia &  \\
+ Spatial &  Colombia &  \\
+ Random &  Madagascar &  \\
+ Spatial &  Madagascar & \\
+ Random &  Senegal & \\
+ Spatial &  Senegal &  \\
+ Random &  Indonesia &  \\
+ Spatial &  Indonesia &   \\
+\end{tabular}
+\label{t:results2}
+\end{table}
+
+
 
 \section{Discussion}
 

@@ -161,11 +161,11 @@ This analysis did not find any benefits to this approach so it was not considere
 
 
 We compared the performance of the models with five sets of covariates, $X$.
-Firstly, we used the environmental and anthropogenic covariates, centered and standardised as a baseline model.
-Secondly, we used the predictions from the machine learning models trained on local data.
-Thirdly, we combined the predictions from the machine learning models and the environmental coviarates in one model.
-Fourthly, we used predictions from the machine learning models trained on the global data.
-Finally, we combined predictions from the machine learning models trained on regional data and global data.
+Firstly, we used the environmental and anthropogenic covariates, centered and standardised as a baseline model (subsequantly called Enviro).
+Secondly, we used the predictions from the machine learning models trained on local data (ML\textsubscript{l}).
+Thirdly, we combined the predictions from the machine learning models and the environmental coviarates in one model (Enviro + ML\textsubscript{l}).
+Fourthly, we used predictions from the machine learning models trained on the global data (ML\textsubscript{g}).
+Finally, we combined predictions from the machine learning models trained on regional data and global data (ML\textsubscript{l} + ML\textsubscript{g}).
 
 To compare the five models we used two cross-validation schemes. 
 In the first, polygon incidence data was randomly split into six cross-validation folds.
@@ -349,6 +349,8 @@ Here we only used data from the region of interest.
 However, the global dataset is much larger than these subsets.
 Training some base level models on local data and some on the global dataset and then combining predictions from all these models has potential to further improve model performance.
 
+\section*{Acknowledgments}
+The authors acknowledge the National Malaria Control Programme of Madagascar for sharing their routine case data for this analysis.
 
 \bibliography{Malaria} 
 \bibliographystyle{apalike}

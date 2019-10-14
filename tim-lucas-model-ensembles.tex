@@ -28,15 +28,36 @@
 % Model ensembles with different response variables for base and meta models:
 
 
-\begin{center}
-{Tim C. D. Lucas*\textsuperscript{1}; Anita Nandi\textsuperscript{1}; Michele Nguyen\textsuperscript{1}; 
-Susan Rumisha\textsuperscript{1}; 
-Katherine E. Battle\textsuperscript{1}; Rosalind E. Howes\textsuperscript{1}; Andre Python\textsuperscript{1}; Penny Hancock\textsuperscript{1}; Punam Amratia\textsuperscript{1};
-Ewan Cameron\textsuperscript{1}; Pete Gething\textsuperscript{1}; Daniel~J.~Weiss\textsuperscript{1}.}\\
-{1. Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK - timcdlucas@gmail.com}\\ 
+%\begin{center}
+{
+\noindent Tim C. D. Lucas*\textsuperscript{1}; 
+Anita K. Nandi\textsuperscript{1},
+Emma L. Collins\textsuperscript{1},
+Suzanne H. Keddie\textsuperscript{1},
+Katherine A. Twohig\textsuperscript{1},
+Elisabeth G. Chestnutt\textsuperscript{1},
+Rosalind E. Howes\textsuperscript{1},
+Michele Nguyen\textsuperscript{1},
+Susan F. Rumisha\textsuperscript{1},
+Andre Python\textsuperscript{1},
+Rohan Arambepola\textsuperscript{1},
+Amelia Bertozzi-Villa\textsuperscript{1, 2},
+Penelope Hancock\textsuperscript{1},
+Punam Amratia\textsuperscript{1},
+Katherine E. Battle\textsuperscript{1},
+Ewan Cameron\textsuperscript{1},
+Peter W. Gething\textsuperscript{1, 3, 4},
+Daniel J. Weiss\textsuperscript{1}}\vspace{0.4cm}\\
+
+{
+\noindent 1. Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK \\
+2. Institute for Disease Modeling, Bellevue WA, USA\\
+3. Telethon Kids Institute, Perth Children’s Hospital, Perth, Australia\\
+4. Curtin University, Perth, Australia\\
+* timcdlucas@gmail.com}\\ 
 
 
-\end{center}
+%\end{center}
 \section{Abstract}
 
 
@@ -189,7 +210,7 @@ We also examined the calibration of models by calculating the proportion of held
 \begin{tabular}{llrrrr}
 Country &  Cross-validation & Enviro &  ML\textsubscript{l} &  Enviro + ML\textsubscript{l} \\
 \hline 
- Colombia & Random &  0.59 & 0.59 & \textbf{0.61} \\
+ Colombia & Random &  \textbf{0.59} & \textbf{0.59} & 0.58 \\
  Colombia &  Spatial &  0.12 &  \textbf{0.33} &  0.25\\
  Madagascar & Random &   0.70 &  \textbf{0.73} & 0.69 \\
  Madagascar &  Spatial &  0.22 &  \textbf{0.66} & 0.18\\
@@ -248,8 +269,8 @@ These model both produce very smooth estimates relative to the tree based method
 \begin{tabular}{llrrrr}
 Country &  Cross-validation & Enviro &   ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
 \hline 
- Colombia & Random &  \textbf{0.59} &0.58 & 0.56 \\
- Colombia &  Spatial &  0.12 &  0.18 & \textbf{0.34}\\
+ Colombia & Random &  \textbf{0.59} &0.58 & 0.55 \\
+ Colombia &  Spatial &  0.12 &  0.12 & \textbf{0.33}\\
  Madagascar &  Random &  0.70 &  0.70 & \textbf{0.71} \\
  Madagascar &  Spatial &  0.22 &  \textbf{0.63} & 0.60\\
  Senegal &  Random &  \textbf{0.58} &  0.30 & 0.08 \\
@@ -317,11 +338,11 @@ Country &  Cross-validation & Enviro &   ML\textsubscript{g} & ML\textsubscript{
 \begin{tabular}{llrrrrr}
 Country &  CV & Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
 \hline 
- Colombia & Random & \textbf{0.28} & \textbf{0.28} & \textbf{0.29} & \textbf{0.29} & \textbf{0.29} \\
+ Colombia & Random & \textbf{0.28} & \textbf{0.28} & \textbf{0.29} & \textbf{0.28} & \textbf{0.30} \\
  Madagascar &  Random & 0.80 & 0.77& 0.75& 0.77& 0.76 \\
  Senegal & Random &0.79 & 0.79& 0.79& 0.79& 0.82 \\
  Indonesia & Random &0.80 & 0.81& 0.78& 0.79& 0.77  \\
- Colombia &  Spatial & \textbf{0.31} & \textbf{0.34}  & \textbf{0.32} & \textbf{0.34} & \textbf{0.34}  \\
+ Colombia &  Spatial & \textbf{0.30} & \textbf{0.33}  & \textbf{0.33} & \textbf{0.33} & \textbf{0.34}  \\
  Madagascar & Spatial & \textbf{0.65} & 0.74& 0.70& 0.75 & 0.76   \\
  Senegal & Spatial & 0.85 & \textbf{0.91}& 0.85& \textbf{0.94} & 0.85  \\
   Indonesia & Spatial & 0.80 & 0.78& 0.78& 0.76& 0.75  \\
@@ -343,11 +364,11 @@ Madagascar & GBM & 0.105 & \textbf{0.570} & 0.178& 0.432 \\
 Madagascar & enet & 0.116 & 0.301 &0.233 & 0.262 \\
 Madagascar & nnet & 0.113 & 0.033 &0.220 & 0.364 \\
 Madagascar & ppr & 0.109 & 0.469 & 0.205 &  0.403\vspace{0.3cm}\\ 
-Colombia & RF & \textbf{0.068} & 0.505 &  \textbf{0.169} & \textbf{0.522}\\
-Colombia & GBM & 0.073 & \textbf{0.879} & 0.178& -0.231  \\
-Colombia & enet & 0.070 & 0.079 &0.233 & 0.080 \\
-Colombia & nnet & 0.070 & -0.008 &0.220 & 0.144 \\
-Colombia & ppr & 0.070 & 0.530 & 0.205 &  0.468\vspace{0.3cm}\\
+Colombia & RF & \textbf{0.068} & 0.625 &  \textbf{0.169} & \textbf{0.522}\\
+Colombia & GBM & 0.073 & \textbf{0.952} & 0.178& -0.231  \\
+Colombia & enet & 0.070 & 0.219 &0.233 & 0.080 \\
+Colombia & nnet & 0.070 & 0.129 &0.220 & 0.144 \\
+Colombia & ppr & 0.070 & 0.0.667 & 0.205 &  0.468\vspace{0.3cm}\\
 Senegal & RF & \textbf{0.092} & \textbf{0.339} & \textbf{0.169} & \textbf{0.425} \\
 Senegal & GBM & 0.099 & 0.261& 0.178& 0.408 \\
 Senegal & enet& 0.103 & 0.344  &0.233 & 0.205 \\

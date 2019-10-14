@@ -5,8 +5,8 @@
 \usepackage{geometry}
 \usepackage{subcaption}
 
-\usepackage{natbib}
 
+\usepackage[numbers, sort&compress]{natbib}
 %\setcitestyle{authoryear}
 
 
@@ -22,7 +22,7 @@
 
 \begin{center}
 %The title should be centred and in bold letters. It should be informative but not too long (preferably no more than two lines).
-\textbf{Model ensembles with different response variables for base and meta models: malaria disaggregation regression combining prevalence and incidence data}
+\textbf{Improving disaggregation models of malaria incidence by ensembling non-linear models of prevalence}
 \end{center}
 
 % Model ensembles with different response variables for base and meta models:
@@ -51,7 +51,7 @@ Daniel J. Weiss\textsuperscript{1}}\vspace{0.4cm}\\
 
 {
 \noindent 1. Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK \\
-2. Institute for Disease Modeling, Bellevue WA, USA\\
+2. Institute for Disease Modeling, Bellevue, WA, USA\\
 3. Telethon Kids Institute, Perth Children’s Hospital, Perth, Australia\\
 4. Curtin University, Perth, Australia\\
 * timcdlucas@gmail.com}\\ 
@@ -60,9 +60,6 @@ Daniel J. Weiss\textsuperscript{1}}\vspace{0.4cm}\\
 %\end{center}
 \section{Abstract}
 
-
-
-% This is where the abstract is placed. It should include a statement about the problem being addressed in the presentation (and paper, if submitted). Continue with a discussion of why it is important to address this problem. This may be followed by some summary information about the models and methods developed and/or used to address the problem. Conclude with a description of the key results and contributions that will be covered in the presentation (and paper).\\
 
 Maps of infection rate are one of the core tools needed for the elimination of malaria.
 Reliable routine surveillance data of malaria incidence is becoming more widely available and can better measure low malaria risk than prevalence point-surveys.
@@ -226,7 +223,8 @@ Country &  Cross-validation & Enviro &  ML\textsubscript{l} &  Enviro + ML\texts
 
 Table \ref{t:results} gives the correlation between observed and held out data (under random and spatially cross-validation) for models that use environmental covariates only, local machine learning models only and a combination of the two.
 Many of the differences in performance are rather marginal.
-Overall, in only one case (random cross-validation in Senegal) is Enviro the best performing model while under spatially cross-validation in Senegal Enviro and Envir + ML\textsubscript{l} perform equally well.
+Overall, in only one case (random cross-validation in Senegal) is Enviro the best performing model.
+In two cases, Enviro perfoms equally well as another model: under spatially cross-validation in Senegal Enviro and Envir + ML\textsubscript{l} perform equally well, under random cross-validation in Colombia Enviro and ML\textsubscript{l} perform equally well.
 Of the remaining six cases, in three cases ML\textsubscript{l} performs best and in three cases Envir + ML\textsubscript{l} performs best.
 The greatest benefits in predictive performance occur under spatial cross validation and in the cases when the Enviro model is particularly poor.
 
@@ -516,7 +514,7 @@ We have here presented a method for improving these models by using ancillary da
 The authors acknowledge the National Malaria Control Programme of Madagascar for sharing their routine case data for this analysis.
 
 \bibliography{Malaria} 
-\bibliographystyle{apalike}
+\bibliographystyle{unsrt}
 
 
 

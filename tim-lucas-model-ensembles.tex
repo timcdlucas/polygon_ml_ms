@@ -5,8 +5,8 @@
 \usepackage{geometry}
 \usepackage{subcaption}
 
-
-\usepackage[numbers, sort&compress]{natbib}
+\usepackage{natbib}
+%\usepackage[numbers, sort&compress]{natbib}
 %\setcitestyle{authoryear}
 
 
@@ -61,13 +61,13 @@ Daniel J. Weiss\textsuperscript{1}}\vspace{0.4cm}\\
 \section{Abstract}
 
 
-Maps of infection rate are one of the core tools needed for the elimination of malaria.
-Reliable routine surveillance data of malaria incidence is becoming more widely available and can better measure low malaria risk than prevalence point-surveys.
-However, these data are often aggregated over large, heterogeneous areas which means that they are often underpowered for learning complex relationships between the environment and malaria risk.
+Maps of infection rate are one of the core tools needed for the control and elimination of malaria.
+As reliable routine surveillance data of malaria incidence becomes more widely available disaggregation regression is becoming an important model framework.
+However, the aggregation of incidence over large, heterogeneous areas means that they are often underpowered for learning complex, non-linear relationships between the environment and malaria risk.
 In contrast, prevalence point-surveys are directly linked to loval environmental conditions but are not common in many areas of the world.
-A model that combines point surveys and aggregated surveillance data could have the benefits of both but must be able to account for the fact that these two data types are different malariometric units.
-Here, we train multiple machine learning models on prevalence point-surveys and then combine the predictions from these with a geostatistical disaggregation model that uses routine surveillance data.
-We find that, in four national case studies, using a disaggregation regression model to combine predictions from machine learning models trained on point surveys improves model accuracy relative to a baseline disaggregation regression model that uses the environmental covariates only.                                  
+A model that combines point surveys and aggregated surveillance data could have the benefits of both but must be able to account for the fact that these two data types measure different malariometric units.
+Here, we train multiple non-linear, machine learning models on prevalence point-surveys and then ensemble the predictions from these with a geostatistical disaggregation model that uses routine surveillance data.
+We find that, in four national case studies, using a disaggregation regression model to combine predictions from machine learning models trained on prevalence point-surveys improves model accuracy relative to a baseline disaggregation regression model that uses linear effects of the environmental covariates only.                                  
 
 {\bf Keywords}: Spatial statistics; Ensemble; Stacking; Epidemiology.
 }\\
@@ -248,10 +248,10 @@ Over there is a general tendancy for models to be slightly over confident.
 We can examine the relationship between the RMSE of the machine learning models to their fitted regression coefficients (weights).
 These values are given in Table~\ref{t:mlresults} (with the RMSE of the global models being copied four times).
 In all five sets of machine learning models, Random Forest performs the best.
-While we have not forced $\beta_i > 0$, the priors for these coefficients were positive.
+We have not forced $\beta_i > 0$ but we have set the priors for these coefficients with a positive mean.
 In nearly all cases the fitted values are positive.
 If the prevalence data and incidence data are not biased relative to each other we would expect the models with the lowest RMSE to also have the biggest regression coefficient.
-This occurs in four cases where Random Forest has the lowest RMSE and the biggest coefficient.
+This occurs in three cases where Random Forest has the lowest RMSE and the biggest coefficient.
 In a further two cases, Random Forest has the lowest RMSE but GBM has the highest coefficient.
 The predictions from Random Forest and GBM are highly correlated in part because they both perform well and because they are both tree based models.
 Finally, it can be seen that relationship between RMSE and regression coefficients is much weaker in Indonesia.
@@ -362,11 +362,11 @@ Madagascar & GBM & 0.105 & \textbf{0.570} & 0.178& 0.432 \\
 Madagascar & enet & 0.116 & 0.301 &0.233 & 0.262 \\
 Madagascar & nnet & 0.113 & 0.033 &0.220 & 0.364 \\
 Madagascar & ppr & 0.109 & 0.469 & 0.205 &  0.403\vspace{0.3cm}\\ 
-Colombia & RF & \textbf{0.068} & 0.625 &  \textbf{0.169} & \textbf{0.522}\\
-Colombia & GBM & 0.073 & \textbf{0.952} & 0.178& -0.231  \\
-Colombia & enet & 0.070 & 0.219 &0.233 & 0.080 \\
-Colombia & nnet & 0.070 & 0.129 &0.220 & 0.144 \\
-Colombia & ppr & 0.070 & 0.0.667 & 0.205 &  0.468\vspace{0.3cm}\\
+Colombia & RF & \textbf{0.068} & 0.625 &  \textbf{0.169} & 0.180\\
+Colombia & GBM & 0.073 & \textbf{0.952} & 0.178& -0.218  \\
+Colombia & enet & 0.070 & 0.219 &0.233 & 0.183 \\
+Colombia & nnet & 0.070 & 0.129 &0.220 & 0.527 \\
+Colombia & ppr & 0.070 & 0.0.667 & 0.205 &  \textbf{0.546}\vspace{0.3cm}\\
 Senegal & RF & \textbf{0.092} & \textbf{0.339} & \textbf{0.169} & \textbf{0.425} \\
 Senegal & GBM & 0.099 & 0.261& 0.178& 0.408 \\
 Senegal & enet& 0.103 & 0.344  &0.233 & 0.205 \\
@@ -450,7 +450,7 @@ Indonesia & ppr &  &  0.45& 0.32\\
 
 
 \end{tabular}
-\label{t:mlresults}
+\label{t:mlresults2}
 \end{table}
 
 
@@ -514,8 +514,8 @@ We have here presented a method for improving these models by using ancillary da
 The authors acknowledge the National Malaria Control Programme of Madagascar for sharing their routine case data for this analysis.
 
 \bibliography{Malaria} 
-\bibliographystyle{unsrt}
-
+%\bibliographystyle{unsrt}
+\bibliographystyle{apalike}
 
 
 

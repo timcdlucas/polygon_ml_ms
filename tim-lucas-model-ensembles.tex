@@ -98,16 +98,19 @@ This data is therefore often under-powered for fitting flexible, non-linear mode
 A model that combines prevalence point-surveys and aggregated surveillance data, and therefore leverages the strength of both, has great potential.
 
 Here we propose training a suite of level-zero machine learning models on point-level, binomial prevalence data and combining these predictions by using them as covariates in a polygon-level, Poisson incidence model.
-This modelling scheme has similarities to previous stacking methods used for malaria mapping \citep{bhatt2017improved}.
+This modelling scheme has similarities to previous stacking methods used for malaria mapping \citep{bhatt2017improved} and elsewhere \citep{wolpert1992stacked, sill2009feature, hao2019review, breiman1996stacked}.
 However, as the response data in the level-zero models and the stacker are on different scales (prevalence is a proportion while incidence is a rate) there are a number of important differences.
-Notably, we cannot simply take a weighted average of the predictions from the level-zero models; they need to be transformed to the incidence scale and some additional flexibility to allow for mispecification of this transform needs to be allowed.
+Notably, we cannot simply take a weighted average of the predictions from the level-zero models as in a standard stacking scheme \citep{sill2009feature, hao2019review}.
+Instead the predictions  need to be transformed to the incidence scale with a seperately fitted model \citep{cameron2015defining}.
+This scheme is also similar to applications in other disease contexts where data from vector or host species are used to train models, the predictions from which are then used in a final model \citep{pigott2014mapping, shearer2016estimating}.
+In those applications we would always expect to need additional covariates as well the modelled distributions of hosts or vectors while in this application, because both sets of data are direct measures of some aspect of malaria transmission rate, it is possible that we would need no further covariates. 
 
-Model stacking has proven effective in many realms \citep{sill2009feature, bhatt2017improved, hao2019review}. 
-Stacking improves predictions by controlling bias and variance; as long as suitably diverse models are averaged, they will have different biases while high variance in models should be averaged out even in relatively similar models.
+Model stacking \citep{wolpert1992stacked} has proven effective in many realms \citep{breiman1996stacked, sill2009feature, bhatt2017improved, hao2019review}. 
+Stacking improves predictions by controlling bias and variance; as long as suitably diverse models are averaged, they will have different biases while high variance in models should be averaged out.
 This understanding of how stacking improves model performance indicates that diversity in models is important for stacking to be effective.
-Diversity in models is typically created in two ways: by using diverse training datasets (as in Random Forests for example) and by using functionally different models (for example by averaging tree based models and neural networks).
+Diversity in models is typically created in two ways: by using diverse training datasets\citep{breiman1996bagging} (as in Random Forests for example) and by using functionally different models (for example by averaging tree based models and neural networks) \citep{breiman1996stacked}.
 One important trade-off in spatial modelling is whether to use local data (with a smaller sample size but that is likely to be representative of the area of study) or global data that have a larger sample size but a less close association with the areas of study.
-In the context of malaria mapping, we can think about diversity of training data in this context and expect that stacking seperate models trained on local and global data will also increase the diversity of predictions in a useful way.
+For the application of malaria mapping, we can think about diversity of training data in this context and expect that stacking seperate models trained on local and global data will also increase the diversity of predictions in a useful way.
 
 To test the effectiveness of the proposed approach we use data from four countries: Madagascar, Colombia, Indonesia and Senegal.
 We train the machine learning models on both local and global data and examine a number of different combinations of covariates: just local or global machine learning predictions, or combining the two or combining local machine learning predictions with the raw environmental covariates.
@@ -178,7 +181,7 @@ This was based on a comparison of the variance of Poisson random variables, with
 We found that an \emph{iid} effect with a standard deviation of 0.05 would be able to account for the discrepancy between the assumed Poisson error and the independently derived error.
 
 Finally, we set different priors on the regression coefficients depending on which covariates were used.
-When environmental covariates or a mix of environmental covariates and predictions from machine learning models were used we set the prior to be weakly regularising, $\beta_i \sim \operatorname{ Norm}(0, 0.4)$, such that it is unlikely that any single covariate could explain the full range of the response data.
+When environmental covariates or a mix of environmental covariates and predictions from machine learning models were used we set the prior to be weakly regularising, $\beta_i \sim \operatorname{Norm}(0, 0.4)$, such that it is unlikely that any single covariate could explain the full range of the response data.
 When only machine learning model predictions were used we set $\beta_i \sim \operatorname{ Norm}(\frac{1}{M}, 0.4)$ where $M$ is the number of machine learning models being used. 
 This prior  sets our \emph{a priori} expectation that all the machine learning prediction models are positively and equally correlated with incidence i.e. this prior encodes standard model averaging.
 It is important to note that this setup does not constitute true stacking in which we would enforce $\sum_i \beta_i = 1$ \citep{bhatt2017improved}.

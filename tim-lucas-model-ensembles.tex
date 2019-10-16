@@ -77,10 +77,16 @@ We find that, in four national case studies, using a disaggregation regression m
 \section{Introduction}
 
 
-%We need to switch to downscaling models
-%But they have issues of low power.
-%While prevalence points should not be primary data source, they should still be used.
-%One way is ML.
+% New plan
+
+% We need to do disaggregation but how do we do nonlinear
+
+% We can do machine learning on prevalence and then combine...
+
+% Stacking is a thing and has some nice theory.
+
+% We found that it worked ok.
+
 
 High-resolution maps of malaria risk are vital for control and elimination \citep{weiss2019mapping, battle2019mapping}.
 However, mapping malaria in lower burden countries presents new challenges as traditional mapping of prevalence from cluster-level surveys \citep{weiss2019mapping, bhatt2017improved, battle2019mapping, bhatt2015effect} is often not effective for two reasons.
@@ -91,6 +97,11 @@ However, the aggregation of cases over space means that the data may be relative
 This data is therefore often under-powered for fitting flexible, non-linear models as is required for accurate malaria maps \citep{bhatt2017improved, bhatt2015effect}. 
 A model that combines prevalence point-surveys and aggregated surveillance data, and therefore leverages the strength of both, has great potential.
 
+Here we propose training a suite of level-zero machine learning models on point-level, binomial prevalence data and combining these predictions by using them as covariates in a polygon-level, Poisson incidence model.
+This modelling scheme has similarities to previous stacking methods used for malaria mapping \citep{bhatt2017improved}.
+However, as the response data in the level-zero models and the stacker are on different scales (prevalence is a proportion while incidence is a rate) there are a number of important differences.
+Notably, we cannot simply take a weighted average of the predictions from the level-zero models; they need to be transformed to the incidence scale and some additional flexibility to allow for mispecification of this transform needs to be allowed.
+
 Model stacking has proven effective in many realms \citep{sill2009feature, bhatt2017improved, hao2019review}. 
 Stacking improves predictions by controlling bias and variance; as long as suitably diverse models are averaged, they will have different biases while high variance in models should be averaged out even in relatively similar models.
 This understanding of how stacking improves model performance indicates that diversity in models is important for stacking to be effective.
@@ -98,11 +109,7 @@ Diversity in models is typically created in two ways: by using diverse training 
 One important trade-off in spatial modelling is whether to use local data (with a smaller sample size but that is likely to be representative of the area of study) or global data that have a larger sample size but a less close association with the areas of study.
 In the context of malaria mapping, we can think about diversity of training data in this context and expect that stacking seperate models trained on local and global data will also increase the diversity of predictions in a useful way.
 
-Here we propose training a suite of level-zero machine learning models on point-level, binomial prevalence data and stacking these models with a polygon-level, Poisson incidence model.
-This modelling scheme has similarities to previous stacking methods used for malaria mapping \citep{bhatt2017improved}.
-However, as the response data in the level-zero models and the stacker are on different scales (prevalence is a proportion while incidence is a rate) there are a number of important differences.
-Notably, we cannot simply take a weighted average of the predictions from the level-zero models; they need to be transformed to the incidence scale and some additional flexibility to allow for mispecification of this transform needs to be allowed.
-To test the effectiveness of this approach we use data from four countries: Madagascar, Colombia, Indonesia and Senegal.
+To test the effectiveness of the proposed approach we use data from four countries: Madagascar, Colombia, Indonesia and Senegal.
 We train the machine learning models on both local and global data and examine a number of different combinations of covariates: just local or global machine learning predictions, or combining the two or combining local machine learning predictions with the raw environmental covariates.
 While there isn't one consistently best model, we find that in nearly all cases, using some information from local machine learning models improves model performance.
 
@@ -225,8 +232,8 @@ Table \ref{t:results} gives the correlation between observed and held out data (
 Many of the differences in performance are rather marginal.
 Overall, in only one case (random cross-validation in Senegal) is Enviro the best performing model.
 In two cases, Enviro perfoms equally well as another model: under spatially cross-validation in Senegal Enviro and Envir + ML\textsubscript{l} perform equally well, under random cross-validation in Colombia Enviro and ML\textsubscript{l} perform equally well.
-Of the remaining six cases, in three cases ML\textsubscript{l} performs best and in three cases Envir + ML\textsubscript{l} performs best.
-The greatest benefits in predictive performance occur under spatial cross validation and in the cases when the Enviro model is particularly poor.
+Of the remaining five cases, in three cases ML\textsubscript{l} performs best and in two cases (random and spatial cross-validation in Indonesia) Envir + ML\textsubscript{l} performs best.
+The greatest benefits in predictive performance occur under spatial cross-validation and in the cases when the Enviro model is particularly poor.
 
 Table \ref{t:results2} gives the correlation between observed and held out data (under random and spatially cross-validation) for models that use environmental covariates only, global machine learning models only and a combination of the local and global machine learning models.
 In five cases, Enviro is the best or tied best performing model.

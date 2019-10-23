@@ -9,4 +9,6 @@
 *.zip
 *.bib.bak
 Template_paper_ISI_2017/*
-
+elsarticle-template/*
+*.out
+*.spl

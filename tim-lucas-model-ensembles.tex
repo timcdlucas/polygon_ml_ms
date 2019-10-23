@@ -113,13 +113,15 @@ However, the aggregation of cases over space means that the data may be relative
 This data is therefore often under-powered for fitting flexible, non-linear models as is required for accurate malaria maps \citep{bhatt2017improved, bhatt2015effect}. 
 A model that combines prevalence point-surveys and aggregated surveillance data, and therefore leverages the strength of both, has great potential.
 
-Here we propose training a suite of level-zero machine learning models on point-level, binomial prevalence data and combining these predictions by using them as covariates in a polygon-level, Poisson incidence model.
+Here we propose training a suite of level-zero machine learning models on point-level, binomial prevalence data and combining these predictions by using them as covariates in a level-one, polygon-level, Poisson incidence model.
 This modelling scheme has similarities to previous stacking methods used for malaria mapping \citep{bhatt2017improved} and elsewhere \citep{wolpert1992stacked, sill2009feature, hao2019review, breiman1996stacked}.
-However, as the response data in the level-zero models and the stacker are on different scales (prevalence is a proportion while incidence is a rate) there are a number of important differences.
+However, as the response data in the level-zero models and the level-one models are on different scales (prevalence is a proportion while incidence is a rate) there are a number of important differences.
 Notably, we cannot simply take a weighted average of the predictions from the level-zero models as in a standard stacking scheme \citep{sill2009feature, hao2019review}.
 Instead the predictions  need to be transformed to the incidence scale with a seperately fitted model \citep{cameron2015defining}.
-This scheme is also similar to applications in other disease contexts where data from vector or host species are used to train models, the predictions from which are then used in a final model \citep{pigott2014mapping, shearer2016estimating}.
-In those applications we would always expect to need additional covariates as well the modelled distributions of hosts or vectors while in this application, because both sets of data are direct measures of some aspect of malaria transmission rate, it is possible that we would need no further covariates. 
+Applications in other disease contexts have used a similar scheme where data from vector or wild-animal host species are used to train models, the predictions from which are then used in a final model \citep{pigott2014mapping, shearer2016estimating}.
+In such applications we would always expect to need additional covariates in additional to the modelled distributions of hosts or vectors.
+However, in the case examined here, both sets of data are direct measures of some aspect of malaria transmission rate, and therefore it is possible that we would need no further covariates. 
+
 
 Model stacking \citep{wolpert1992stacked} has proven effective in many realms \citep{breiman1996stacked, sill2009feature, bhatt2017improved, hao2019review}. 
 Stacking improves predictions by controlling bias and variance; as long as suitably diverse models are averaged, they will have different biases while high variance in models should be averaged out.
@@ -127,6 +129,7 @@ This understanding of how stacking improves model performance indicates that div
 Diversity in models is typically created in two ways: by using diverse training datasets\citep{breiman1996bagging} (as in Random Forests for example) and by using functionally different models (for example by averaging tree based models and neural networks) \citep{breiman1996stacked}.
 One important trade-off in spatial modelling is whether to use local data (with a smaller sample size but that is likely to be representative of the area of study) or global data that have a larger sample size but a less close association with the areas of study.
 For the application of malaria mapping, we can think about diversity of training data in this context and expect that stacking seperate models trained on local and global data will also increase the diversity of predictions in a useful way.
+
 
 To test the effectiveness of the proposed approach we use data from four countries: Madagascar, Colombia, Indonesia and Senegal.
 We train the machine learning models on both local and global data and examine a number of different combinations of covariates: just local or global machine learning predictions, or combining the two or combining local machine learning predictions with the raw environmental covariates.

@@ -247,9 +247,9 @@ Country &  Cross-validation & Enviro &  ML\textsubscript{l} &  Enviro + ML\texts
  Madagascar & Random &   \textbf{0.70} &  0.68 & 0.69 \\
  Madagascar &  Spatial &  0.22 &  \textbf{0.55} & 0.18\\
  Senegal &  Random &  \textbf{0.58} &  0.51 & 0.57 \\
- Senegal &  Spatial &  \textbf{0.63} &  0.51 &  \textbf{0.63} \\
- Indonesia &  Random &  0.58 &  0.48 &  \textbf{0.59} \\
- Indonesia &  Spatial &  \textbf{0.63} &  0.44 &  0.51 \\
+ Senegal &  Spatial &  0.63 &  0.51 &  0.63 \\
+ Indonesia &  Random &  0.52 &  0.48 &  \textbf{0.59} \\
+ Indonesia &  Spatial &  0.45 &  0.44 &  \textbf{0.51} \\
 \end{tabular}
 \label{t:results}
 \end{table}
@@ -300,13 +300,13 @@ In only three cases (Spatial Colombia, Spatial Senegal and Spatial Indonesia) do
 Country &  Cross-validation & Enviro &   ML\textsubscript{g} & ML\textsubscript{l} + ML\textsubscript{g} \\
 \hline 
  Colombia & Random &  \textbf{0.59} &0.55 & 0.58 \\
- Colombia &  Spatial &  0.12 &  \textbf{0.33} & 0.25\\
+ Colombia &  Spatial &  0.12 &  0.12 & \textbf{0.33}\\
  Madagascar &  Random &  \textbf{0.70} &  0.67 & 0.68 \\
- Madagascar &  Spatial &  0.22 &  \textbf{0.55} & 0.18\\
+ Madagascar &  Spatial &  0.22 &  0.51 & \textbf{0.55}\\
  Senegal &  Random &  \textbf{0.58} &  0.50 & 0.49 \\
- Senegal &  Spatial &  \textbf{0.63} & 0.51 & \textbf{0.63} \\
+ Senegal &  Spatial &   \textbf{0.63} & 0.55 & 0.52 \\
  Indonesia &  Random &  \textbf{0.52} & 0.32 & 0.46 \\
- Indonesia &  Spatial &  \textbf{0.63} & 0.44 & 0.51 \\
+ Indonesia &  Spatial &  0.45 & 0.41 & 0.45 \\
 \end{tabular}
 \label{t:results2}
 \end{table}
@@ -317,7 +317,7 @@ Figure~\ref{f:map} shows the input data and out-of-sample predictions of the ML\
 Table~\ref{t:coverage} shows the out-of-sample coverage of the 80\% credible intervals for all models, countries and cross-validation schemes.
 The coverage in Colombia is very poor with no models achieving a coverage above 0.4.
 Otherwise the coverage is generally acceptable with most values lying between 0.7 and 0.9.
-Over there is a general tendancy for models to be slightly over confident.
+Overall there is a general tendancy for models to be slightly over confident.
 
 
 We can examine the relationship between the RMSE of the machine learning models to their fitted regression coefficients (weights).
@@ -360,15 +360,15 @@ These model both produce very smooth estimates relative to the tree based method
 
 \begin{figure}
 \centering
-\includegraphics[trim={0 30mm 0 40mm}, width = 0.8\textwidth]{figs/col_obs_pred_map_ml.png} %\caption{Indonesia spatial crossvalidation} 
+\includegraphics[width = 1\textwidth]{figs/col_comparison_map.png} %\caption{Indonesia spatial crossvalidation} 
 \caption{
-  Left: Observed data for Colombia (grey for zero incidence). Right: Out-of-sample predictions for the random cross-validation, machine learning only model. For each cross-validation fold, predictions are made for the held out data which are then combined to make a single surface.
+  Left: Observed data for Colombia (grey for zero incidence). Middle: Out-of-sample predictions for the spatial cross-validation, environmental covariates only model. Right: Out-of-sample predictions for the spatial cross-validation, local machine learning only model. For each cross-validation fold, predictions are made for the held out data which are then combined to make a single surface.
 }
 \label{f:map}
 \end{figure}
 
 
-\begin{table}[h!]
+\begin{table}[t!]
 \caption{Covarage of 80\% credible intervals. Values outside 0.7--0.9 are shown in bold.}
 \centering
 \begin{tabular}{llrrrrr}
@@ -389,7 +389,7 @@ Country &  CV & Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & M
 
 
 
-\begin{table}
+\begin{table}[t!]
 \caption{Machine learning model results and fitted parameters (i.e.\thinspace model weights) of the machine learning predictions only models (local only and global only). }
 \centering
 \small
@@ -404,7 +404,7 @@ Colombia & RF & \textbf{0.068} & 0.625 &  \textbf{0.169} & 0.180\\
 Colombia & GBM & 0.073 & \textbf{0.952} & 0.178& -0.218  \\
 Colombia & enet & 0.070 & 0.219 &0.233 & 0.183 \\
 Colombia & nnet & 0.070 & 0.129 &0.220 & 0.527 \\
-Colombia & ppr & 0.070 & 0.0.667 & 0.205 &  \textbf{0.546}\vspace{0.3cm}\\
+Colombia & ppr & 0.070 & 0.667 & 0.205 &  \textbf{0.546}\vspace{0.3cm}\\
 Senegal & RF & \textbf{0.092} & \textbf{0.339} & \textbf{0.169} & \textbf{0.425} \\
 Senegal & GBM & 0.099 & 0.261& 0.178& 0.408 \\
 Senegal & enet& 0.103 & 0.344  &0.233 & 0.205 \\

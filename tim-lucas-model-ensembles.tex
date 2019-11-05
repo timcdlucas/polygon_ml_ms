@@ -131,10 +131,11 @@ One important trade-off in spatial modelling is whether to use local data (with 
 For the application of malaria mapping, we can think about diversity of training data in this context and expect that stacking seperate models trained on local and global data will also increase the diversity of predictions in a useful way.
 
 
-To test the effectiveness of the proposed approach we use data from four countries: Madagascar, Colombia, Indonesia and Senegal.
-We train the machine learning models on both local and global data and examine a number of different combinations of covariates: just local or global machine learning predictions, or combining the two or combining local machine learning predictions with the raw environmental covariates.
-While there isn't one consistently best model, we find that in nearly all cases, using some information from local machine learning models improves model performance.
-
+To test the effectiveness of the proposed approach we used data from four countries: Madagascar, Colombia, Indonesia and Senegal.
+We first examined whether using predictions from machine learning models trained on local prevalence data could improve predictions.
+We then tested whether using predictions from machine learning models trained on global data could improve predictions either on their own or when combined with predictions from machine learning models trained on local data.
+While there was not one consistently best model, we found that in nearly all cases, using predictions from local machine learning models improved model performance.
+In contrast, using predictions from machine learning models trained on the global prevalence dataset rarely improved predictive performance.
 
 \section{Methods}
 
@@ -147,7 +148,7 @@ While the data cover a large time period, we did not model time explicitely but 
 The prevalence points were then standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}.
 This data was used as both a global dataset and as regional subsets.
 The global dataset contained 55,914 surveys in 44,842 distinct locations and represented samples from 5,687,304 individuals.
-For Colombia we used all points from South America (locations = 522, individuals = 7,719) while for the other countries we used only data from that country (Madagascar: locations = 1,505, individuals = 89,381. Indonesia: locations = 4,778, individuals = 1,512,888. Senegal: locations = 1,762, individuals = 80,896).
+For Colombia we used all points from South America (7,719 individuals from 522 locations) while for the other countries we used only data from that country (Madagascar: 89,381 individuals from 1,505 locations. Indonesia: 1,512,888 individuals from 4,778 locations. Senegal: 80,896 individuals from 1,762 locations).
 We chose these geographic regions based on a trade-off between wanting a large sample size but wanting data from geographically relevant areas.
 
 The polygon incidence data were collected from government reports and standardised using methods defined in \cite{cibulskis2011worldwide}.
@@ -169,13 +170,13 @@ Population rasters for the remaining years were created by linear interpolation.
 
 
 \subsection{Machine learning models}
-For each country we fitted 5 models via \emph{caret} \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees \citep{gbm}.
+For each country specific dataset and for the global dataset we fitted 5 models via \emph{caret} \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees \citep{gbm}.
 These models were fitted to both the full malaria prevalence dataset and to the regional subsets of the data.
 Our response variable was prevalence and we weighted the data by sample size (i.e.\thinspace the number of people tested for malaria in each survey).
-For each model we ran  five-fold cross-validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
+For each model we ran five-fold cross-validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
 Root mean square error (RMSE) was used to select the best performing model.
 Predictions from these models were then made across each country respectively.
-These predictions were finally empirical logit transformed so that they are on the linear predictor scale of the top level model.
+These predictions were finally empirical logit transformed so that they were on the linear predictor scale of the top level model.
 An empirical logit was used rather than a standard logit as there were many predictions of exactly zero.
 
 \subsection{Disaggregation regression}
@@ -217,23 +218,31 @@ This analysis did not find any benefits to this approach so it was not considere
 
 
 \subsection{Experiments}
-We compared the performance of the models with five sets of covariates, $X$.
-Firstly, we used the environmental and anthropogenic covariates, centered and standardised as a baseline model (subsequantly called Enviro).
-Secondly, we used the predictions from the machine learning models trained on local data (ML\textsubscript{l}).
-Thirdly, we combined the predictions from the machine learning models and the environmental coviarates in one model (Enviro + ML\textsubscript{l}).
-Fourthly, we used predictions from the machine learning models trained on the global data (ML\textsubscript{g}).
-Finally, we combined predictions from the machine learning models trained on regional data and global data (ML\textsubscript{l} + ML\textsubscript{g}).
+
+We used the environmental and anthropogenic covariates, centered and standardised, as a baseline model (subsequantly called Enviro).
+We then performed two experiments.
+In the first (\emph{i}) we tested whether using predictions from machine learning models trained on local prevalence data improved predictions.
+In the second (\emph{ii}) we tested whether using predictions from machine learning models trained on global prevalence data improved predictions.
+Our primary performance metric was correlation between observed and predicted data.
+We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
+
+In experiment \emph{i} we compared the baseline to two models that used locally trained machine learning models.
+First we used only the predictions from the machine learning models trained on local data (ML\textsubscript{l}).
+Secondly, we combined the predictions from the machine learning models and the environmental coviarates in one model (Enviro + ML\textsubscript{l}).
+
+In experiment \emph{ii} we compared the baseline to two models that used globally trained machine learning models.
+We used only predictions from the machine learning models trained on the global data (ML\textsubscript{g}).
+We also combined predictions from the machine learning models trained on regional data and global data (ML\textsubscript{l} + ML\textsubscript{g}).
 
 
-To compare the five models we used two cross-validation schemes. 
+In each experiment we used two cross-validation schemes. 
 In the first, polygon incidence data was randomly split into six cross-validation folds.
 In the second, polygon incidence data was split spatially into k folds (via k-means clustering on the polygon centroids).
 We set k as 3 for Madagascar and Colombia.
 Due to its large size we set k as 7 for Indonesia.
 Due to the small sample size, we set k as 5 for Senegal.
 This spatial cross-validation scheme is testing the models' ability to make predictions far from data where the spatial random field is not informative.
-Our primary performance metric was correlation between observed and predicted data.
-We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
+
 
 
 \begin{table}[t!]
@@ -328,7 +337,7 @@ In nearly all cases the fitted values are positive.
 If the prevalence data and incidence data are not biased relative to each other we would expect the models with the lowest RMSE to also have the biggest regression coefficient.
 This occurs in three cases where Random Forest has the lowest RMSE and the biggest coefficient.
 In a further two cases, Random Forest has the lowest RMSE but GBM has the highest coefficient.
-The predictions from Random Forest and GBM are highly correlated in part because they both perform well and because they are both tree based models.
+The predictions from Random Forest and GBM are highly correlated in part because they both perform well and in part because they are both tree based models.
 Finally, it can be seen that relationship between RMSE and regression coefficients is much weaker in Indonesia.
 For the models trained on local data a neural network has the highest fitted coefficient while for the models trained on global data an elastic net has the highest fitted coefficient.
 These model both produce very smooth estimates relative to the tree based methods.

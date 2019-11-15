@@ -78,8 +78,8 @@ However, the aggregation of incidence over large, heterogeneous areas means that
 In contrast, prevalence point-surveys are directly linked to local environmental conditions but are not common in many areas of the world.
 A model that combines point surveys and aggregated surveillance data could have the benefits of both but must be able to account for the fact that these two data types measure different malariometric units.
 Here, we train multiple non-linear, machine learning models on prevalence point-surveys.
-We then ensemble the predictions from these machine learning models with a geostatistical disaggregation regression model that uses malaria incidence, aggregated to admnistrative units, as response data.
-We find that, in four national case studies, using a disaggregation regression model to combine predictions from machine learning models trained on prevalence point-surveys improves model accuracy relative to a baseline disaggregation regression model that uses linear effects of the environmental covariates only.                                  
+We then ensemble the predictions from these machine learning models with a geostatistical disaggregation regression model that uses malaria incidence, aggregated to administrative units, as response data.
+We find that, in four national case studies, using a disaggregation regression model to combine predictions from machine learning models trained on prevalence point-surveys improves model accuracy relative to a baseline disaggregation regression model that uses linear effects of the raw environmental covariates only.                                  
 
 \end{abstract}
 
@@ -116,33 +116,33 @@ However, the aggregation of cases over space means that the data may be spatiall
 This data is therefore often under-powered for fitting flexible, non-linear models as is required for accurate malaria maps \citep{bhatt2017improved, bhatt2015effect}. 
 A model that combines prevalence point-surveys and aggregated surveillance data, and therefore leverages the strength of both, has great potential.
 
-Here we propose training a suite of machine learning models on point-level, binomial prevalence data and combining these predictions by using them as covariates in a polygon-level, disaggregation regression model that uses  malaria incidence, aggregated to administrative units, as the response.
+Here we propose training a suite of machine learning models, using point-level, binomial prevalence data and environmental covariates, and combining predictions from these models by using them as covariates in a polygon-level, disaggregation regression model that uses  malaria incidence, aggregated to administrative units, as the response.
 This modelling scheme has similarities to previous stacking methods used for malaria mapping \citep{bhatt2017improved} and elsewhere \citep{wolpert1992stacked, sill2009feature, hao2019review, breiman1996stacked}.
-However, as the response data in the level-zero models and the level-one models are on different scales (prevalence is a proportion while incidence is a rate) there are a number of important differences.
-Notably, we cannot simply take a weighted average of the predictions from the level-zero models as in a standard stacking scheme \citep{sill2009feature, hao2019review}.
+However, as the response data in the machine learning models and the disaggregation regression models are on different scales (prevalence is a proportion while incidence is a rate) there are a number of important differences.
+Notably, we cannot simply take a weighted average of the predictions from the machine learning models as in a standard stacking scheme \citep{sill2009feature, hao2019review}.
 Instead the predictions  need to be transformed to the incidence scale with a seperately fitted model \citep{cameron2015defining}.
-Applications in other disease contexts have used a similar scheme where data from vector or wild-animal host species are used to train models, the predictions from which are then used in a final model \citep{pigott2014mapping, shearer2016estimating}.
+Applications in other disease contexts have used a similar scheme where data from vector or wild-animal host species are used to train models, the predictions from which are then used as covariates in a final model \citep{pigott2014mapping, shearer2016estimating}.
 In such applications we would always expect to need additional covariates in additional to the modelled distributions of hosts or vectors.
-However, in the case examined here, both sets of data are direct measures of some aspect of malaria transmission rate, and therefore it is possible that we would need no further covariates. 
+However, in the case examined here, both sets of data are direct measures of some aspect of malaria transmission rate, and therefore it is possible, though not guaranteed, that we would not need any further covariates. 
 
 
 Model stacking \citep{wolpert1992stacked} has proven effective in many realms \citep{bhatt2017improved, sill2009feature, hao2019review, breiman1996stacked}. 
 Stacking improves predictions by controlling bias and variance; as long as suitably diverse models are averaged, they will have different biases while high variance in models should be averaged out.
 This understanding of how stacking improves model performance indicates that diversity in models is important for stacking to be effective.
-Diversity in models is typically created in two ways: by using diverse training datasets\citep{breiman1996bagging} (as in Random Forests for example) and by using functionally different models (for example by averaging tree based models and neural networks) \citep{breiman1996stacked}.
+Diversity in models is typically created in two ways: by using diverse training datasets \citep{breiman1996bagging} (as in Random Forests for example) and by using functionally different models (for example by averaging tree based models and neural networks) \citep{breiman1996stacked}.
 One important trade-off in spatial modelling is whether to use local data (with a smaller sample size but that is likely to be representative of the area of study) or global data that have a larger sample size but a less close association with the areas of study.
 For the application of malaria mapping, we can think about diversity of training data in this context and expect that stacking seperate models trained on local and global data will also increase the diversity of predictions in a useful way.
 
 
 To test the effectiveness of the proposed approach we used data from four countries: Madagascar, Colombia, Indonesia and Senegal.
-We first examined whether using predictions from machine learning models trained on local prevalence data could improve predictions.
-We then tested whether using predictions from machine learning models trained on global data could improve predictions either on their own or when combined with predictions from machine learning models trained on local data.
-While there was not one consistently best model, we found that in nearly all cases, using predictions from local machine learning models improved model performance.
+We first examined whether using predictions from machine learning models, trained on local prevalence data and raw environmental covariates, could improve predictions when used as covariates in disaggregation regression models.
+We then tested whether covariates made using predictions from machine learning models trained on a global prevalence dataset could improve predictions either on their own or when combined with predictions from machine learning models trained on local data.
+While there was not one consistently best model, we found that in most cases, using predictions from local machine learning models as covariates improved model performance.
 In contrast, using predictions from machine learning models trained on the global prevalence dataset rarely improved predictive performance.
 
 \section{Methods}
 
-\subsection{Malaria Data}
+\subsection{Epidemiological Data}
 
 We used two data sources that reflect \emph{Plasmodium falciparum} malaria transmission; point-prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Madagascar, Colombia, Indonesia and Senegal as case examples as they all have fairly complete, publicly available, surveillance data at a finer geographical resolution than admin 1.
@@ -156,34 +156,36 @@ We chose these geographic regions based on a trade-off between wanting a large s
 
 The polygon incidence data were collected from government reports and standardised using methods defined in \cite{cibulskis2011worldwide}.
 This standardisation step accounts for missed cases due to lack of treatment seeking, missing case reports, and cases that sought medical attention outside the public health systems \citep{battle2016treatment}.
-For reports where cases were not reported at the species level, national estimates of the ratio between \emph{P. falciparum} and \emph{P. vivax} cases were used to calculate \emph{P. falciparum} only cases. 
+For reports where cases were not reported at the species level, national estimates of the ratio between \emph{P. falciparum} and \emph{Plasmodium vivax} cases were used to calculate \emph{P. falciparum} only cases. 
 To minimise temporal effects we selected, for each country, one year of surveillance data. 
 We used annual surveillance data from data from 2013 for Madagascar (110 districts), 2015 for Colombia (952 municipalities), 2013 for Indonesia (244 regencies and cities) and 2009 for Senegal (34 departments).
 These years were selected as they had the most data in each case.
 
-
-\subsection{Raw Covariates}
-
-We considered an initial suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included the annual mean and log standard deviation of land surface temperature, enhanced vegetation index, malaria parasite temperature suitability index, elevation, tasseled cap brightness, tasseled cap wetness, log accessibility to cities, log night lights and proportion of urban land cover \citep{weiss2015re, weiss2018global}. 
-Tasseled cap brightness and urban land cover were subsequently removed as they were highly correlated with other variables. 
-The covariates were standardised to have a mean of zero and a standard deviation of one. 
-These covariates were used in the machine learning models as well as being used directly in the baseline dissaggregation regression models.
 Raster surfaces of population for the years 2005, 2010 and 2015, were created using data from WorldPop \citep{linard2012population,gaughan2013high,  sorichetta2015high} and from GPWv4 \citep{gpw4} where WorldPop did not have values. 
 Population rasters for the remaining years were created by linear interpolation. 
 
+\subsection{Raw Environmental Covariates}
+
+We considered an initial suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included the annual mean and log standard deviation of land surface temperature, enhanced vegetation index, malaria parasite temperature suitability index, elevation, tasseled cap brightness, tasseled cap wetness, log accessibility to cities, log night lights and proportion of urban land cover \citep{weiss2014air, weiss2015re, weiss2018global}. 
+Tasseled cap brightness and urban land cover were subsequently removed as they were highly correlated with other variables. 
+The covariates were standardised to have a mean of zero and a standard deviation of one. 
+We refer to this set of transformed variables as the raw environmental covariates (even though some of the covariates are anthropogenic rather than environmental) to distinguish them from other covariates created from predictions from machine learning models.
+These variables were used as covariates in the machine learning models as well as being used directly as covariates the baseline dissaggregation regression models.
+
+
 
 \subsection{Machine learning models}
-For each country specific dataset and for the global dataset we fitted 5 models via \emph{caret} \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees \citep{gbm}.
+For each country specific dataset and for the global dataset we fitted 5 models via \emph{caret} \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees (gradient boosted models, subsequently GBM) \citep{gbm}.
 These models were fitted to both the full malaria prevalence dataset and to the regional subsets of the data.
 Our response variable was prevalence and we weighted the data by sample size (i.e.\thinspace the number of people tested for malaria in each survey).
-We used the raw covariates described above.
+We used the raw environmental covariates described above.
 For each model we ran five-fold cross-validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
 Root mean square error (RMSE) was used to select the best performing model.
 Predictions from these models were then made across each country respectively.
 These predictions were empirical logit transformed so that they were on the linear predictor scale of the top level model.
 An empirical logit was used rather than a standard logit as there were many predictions of exactly zero.
 These predicted surfaces were subsequently used as covariates in the dissaggregation regression models.
-This process can therefore be seen as creating non-linear transformations of the raw covariates that are hopefully better correlated with malaria incidence than the raw covariates are.
+This process can therefore be seen as creating non-linear transformations of the raw covariates that are hopefully better correlated with malaria incidence than the raw environmental covariates are.
 
 \subsection{Disaggregation regression}
 The top level model was a disaggregation regression model \citep{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}.
@@ -204,6 +206,7 @@ The linear predictor of the model is related to prevalence by a typical logit li
 $$p_b = \operatorname{logit}^{-1}\left(\beta_0 + \beta X  + u_s\left(\rho, \sigma_u\right) + v_j\left(\sigma_v\right)\right)$$
 The Gaussian spatial effect has a Mat\'ern covariance function and two hyperparameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
 The \emph{iid} random effect models both missing covariates and extra-Poisson sampling error.
+As described in more detail below, the matrix of covariates $X$ varies and is made up of various combinations of raw environmental covariates and predictions from the machine learning models.
 
 Finally, we complete the model by setting priors on the parameters $\beta_0, \beta, \rho$ and $\sigma_u$ and $\sigma_v$. 
 We assigned $\rho$ and $\sigma_u$ a joint penalised complexity prior \citep{fuglstad2018constructing} such that $P(\rho < 1) = 0.0001$ (except for Indonesia where we set $P(\rho < 3) = 0.0001$ due to it's much larger size) and $P(\sigma_u > 1) = 0.0001$. 
@@ -230,6 +233,7 @@ We used the raw environmental covariates, centered and standardised, as a baseli
 We then performed two experiments.
 In the first (\emph{i}) we tested whether using predictions from machine learning models trained on local prevalence data improved predictions.
 In the second (\emph{ii}) we tested whether using predictions from machine learning models trained on global prevalence data improved predictions.
+These combinations of covariates are summarised in Table~\ref{t:models}.
 Our primary performance metric was correlation between observed and predicted data.
 We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
 
@@ -249,21 +253,21 @@ Model &  Environmental covariates & Local ML covariates &  Global ML covariates 
  ML\textsubscript{g} &  &  & \checkmark\\
  ML\textsubscript{l} + ML\textsubscript{g} &  & \checkmark &  \checkmark
 \end{tabular}
-\label{t:results}
+\label{t:models}
 \end{table}
 
 
 In experiment \emph{i} we compared the baseline to two models that used locally trained machine learning models.
-Firstly, we combined the predictions from the machine learning models and the environmental coviarates in one model (Enviro + ML\textsubscript{l}).
+Firstly, we combined the predictions from the machine learning models and the environmental coviarates in one model (subsequantly called Enviro + ML\textsubscript{l}).
 In this model therefore, the environmental covariates are effectively used twice, once in their raw form and once in transformed form (i.e. the predictions from the machine learning models).
 Secondly, we used only the predictions from the machine learning models trained on local data (subsequantly called ML\textsubscript{l}).
 As the environmental covariates are used as covariates in the machine learning models, this model is still ultimately driven by the values of the raw enviroenmental covariates.
 However, in this model we are only using the environmental covariates in the transformed space learned by the machine learning models.
 
 
-In experiment \emph{ii} we compared the baseline to two models that used globally trained machine learning models.
-We used only predictions from the machine learning models trained on the global data (ML\textsubscript{g}).
-We also combined predictions from the machine learning models trained on regional data and predictions from the machine learning models trained on global data (ML\textsubscript{l} + ML\textsubscript{g}).
+In experiment \emph{ii} we compared the baseline model to two models that use predictions from machine learning models trained on the global dataset of prevalence surveys.
+In the first, we used only predictions from the machine learning models trained on the global data (ML\textsubscript{g}).
+In the second, we combined predictions from the machine learning models trained on regional data and predictions from the machine learning models trained on global data (ML\textsubscript{l} + ML\textsubscript{g}).
 
 
 In each experiment we used two cross-validation schemes. 
@@ -275,6 +279,18 @@ Due to the small sample size, we set k as 5 for Senegal.
 This spatial cross-validation scheme is testing the ability of the different models to make predictions far from data where the spatial random field is not informative.
 
 
+
+
+\section{Results}
+
+
+
+Table \ref{t:results} gives the correlation between observed and held out data (under random and spatially cross-validation) for experiment \emph{i} (models Enviro, ML\textsubscript{l} and Envir + ML\textsubscript{l}).
+Many of the differences in performance are rather marginal.
+Enviro was the best performing model in two cases (random cross-validation in Madagascar and Senegal).
+In one case, Enviro perfomed equally well as another model; under spatial cross-validation in Senegal Enviro and Enviro + ML\textsubscript{l} performed equally well.
+Of the remaining five cases, in two cases ML\textsubscript{l} performed best and in three cases Envir + ML\textsubscript{l} performed best.
+The greatest benefits to using prediction from machine learning models instead of, or in combination with, the raw environmental variables occured under spatial cross-validation and in the cases when the Enviro model was particularly poor.
 
 \begin{table}[t!]
 \caption{Pearson correlations between observed and predicted values. }
@@ -293,18 +309,6 @@ Country &  Cross-validation & Enviro &  Enviro + ML\textsubscript{l} &  ML\texts
 \end{tabular}
 \label{t:results}
 \end{table}
-
-
-\section{Results}
-
-
-
-Table \ref{t:results} gives the correlation between observed and held out data (under random and spatially cross-validation) for experiment \emph{i} (models Enviro, ML\textsubscript{l} and Envir + ML\textsubscript{l}).
-Many of the differences in performance are rather marginal.
-Enviro is the best performing model in two cases (random cross-validation in Madagascar and Senegal).
-In one case, Enviro perfoms equally well as another model; under spatial cross-validation in Senegal Enviro and Enviro + ML\textsubscript{l} perform equally well.
-Of the remaining five cases, in two cases ML\textsubscript{l} performs best and in three cases Envir + ML\textsubscript{l} performs best.
-The greatest benefits to using prediction from machine learning models instead of, or in combination with, the raw environmental variables occur under spatial cross-validation and in the cases when the Enviro model is particularly poor.
 
 
 \begin{figure}
@@ -332,11 +336,11 @@ Figure~\ref{f:map} shows the input data and spatially out-of-sample predictions 
 
 
 Table \ref{t:results2} gives the correlation between observed and held out data (under random and spatially cross-validation) for experiment \emph{ii} (models Enviro, ML\textsubscript{g} and ML\textsubscript{l} + ML\textsubscript{g}).
-In six cases, Enviro is the best or tied best performing model.
-The ML\textsubscript{g} model is never the best performing model and only outpeforms Enviro in one case (spatial cross-validation in Madagascar).
-In two cases ML\textsubscript{l} + ML\textsubscript{g} is the best performing model (spatial Colombia and spatial Madagascar).
+In six cases, Enviro was the best or tied best performing model.
+The ML\textsubscript{g} model was never the best performing model and only outpeforms Enviro in one case (spatial cross-validation in Madagascar).
+In two cases ML\textsubscript{l} + ML\textsubscript{g} was the best performing model (spatial Colombia and spatial Madagascar).
 Comparing across Tables \ref{t:results} and \ref{t:results2} we can see that ML\textsubscript{g} outpeforms ML\textsubscript{l} once (spatial cross-validation in Senegal).
-In only two cases (Spatial Senegal and Spatial Indonesia) does ML\textsubscript{l} + ML\textsubscript{g} outperform ML\textsubscript{l}.
+In only two cases (Spatial Senegal and Spatial Indonesia) did ML\textsubscript{l} + ML\textsubscript{g} outperform ML\textsubscript{l}.
 
 
 
@@ -350,13 +354,13 @@ In only two cases (Spatial Senegal and Spatial Indonesia) does ML\textsubscript{
 \end{figure}
 
 Table~\ref{t:coverage} shows the out-of-sample coverage of the 80\% credible intervals for all models, countries and cross-validation schemes.
-The coverage in Colombia is very poor with no models achieving a coverage above 0.4.
-The coverage is acceptable in the other three countries with most values lying between 0.7 and 0.9.
-Overall there is a general tendancy for models to be slightly over confident.
+The coverage in Colombia was very poor with no models achieving a coverage above 0.4.
+The coverage was acceptable in the other three countries with most values lying between 0.7 and 0.9.
+Overall there was a general tendancy for models to be slightly over confident.
 
 We can examine the relationship between the RMSE of the machine learning models to their fitted regression coefficients (weights).
 These values are given in Table~\ref{t:mlresults}.
-In all five sets of machine learning models (four sets trained on local data and one set trained on local data), Random Forest performs the best.
+In all five sets of machine learning models (four sets trained on local data and one set trained on global data), Random Forest performs the best.
 We have not forced $\beta_i > 0$ but we have set the priors for these coefficients with a positive mean.
 In nearly all cases the fitted values are positive.
 If the prevalence data and incidence data are not biased relative to each other we would expect the models with the lowest RMSE to also have the biggest regression coefficient.
@@ -544,9 +548,9 @@ Senegal & ppr & 0.098 & 0.268& 0.205 &  0.126\\
 \section{Discussion}
 
 
-Overall, experiment \emph{i} suggest that using predictions from machine learning models trained on local prevalence points provides more accurate predictions than using environmental covariates when fitting disaggregation models of malaria incidence.
-This increased performance comes despite the data being on different scales, the data being measurements of different aspects of malaria transmission and despite the imperfect model we have used to translate between the two scales.
-However, there is no clear best model between ML\textsubscript{l} and Enviro + ML\textsubscript{l}.
+Overall, experiment \emph{i} suggest that using predictions from machine learning models trained on local prevalence points provides more accurate predictions than using raw environmental covariates when fitting disaggregation models of malaria incidence.
+This increased performance comes despite the prevalence data being on a different scale and being measurements of a different aspects of malaria transmission as well as the fact that the model we have used to translate between the two scales is imperfect.
+However, there was no clear best model between ML\textsubscript{l} and Enviro + ML\textsubscript{l}.
 Therefore, when using these methods, both of these models should be fitted and the most predictive model selected for a given dataset.
 Furthermore, many of the performance improvements are rather marginal. 
 However, in a few cases such as Colombia and Madagascar under spatial cross-validation the performance boost is large.
@@ -593,7 +597,7 @@ Overall we find that including predictions from machine learning models trained 
 This extra modelling step can be seen as finding useful, non-linear transformations of the raw environmental covariates.
 This view is important for understanding how the model will predict in areas with no incidence data; in this situation the Gaussian random field has no effect and predictions are driven by this non-linear transformation of the raw environmental covariates.
 Training the machine learning models on local data (i.e. prevalence data from the same country or region as the incidence data) gave much better performance than when training the machine learning models on the full, global, dataset of prevalence point-surveys.
-As more countries start providing timely and accurate routine surveillance data of malaria cases disaggregation regression may become more popular.
+As more countries, particularly those with medium or low malaria burdens, start providing timely and accurate routine surveillance data of malaria cases disaggregation regression may become more popular.
 We have here presented a method for improving these models by using ancillary, prevalence point-survey data.
 
 

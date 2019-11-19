@@ -145,30 +145,30 @@ In contrast, using predictions from machine learning models trained on the globa
 \subsection{Epidemiological Data}
 
 We used two data sources that reflect \emph{Plasmodium falciparum} malaria transmission; point-prevalence surveys and polygon-level, aggregated incidence data. 
-We selected Madagascar, Colombia, Indonesia and Senegal as case examples as they all have fairly complete, publicly available, surveillance data at a finer geographical resolution than admin 1.
+We selected Madagascar, Colombia, Indonesia and Senegal as case examples as they all have fairly complete, publicly available, surveillance data at a finer geographical resolution than admin 1 (i.e. higher resolution than state or province).
 The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect, guerra2007assembling, pfeffer2018ma}.
-While the data covered a large time period, we did not model time explicitely as we are here focussed on spatial, rather than temporal modelling.
+While the data covered a large time period, we did not model time explicitly as we are here focussed on spatial, rather than temporal modelling.
 The prevalence points were then standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}.
 This data was used as both a global dataset and as regional subsets.
 The global dataset contained 55,914 surveys in 44,842 distinct locations and represented samples from 5,687,304 individuals.
 For Colombia we used all points from South America (7,719 individuals from 522 locations) while for the other countries we used only data from that country (Madagascar: 89,381 individuals from 1,505 locations. Indonesia: 1,512,888 individuals from 4,778 locations. Senegal: 80,896 individuals from 1,762 locations).
 We chose these geographic regions based on a trade-off between wanting a large sample size but wanting data from geographically relevant areas.
 
-The polygon incidence data were collected from government reports and standardised using methods defined in \cite{cibulskis2011worldwide}.
+The polygon incidence data (i.e. malaria incidence aggregated to administrative units) were collected from government reports and standardised using methods defined in \cite{cibulskis2011worldwide}.
 This standardisation step accounts for missed cases due to lack of treatment seeking, missing case reports, and cases that sought medical attention outside the public health systems \citep{battle2016treatment}.
 For reports where cases were not reported at the species level, national estimates of the ratio between \emph{P. falciparum} and \emph{Plasmodium vivax} cases were used to calculate \emph{P. falciparum} only cases. 
 To minimise temporal effects we selected, for each country, one year of surveillance data. 
-We used annual surveillance data from data from 2013 for Madagascar (110 districts), 2015 for Colombia (952 municipalities), 2013 for Indonesia (244 regencies and cities) and 2009 for Senegal (34 departments).
-These years were selected as they had the most data in each case.
+We used annual surveillance data from 2013 for Madagascar (110 districts), 2015 for Colombia (952 municipalities), 2013 for Indonesia (244 regencies and cities) and 2009 for Senegal (34 departments).
+These years were selected as they had the most complete data in each case.
 
-Raster surfaces of population for the years 2005, 2010 and 2015, were created using data from WorldPop \citep{linard2012population,gaughan2013high,  sorichetta2015high} and from GPWv4 \citep{gpw4} where WorldPop did not have values. 
+Raster surfaces (i.e. population gridded to 5$ \times$ 5 km pixles) of population for the years 2005, 2010 and 2015, were created using data from WorldPop \citep{linard2012population,gaughan2013high,  sorichetta2015high} and from GPWv4 \citep{gpw4} where WorldPop did not have values. 
 Population rasters for the remaining years were created by linear interpolation. 
 
 \subsection{Raw Environmental Covariates}
 
 We considered an initial suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included the annual mean and log standard deviation of land surface temperature, enhanced vegetation index, malaria parasite temperature suitability index, elevation, tasseled cap brightness, tasseled cap wetness, log accessibility to cities, log night lights and proportion of urban land cover \citep{weiss2014air, weiss2015re, weiss2018global}. 
 Tasseled cap brightness and urban land cover were subsequently removed as they were highly correlated with other variables. 
-The covariates were standardised to have a mean of zero and a standard deviation of one. 
+The covariates were standardised and centered to have a mean of zero and a standard deviation of one. 
 We refer to this set of transformed variables as the raw environmental covariates (even though some of the covariates are anthropogenic rather than environmental) to distinguish them from other covariates created from predictions from machine learning models.
 These variables were used as covariates in the machine learning models as well as being used directly as covariates the baseline dissaggregation regression models.
 
@@ -178,17 +178,17 @@ These variables were used as covariates in the machine learning models as well a
 For each country specific dataset and for the global dataset we fitted 5 models via \emph{caret} \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees (gradient boosted models, subsequently GBM) \citep{gbm}.
 These models were fitted to both the full malaria prevalence dataset and to the regional subsets of the data.
 Our response variable was prevalence and we weighted the data by sample size (i.e.\thinspace the number of people tested for malaria in each survey).
-We used the raw environmental covariates described above.
+We used the raw environmental covariates described above as covariates in these machine learning models.
+This process can therefore be seen as creating non-linear transformations of the raw covariates that are hopefully better correlated with malaria incidence than the raw environmental covariates are.
 For each model we ran five-fold cross-validation to select hyperparameters using random search for Random Forest and boosted regression trees and grid search for the other models. 
 Root mean square error (RMSE) was used to select the best performing model.
 Predictions from these models were then made across each country respectively.
 These predictions were empirical logit transformed so that they were on the linear predictor scale of the top level model.
 An empirical logit was used rather than a standard logit as there were many predictions of exactly zero.
 These predicted surfaces were subsequently used as covariates in the dissaggregation regression models.
-This process can therefore be seen as creating non-linear transformations of the raw covariates that are hopefully better correlated with malaria incidence than the raw environmental covariates are.
 
 \subsection{Disaggregation regression}
-The top level model was a disaggregation regression model \citep{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}.
+The model fitted to aggregated incidence data was a disaggregation regression model \citep{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log}.
 The models were implemented and fitted using Template Model Builder \citep{TMB} in R \citep{R} and we note that these models cannot be fitted using INLA \citep{INLA} as we are not using a linear link function.
 This model is defined by a likelihood at the level of the polygon with covariates and a spatial random field at the pixel-level. 
 Values at the polygon-level are given the subscript $a$ while pixel level values are indexed with $b$.
@@ -229,7 +229,7 @@ This analysis did not find any benefits to this approach so it was not considere
 \subsection{Experiments}
 
 
-We used the raw environmental covariates, centered and standardised, as a baseline model (subsequantly called Enviro).
+We used the raw environmental covariates, centered and standardised, as a baseline model (subsequently called Enviro).
 We then performed two experiments.
 In the first (\emph{i}) we tested whether using predictions from machine learning models trained on local prevalence data improved predictions.
 In the second (\emph{ii}) we tested whether using predictions from machine learning models trained on global prevalence data improved predictions.
@@ -261,7 +261,7 @@ In experiment \emph{i} we compared the baseline to two models that used locally 
 Firstly, we combined the predictions from the machine learning models and the environmental coviarates in one model (subsequantly called Enviro + ML\textsubscript{l}).
 In this model therefore, the environmental covariates are effectively used twice, once in their raw form and once in transformed form (i.e. the predictions from the machine learning models).
 Secondly, we used only the predictions from the machine learning models trained on local data (subsequantly called ML\textsubscript{l}).
-As the environmental covariates are used as covariates in the machine learning models, this model is still ultimately driven by the values of the raw enviroenmental covariates.
+As the environmental covariates are used as covariates in the machine learning models, this model is still ultimately driven by the values of the raw environmental covariates.
 However, in this model we are only using the environmental covariates in the transformed space learned by the machine learning models.
 
 

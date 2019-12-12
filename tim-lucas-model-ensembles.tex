@@ -201,6 +201,8 @@ The raw environmental variables were used as covariates in the stage one machine
 }
 \label{f:schem}
 \end{figure}
+
+
 For each country specific dataset and for the global dataset we fitted 5 stage 1 models via \emph{caret} \citep{caret}: elastic net \citep{enet}, Random Forest \citep{wright2015ranger}, projection pursuit regression \citep{friedman1981projection}, neural networks \citep{nnet} and boosted regression trees (gradient boosted models, subsequently GBM) \citep{gbm}.
 These models were fitted to both the full malaria prevalence dataset and to the regional subsets of the data.
 Our response variable was prevalence and we weighted the data by sample size (i.e.\thinspace the number of people tested for malaria in each survey).
@@ -262,6 +264,25 @@ This analysis did not show any benefits to this approach so it was not considere
 \subsection{Experiments}
 
 
+
+All experiments involve comparing predictive performance of stage two disaggregation regression models when different combinations of covariates are used.
+We used the raw environmental covariates, centered and standardised, as a baseline stage two model (Figure~\ref{f:schem}).
+We subsequently refer to this model as Enviro.
+We then performed two experiments.
+In the first (\emph{i}) we tested whether using predictions from stage one machine learning models trained on local (i.e. within-country) prevalence data improved predictions (Figure~\ref{f:schem}).
+In the second (\emph{ii}) we tested whether using predictions from stage one machine learning models trained on global prevalence data improved predictions.
+Our primary performance metric was correlation between observed and predicted aggregated  data.
+We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
+
+
+
+In experiment \emph{i} we compared the baseline to two models that used locally trained machine learning models (Table~\ref{t:models}).
+Firstly, we combined the predictions from the machine learning models and the environmental coviarates in one model (subsequently called Enviro + ML\textsubscript{l}).
+In this model therefore, the environmental covariates are effectively used twice, once in their raw form and once in transformed form (i.e. the predictions from the machine learning models).
+Secondly, we used only the predictions from the machine learning models (Figure~\ref{f:schem}) trained on local data (subsequantly called ML\textsubscript{l}).
+As the environmental covariates are used as covariates in the machine learning models, this model is still ultimately driven by the values of the raw environmental covariates.
+However, in this model we are only using the environmental covariates in the transformed space learned by the machine learning models.
+
 \begin{table}[t!]
 
 \centering
@@ -283,27 +304,7 @@ Model &  Environmental covariates & Local ML covariates &  Global ML covariates 
 
 
 
-All experiments involve comparing predictive performance of stage two disaggregation regression models when different combinations of covariates are used.
-We used the raw environmental covariates, centered and standardised, as a baseline stage two model (Figure~\ref{f:schem}).
-We subsequently refer to this model as Enviro.
-We then performed two experiments.
-In the first (\emph{i}) we tested whether using predictions from stage one machine learning models trained on local (i.e. within-country) prevalence data improved predictions (Figure~\ref{f:schem}).
-In the second (\emph{ii}) we tested whether using predictions from stage one machine learning models trained on global prevalence data improved predictions.
-These combinations of covariates are summarised in Table~\ref{t:models}.
-Our primary performance metric was correlation between observed and predicted aggregated  data.
-We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
-
-
-
-In experiment \emph{i} we compared the baseline to two models that used locally trained machine learning models.
-Firstly, we combined the predictions from the machine learning models and the environmental coviarates in one model (subsequantly called Enviro + ML\textsubscript{l}).
-In this model therefore, the environmental covariates are effectively used twice, once in their raw form and once in transformed form (i.e. the predictions from the machine learning models).
-Secondly, we used only the predictions from the machine learning models (Figure~\ref{f:schem}) trained on local data (subsequantly called ML\textsubscript{l}).
-As the environmental covariates are used as covariates in the machine learning models, this model is still ultimately driven by the values of the raw environmental covariates.
-However, in this model we are only using the environmental covariates in the transformed space learned by the machine learning models.
-
-
-In experiment \emph{ii} we compared the baseline model to two models that use predictions from machine learning models trained on the global dataset of prevalence surveys.
+In experiment \emph{ii} we compared the baseline model to two models that use predictions from machine learning models trained on the global dataset of prevalence surveys (Table~\ref{t:models}).
 In the first, we used only predictions from the machine learning models trained on the global data (ML\textsubscript{g}).
 In the second, we combined predictions from the machine learning models trained on regional data and predictions from the machine learning models trained on global data (ML\textsubscript{l} + ML\textsubscript{g}).
 

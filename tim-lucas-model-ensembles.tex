@@ -165,7 +165,7 @@ The global dataset contained 55,914 surveys in 44,842 distinct locations and rep
 For Colombia we used all points from South America (7,719 individuals from 522 locations) while for the other countries we used only data from that country (Madagascar: 89,381 individuals from 1,505 locations. Indonesia: 1,512,888 individuals from 4,778 locations. Senegal: 80,896 individuals from 1,762 locations).
 We chose these geographic regions based on a trade-off between wanting a large sample size but wanting data from geographically relevant areas.
 
-The polygon incidence data (i.e. malaria incidence aggregated to administrative units) were collected from government reports and standardised using methods defined in \cite{cibulskis2011worldwide}.
+The polygon incidence data (i.e. malaria incidence aggregated to administrative units) were collected from government reports \citep{mdg, sen, col, idn} and standardised using methods defined in \cite{cibulskis2011worldwide}.
 This standardisation step accounts for missed cases due to lack of treatment seeking, missing case reports, and cases that sought medical attention outside the public health systems \citep{battle2016treatment}.
 For reports where cases were not reported at the species level, national estimates of the ratio between \emph{P. falciparum} and \emph{Plasmodium vivax} cases were used to calculate \emph{P. falciparum} only cases. 
 To minimise temporal effects we selected one year of surveillance data for each country. 
@@ -215,6 +215,7 @@ These predictions were empirical logit transformed so that they were on the line
 An empirical logit was used rather than a standard logit as there were many predictions of exactly zero.
 These predicted surfaces were subsequently used as covariates in the stage 2 dissaggregation regression models (Figure~\ref{f:schem}).
 The experiments that follow in this paper assess the improved performance of disaggregation regression models when using the predictions from these machine learning models as covariates as compared to a baseline disaggregation regression model using only the raw environmental covariates.
+See the supplementary material for plots of the grid search hyperparameter performance, out-of-sample scatter plots and plots of the predicted surfaces.
 
 
 
@@ -275,14 +276,6 @@ Our primary performance metric was correlation between observed and predicted ag
 We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
 
 
-
-In experiment \emph{i} we compared the baseline to two models that used locally trained machine learning models (Table~\ref{t:models}).
-Firstly, we combined the predictions from the machine learning models and the environmental coviarates in one model (subsequently called Enviro + ML\textsubscript{l}).
-In this model therefore, the environmental covariates are effectively used twice, once in their raw form and once in transformed form (i.e. the predictions from the machine learning models).
-Secondly, we used only the predictions from the machine learning models (Figure~\ref{f:schem}) trained on local data (subsequantly called ML\textsubscript{l}).
-As the environmental covariates are used as covariates in the machine learning models, this model is still ultimately driven by the values of the raw environmental covariates.
-However, in this model we are only using the environmental covariates in the transformed space learned by the machine learning models.
-
 \begin{table}[t!]
 
 \centering
@@ -304,6 +297,15 @@ Model &  Environmental covariates & Local ML covariates &  Global ML covariates 
 
 
 
+In experiment \emph{i} we compared the baseline to two models that used locally trained machine learning models (Table~\ref{t:models}).
+Firstly, we combined the predictions from the machine learning models and the environmental coviarates in one model (subsequently called Enviro + ML\textsubscript{l}).
+In this model therefore, the environmental covariates are effectively used twice, once in their raw form and once in transformed form (i.e. the predictions from the machine learning models).
+Secondly, we used only the predictions from the machine learning models (Figure~\ref{f:schem}) trained on local data (subsequantly called ML\textsubscript{l}).
+As the environmental covariates are used as covariates in the machine learning models, this model is still ultimately driven by the values of the raw environmental covariates.
+However, in this model we are only using the environmental covariates in the transformed space learned by the machine learning models.
+
+
+
 In experiment \emph{ii} we compared the baseline model to two models that use predictions from machine learning models trained on the global dataset of prevalence surveys (Table~\ref{t:models}).
 In the first, we used only predictions from the machine learning models trained on the global data (ML\textsubscript{g}).
 In the second, we combined predictions from the machine learning models trained on regional data and predictions from the machine learning models trained on global data (ML\textsubscript{l} + ML\textsubscript{g}).
@@ -316,7 +318,6 @@ We set k as 3 for Madagascar and Colombia.
 Due to its large size we set k as 7 for Indonesia.
 Due to the small sample size, we set k as 5 for Senegal.
 This spatial cross-validation scheme is testing the ability of the different models to make predictions far from data where the spatial random field is not informative.
-
 
 
 
@@ -346,7 +347,7 @@ Country &  Cross-validation & Enviro &  Enviro + ML\textsubscript{l} &  ML\texts
  Senegal &  Random &  \textbf{0.58} & 0.57&  0.51  \\
  Senegal &  Spatial &  0.63 &  0.63&  0.51  \\
 \end{tabular}
-\caption{Pearson correlations between observed and predicted values. }
+\caption{Pearson correlations between observed and predicted values for experiment \emph{i}. }
 \label{t:results}
 
 \end{table}
@@ -454,7 +455,7 @@ Country &  Cross-validation & Enviro &   ML\textsubscript{g} & ML\textsubscript{
  Senegal &  Spatial &   \textbf{0.63} & 0.55 & 0.52 \\
 
 \end{tabular}
-\caption{Pearson correlations between observed and predicted values. }
+\caption{Pearson correlations between observed and predicted values for experiment \emph{ii}. }
 \label{t:results2}
 
 \end{table}

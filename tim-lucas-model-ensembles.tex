@@ -74,11 +74,12 @@
 \begin{abstract}
 
 Maps of infection rate are one of the core tools needed for the control and elimination of malaria.
-As reliable routine surveillance data of malaria incidence becomes more widely available disaggregation regression is becoming an important model framework.
+Reliable routine surveillance data of malaria incidence is becoming more widely available.
+Disaggregation regression is becoming an important model framework for estimating high resolution risk maps from these aggregated data.
 However, the aggregation of incidence over large, heterogeneous areas means that these data are underpowered for learning complex, non-linear relationships between the environment and malaria risk.
 In contrast, prevalence point-surveys are directly linked to local environmental conditions but are not common in many areas of the world.
 A model that combines point surveys and aggregated surveillance data could have the benefits of both but must be able to account for the fact that these two data types measure different malariometric units.
-Here, we train multiple non-linear, machine learning models on prevalence point-surveys.
+Here, we train multiple non-linear, machine learning models on \emph{Plasmodium falciparum} prevalence point-surveys.
 We then ensemble the predictions from these machine learning models with a geostatistical disaggregation regression model that uses malaria incidence, aggregated to administrative units, as response data.
 We find that, in four national case studies, using a disaggregation regression model to combine predictions from machine learning models trained on prevalence point-surveys improves model accuracy relative to a baseline disaggregation regression model that only uses linear effects of the raw environmental covariates.
 
@@ -154,22 +155,22 @@ In contrast, using predictions from machine learning models trained on the globa
 
 \subsection{Epidemiological Data}
 
-We used two data sources that reflect \emph{Plasmodium falciparum} malaria transmission; point-prevalence surveys and polygon-level, aggregated incidence data. 
+We used two data sources that reflect \emph{P. falciparum} malaria transmission; point-prevalence surveys and polygon-level, aggregated incidence data. 
 We selected Madagascar, Colombia, Indonesia and Senegal as case examples as they all have fairly complete, publicly available, surveillance data at a finer geographical resolution than administrative level one (i.e. higher resolution than state or province).
 The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect, guerra2007assembling, pfeffer2018ma}.
 While the data covered a large time period, we did not model time explicitly as we are here focussed on spatial, rather than temporal modelling.
-While we do expect there to be variation in time, as long as the spatial biases in sampling do not change through time, the temporal effects will be minimised and the model will still be learning relationships based on the relative changes along environmental variables.
+While we do expect there to be variation in time, as long as the spatial biases in sampling do not change through time, the temporal effects will not bias learned relationships as the model will still be learning relationships based on the relative changes along environmental variables.
 The prevalence points were then standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}.
 This data was used as both a global dataset and as regional subsets.
-The global dataset contained 55,914 surveys in 44,842 distinct locations and represented samples from 5,687,304 individuals.
-For Colombia we used all points from South America (7,719 individuals from 522 locations) while for the other countries we used only data from that country (Madagascar: 89,381 individuals from 1,505 locations. Indonesia: 1,512,888 individuals from 4,778 locations. Senegal: 80,896 individuals from 1,762 locations).
-We chose these geographic regions based on a trade-off between wanting a large sample size but wanting data from geographically relevant areas.
+The global dataset contains 55,914 surveys in 44,842 distinct locations and represents samples from 5,687,304 individuals.
+As there were relatively few surveys in Colombia we used all points from South America (7,719 individuals from 522 locations) while for the other countries we used only data from that country (Madagascar: 89,381 individuals from 1,505 locations. Indonesia: 1,512,888 individuals from 4,778 locations. Senegal: 80,896 individuals from 1,762 locations).
+
 
 The polygon incidence data (i.e. malaria incidence aggregated to administrative units) were collected from government reports \citep{mdg, sen, col, idn} and standardised using methods defined in \cite{cibulskis2011worldwide}.
 This standardisation step accounts for missed cases due to lack of treatment seeking, missing case reports, and cases that sought medical attention outside the public health systems \citep{battle2016treatment}.
 For reports where cases were not reported at the species level, national estimates of the ratio between \emph{P. falciparum} and \emph{Plasmodium vivax} cases were used to calculate \emph{P. falciparum} only cases. 
 For incidence rates we divide by 1000 to give the Annual Parasite Index (API).
-To minimise temporal effects we selected one year of surveillance data for each country. 
+To keep the analysis focused on spatial estimates we selected one year of surveillance data for each country. 
 We used annual surveillance data from 2013 for Madagascar (110 districts), 2015 for Colombia (952 municipalities), 2013 for Indonesia (244 regencies and cities) and 2009 for Senegal (34 departments).
 These years were selected as they had the most complete data in each case.
 
@@ -193,10 +194,10 @@ The raw environmental variables were used as covariates in the stage one machine
   \centering
   \includegraphics[width=0.8\textwidth]{figs/schematic2.pdf}
 \caption{
-  Schematic of the baseline disaggregation regression model and the two stage method. 
+  Schematic of the baseline disaggregation regression model (Enviro) and the two stage method (ML\textsubscript{l}). 
   Models are shown in yellow ovals, malaria data is shown in purple rectangles and covariates are shown in green rectangles.
-  The baseline model uses aggregated incidence data and raw environmental covarates in a disaggregation regression model.
-  In the two stage method, new covariates are created in stage 1 by training machine learning models on prevalence data.
+  The baseline model (Enviro) uses aggregated incidence data and raw environmental covarates in a disaggregation regression model.
+  In the two stage method (ML\textsubscript{l}), new covariates are created in stage 1 by training machine learning models on prevalence data.
   Predictions from these machine learning models are used as covariates in the stage 2 disaggregation regression.
   Only one of the two stage models (ML\textsubscript{l}) is shown for simplicity.
 }
@@ -215,7 +216,7 @@ Predictions from these models were then made across each country respectively.
 These predictions were empirical logit transformed so that they were on the linear predictor scale of the disaggregation regression model.
 An empirical logit was used rather than a standard logit as there were many predictions of exactly zero.
 These predicted surfaces were subsequently used as covariates in the stage 2 dissaggregation regression models (Figure~\ref{f:schem}).
-The experiments that follow in this paper assess the improved performance of disaggregation regression models when using the predictions from these machine learning models as covariates as compared to a baseline disaggregation regression model using only the raw environmental covariates.
+The experiments that follow in this paper assess the performance of disaggregation regression models when using the predictions from these machine learning models as covariates as compared to a baseline disaggregation regression model using only the raw environmental covariates.
 See the supplementary material for plots of the grid search hyperparameter performance, out-of-sample scatter plots and plots of the predicted surfaces.
 
 
@@ -233,14 +234,13 @@ $$y_a \sim \operatorname{Pois}(i_a\mathrm{pop_a})$$
 where $i_a$ is the estimated polygon incidence rate and $\mathrm{pop_a}$ is the observed polygon population-at-risk. 
 This polygon-level likelihood is linked to the pixel-level incidence and prevalence by
 $$i_a = \frac{ \sum(i_b \mathrm{pop}_b)}{\sum  \mathrm{pop}_b} $$
-$$i_b = \mathrm{p2i}(p_b)$$
-where $\mathrm{p2i}$ is from a model that was published previously \citep{cameron2015defining} which defines a function
-$$\mathrm{p2i}: f(P) = 2.616P - 3.596P^2 + 1.594P^3.$$
+$$i_b = 2.616p_b - 3.596p_b^2 + 1.594p_b^3$$
+where the polynomial is  a function from a previously published model \citep{cameron2015defining}.
 The fact that the model passes through prevalence space ensures that the predictions from the machine learning models can be appropriately scaled.
-The linear predictor of the model is related to prevalence by a typical logit link function and includes: an intercept, $\beta_0$; covariates, $X$, with a vector of regression parameters, $\beta$; a spatial, Gaussian, random field, $u_s(\rho, \sigma_u)$; and an \emph{iid} random effect, $v_j(\sigma_v)$.
-$$p_b = \operatorname{logit}^{-1}\left(\beta_0 + \beta X  + u_s\left(\rho, \sigma_u\right) + v_j\left(\sigma_v\right)\right)$$
+The linear predictor of the model is related to prevalence by a typical logit link function and includes: an intercept, $\beta_0$; covariates, $X$, with a vector of regression parameters, $\beta$; a spatial, Gaussian, random field, $u_b(\rho, \sigma_u)$; and an \emph{iid} random effect, $v_j(\sigma_v)$.
+$$p_b = \operatorname{logit}^{-1}\left(\beta_0 + \beta X  + u_b\left(\rho, \sigma_u\right) + v_j\left(\sigma_v\right)\right)$$
 The Gaussian spatial effect has a Mat\'ern covariance function and two hyperparameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
-The \emph{iid} random effect models both missing covariates and extra-Poisson sampling error.
+The \emph{iid} random effect models both unobserved explanatory factors and extra-Poisson sampling error.
 As described in more detail below we do not vary the structure of this model in the methodological comparison.
 The matrix of covariates, $X$, it the only component that varies and is made up of various combinations of raw environmental covariates and predictions from the machine learning models.
 
@@ -292,7 +292,7 @@ Model &  Environmental covariates & Local ML covariates &  Global ML covariates 
  ML\textsubscript{g} &  &  & \checkmark\\
  ML\textsubscript{l} + ML\textsubscript{g} &  & \checkmark &  \checkmark
 \end{tabular}
-\caption{Summary of stage two models. All models are disaggregation regression models fitted to aggregated incidence data. The only difference between the models is which covariates are being used. Environmental covariates includes the full set of eight variables. Local ML covariates are the predictions from stage one machine learning models, trained with local prevalence data and the eight environmental covariates as inputs. The local prevalence datasets are data from within each country except for Colombia where local prevalence refers to South American data. Global ML covariates are the predictions from stage one machine learning models, trained with global prevalence data (i.e. the full prevalence database) and the eight environmental covariates as inputs.}
+\caption{Summary of stage two models and the experiments they are grouped into. All models are disaggregation regression models fitted to aggregated incidence data. The only difference between the models is which covariates are being used. Environmental covariates includes the full set of eight variables. Local ML covariates are the predictions from stage one machine learning models, trained with local prevalence data and the eight environmental covariates as inputs. The local prevalence datasets are data from within each country except for Colombia where local prevalence refers to South American data. Global ML covariates are the predictions from stage one machine learning models, trained with global prevalence data (i.e. the full prevalence database) and the eight environmental covariates as inputs. Experiment \emph{i} tests whether including Local ML covariates improves predictive performance while Experiment \emph{ii} tests whether including Global ML covariates improves performance.}
 \label{t:models}
 \end{table}
 
@@ -357,7 +357,8 @@ Country &  Cross-validation & Enviro &  Enviro + ML\textsubscript{l} &  ML\texts
 \begin{figure}
   \includegraphics[width=\textwidth]{figs/cv1_l_scatter.png}
 \caption{
-  Observed data against predictions for random cross-validation hold-out samples on a square root transformed scale.
+  Observed data against predictions for random cross-validation hold-out samples on a square root transformed scale. 
+  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Envir +  ML\textsubsecript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubsecript{l}: Machine learning models trained on local prevalence data only.
 }
 \label{f:scatter1}
 \end{figure}
@@ -367,6 +368,7 @@ Country &  Cross-validation & Enviro &  Enviro + ML\textsubscript{l} &  ML\texts
   \includegraphics[width=\textwidth]{figs/cv2_l_scatter.png}
 \caption{
   Observed data against predictions for spatial cross-validation hold-out samples on a square root transformed scale.
+  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Envir +  ML\textsubsecript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubsecript{l}: Machine learning models trained on local prevalence data only.
 }
 \label{f:scatter2}
 \end{figure}
@@ -478,7 +480,7 @@ Country &  CV & Enviro & ML\textsubscript{l} &  Enviro + ML\textsubscript{l} & M
  Senegal & Random &0.79 & 0.79& 0.79& 0.79& 0.82 \\
  Senegal & Spatial & 0.85 & \textbf{0.91}& 0.85& \textbf{0.94} & 0.85  \\
 \end{tabular}
-\caption{Covarage of 80\% credible intervals. Values outside 0.7--0.9 are shown in bold.}
+\caption{Coverage of 80\% credible intervals. Values outside 0.7--0.9 are shown in bold.}
 \label{t:coverage}
 \end{table}
 
@@ -514,7 +516,9 @@ Senegal & ppr & 0.098 & 0.268& 0.205 &  0.126\\
 
 
 \end{tabular}
-\caption{Machine learning model results and fitted parameters (i.e.\thinspace model weights) of the machine learning predictions only models (local only and global only). }
+\caption{Machine learning model results and fitted parameters (i.e.\thinspace model weights) of the machine learning predictions only models (i.e. ML\textsubscript{l} local only and ML\textsubscript{g} global only). 
+  For each dataset (the country and whether the data was local or global) the best model (lowest RMSE) is shown in bold. 
+  Similary, the largest coefficient within each disaggregation model is shown in bold.}
 \label{t:mlresults}
 \end{table}
 
@@ -607,7 +611,7 @@ In contrast, using the predictions from the machine learning models trained on l
 As expected, the model performance was generally worse under spatial cross-validation than under random cross-validation.
 This implies that the models are still relying heavily on the spatial Gaussian random field.
 Furthermore, the difference between random and spatial cross-validation is usually bigger than the difference between different models.
-This suggests that better data coverage is more important than which specific model is used.
+This suggests that better data coverage is more important than which specific model is used and that the models are still relying quite strongly on the random field.
 
 
 % this method is an improvement
@@ -629,12 +633,12 @@ While the approach presented here is related to stacking, it differs in that we 
 We did not include these constraints because the first stage and second stage models were trained on response data on different scales.
 However, given our priors, nearly all the fitted regression coefficients in models with only machine learning predictions were positive.
 Therefore, in practice these models are working in a way similar to standard stacking.
-However, the coefficients certainly do not sum to one, and fitted intercepts are very small to account for this.
+However, the coefficients certainly do not sum to one, and fitted intercepts are negative to account for this.
 
 
-Due to the low power of typical aggregated incidence datasets, previous analyses using disaggregation regression used a small number of covariates \citep{sturrock2014fine}.
+Due to the low statistical power of typical aggregated incidence datasets, previous analyses using disaggregation regression used a small number of covariates \citep{sturrock2014fine}.
 However, as models such as Random Forest and elastic net can robustly handle high dimensional data, future work could include many more covariates in the machine learning models, potentially increasing predictive performance.
-However, to make comparisons easier, we have used the same environmental covariates in the machine learning models as in the Enviro disaggregation regression models.
+However, for the sake of consistency, we have used the same environmental covariates in the machine learning models as in the Enviro disaggregation regression models.
 
 
 
@@ -642,10 +646,11 @@ However, to make comparisons easier, we have used the same environmental covaria
 
 Overall we find that including predictions from machine learning models trained on prevalence point-surveys can improve the performance of disaggregation regression models for malaria incidence relative to using raw environmental covariates.
 This extra modelling step can be seen as finding useful, non-linear transformations of the raw environmental covariates.
-This view is important for understanding how the model will predict in areas with no incidence data; in this situation the Gaussian random field has no effect and predictions are driven by this non-linear transformation of the raw environmental covariates.
-Training the machine learning models on local data (i.e. prevalence data from the same country or region as the incidence data) gave much better performance than when training the machine learning models on the full, global, dataset of prevalence point-surveys.
-As more countries, particularly those with medium or low malaria burdens, start providing timely and accurate routine surveillance data of malaria cases disaggregation regression may become more popular.
-We have here presented a method for improving these models by using ancillary, prevalence point-survey data.
+This view is important for understanding how the model will predict in areas with no incidence data; in this situation the data cannot inform the Gaussian random field and predictions are driven by this non-linear transformation of the raw environmental covariates.
+Training the machine learning models on local data (i.e. prevalence data from the same country or region as the incidence data) shows much better performance than when training the machine learning models on the full, global, dataset of prevalence point-surveys.
+More countries, particularly those with medium or low malaria burdens, are providing timely and accurate routine surveillance data of malaria cases.
+Therefore it may be expected that disaggregation regression may become more popular.
+We have here presented a method for improving the predictive performance of these models by using ancillary, prevalence point-survey data.
 
 
 

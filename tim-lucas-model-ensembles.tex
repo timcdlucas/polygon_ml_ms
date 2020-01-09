@@ -182,8 +182,8 @@ Population rasters for the remaining years were created by linear interpolation.
 We considered an initial suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included the annual mean and log standard deviation of land surface temperature, enhanced vegetation index, malaria parasite temperature suitability index, elevation, tasseled cap brightness, tasseled cap wetness, log accessibility to cities, log night lights and proportion of urban land cover \citep{weiss2014air, weiss2015re, weiss2018global}. 
 Tasseled cap brightness and urban land cover were subsequently removed as they were highly correlated with other variables. 
 The covariates were standardised and centered to have a mean of zero and a standard deviation of one. 
-We refer to this set of transformed variables as the raw environmental covariates (even though some of the covariates are anthropogenic rather than environmental) to distinguish them from other covariates created from predictions from stage one machine learning models.
-The raw environmental variables were used as covariates in the stage one machine learning models as well as being used directly as covariates in the baseline stage two dissaggregation regression models.
+We refer to this set of transformed variables as the raw environmental covariates (even though some of the covariates are anthropogenic rather than environmental) to distinguish them from other covariates created from predictions from stage 1 machine learning models.
+The raw environmental variables were used as covariates in the stage 1 machine learning models as well as being used directly as covariates in the baseline stage 2 dissaggregation regression models.
 
 
 
@@ -237,8 +237,8 @@ $$i_a = \frac{ \sum(i_b \mathrm{pop}_b)}{\sum  \mathrm{pop}_b} $$
 $$i_b = 2.616p_b - 3.596p_b^2 + 1.594p_b^3$$
 where the polynomial is  a function from a previously published model \citep{cameron2015defining}.
 The fact that the model passes through prevalence space ensures that the predictions from the machine learning models can be appropriately scaled.
-The linear predictor of the model is related to prevalence by a typical logit link function and includes: an intercept, $\beta_0$; covariates, $X$, with a vector of regression parameters, $\beta$; a spatial, Gaussian, random field, $u_b(\rho, \sigma_u)$; and an \emph{iid} random effect, $v_j(\sigma_v)$.
-$$p_b = \operatorname{logit}^{-1}\left(\beta_0 + \beta X  + u_b\left(\rho, \sigma_u\right) + v_j\left(\sigma_v\right)\right)$$
+The linear predictor of the model is related to prevalence by a typical logit link function and includes: an intercept, $\beta_0$; covariates, $X$, with a vector of regression parameters, $\beta$; a spatial, Gaussian, random field, $u_b(\rho, \sigma_u)$; and an \emph{iid} random effect, $v_a(\sigma_v)$.
+$$p_b = \operatorname{logit}^{-1}\left(\beta_0 + \beta X  + u_b\left(\rho, \sigma_u\right) + v_a\left(\sigma_v\right)\right)$$
 The Gaussian spatial effect has a Mat\'ern covariance function and two hyperparameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
 The \emph{iid} random effect models both unobserved explanatory factors and extra-Poisson sampling error.
 As described in more detail below we do not vary the structure of this model in the methodological comparison.
@@ -267,12 +267,12 @@ This analysis did not show any benefits to this approach so it was not considere
 
 
 
-All experiments involve comparing predictive performance of stage two disaggregation regression models when different combinations of covariates are used.
-We used the raw environmental covariates, centered and standardised, as a baseline stage two model (Figure~\ref{f:schem}).
+All experiments involve comparing predictive performance of stage 2 disaggregation regression models when different combinations of covariates are used.
+We used the raw environmental covariates, centered and standardised, as a baseline stage 2 model (Figure~\ref{f:schem}).
 We subsequently refer to this model as Enviro.
 We then performed two experiments.
-In the first (\emph{i}) we tested whether using predictions from stage one machine learning models trained on local (i.e. within-country) prevalence data improved predictions (Figure~\ref{f:schem}).
-In the second (\emph{ii}) we tested whether using predictions from stage one machine learning models trained on global prevalence data improved predictions.
+In the first (\emph{i}) we tested whether using predictions from stage 1 machine learning models trained on local (i.e. within-country) prevalence data improved predictions (Figure~\ref{f:schem}).
+In the second (\emph{ii}) we tested whether using predictions from stage 1 machine learning models trained on global prevalence data improved predictions.
 Our primary performance metric was correlation between observed and predicted aggregated  data.
 We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
 
@@ -292,7 +292,7 @@ Model &  Environmental covariates & Local ML covariates &  Global ML covariates 
  ML\textsubscript{g} &  &  & \checkmark\\
  ML\textsubscript{l} + ML\textsubscript{g} &  & \checkmark &  \checkmark
 \end{tabular}
-\caption{Summary of stage two models and the experiments they are grouped into. All models are disaggregation regression models fitted to aggregated incidence data. The only difference between the models is which covariates are being used. Environmental covariates includes the full set of eight variables. Local ML covariates are the predictions from stage one machine learning models, trained with local prevalence data and the eight environmental covariates as inputs. The local prevalence datasets are data from within each country except for Colombia where local prevalence refers to South American data. Global ML covariates are the predictions from stage one machine learning models, trained with global prevalence data (i.e. the full prevalence database) and the eight environmental covariates as inputs. Experiment \emph{i} tests whether including Local ML covariates improves predictive performance while Experiment \emph{ii} tests whether including Global ML covariates improves performance.}
+\caption{Summary of stage 2 models and the experiments they are grouped into. All models are disaggregation regression models fitted to aggregated incidence data. The only difference between the models is which covariates are being used. Environmental covariates includes the full set of eight variables. Local ML covariates are the predictions from stage 1 machine learning models, trained with local prevalence data and the eight environmental covariates as inputs. The local prevalence datasets are data from within each country except for Colombia where local prevalence refers to South American data. Global ML covariates are the predictions from stage 1 machine learning models, trained with global prevalence data (i.e. the full prevalence database) and the eight environmental covariates as inputs. Experiment \emph{i} tests whether including Local ML covariates improves predictive performance while Experiment \emph{ii} tests whether including Global ML covariates improves performance.}
 \label{t:models}
 \end{table}
 
@@ -358,7 +358,7 @@ Country &  Cross-validation & Enviro &  Enviro + ML\textsubscript{l} &  ML\texts
   \includegraphics[width=\textwidth]{figs/cv1_l_scatter.png}
 \caption{
   Observed data against predictions for random cross-validation hold-out samples on a square root transformed scale. 
-  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Envir +  ML\textsubsecript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubsecript{l}: Machine learning models trained on local prevalence data only.
+  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Envir +  ML\textsubscript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubscript{l}: Machine learning models trained on local prevalence data only.
 }
 \label{f:scatter1}
 \end{figure}
@@ -368,7 +368,7 @@ Country &  Cross-validation & Enviro &  Enviro + ML\textsubscript{l} &  ML\texts
   \includegraphics[width=\textwidth]{figs/cv2_l_scatter.png}
 \caption{
   Observed data against predictions for spatial cross-validation hold-out samples on a square root transformed scale.
-  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Envir +  ML\textsubsecript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubsecript{l}: Machine learning models trained on local prevalence data only.
+  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Envir +  ML\textsubscript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubscript{l}: Machine learning models trained on local prevalence data only.
 }
 \label{f:scatter2}
 \end{figure}

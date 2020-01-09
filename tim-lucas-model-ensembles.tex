@@ -168,6 +168,7 @@ We chose these geographic regions based on a trade-off between wanting a large s
 The polygon incidence data (i.e. malaria incidence aggregated to administrative units) were collected from government reports \citep{mdg, sen, col, idn} and standardised using methods defined in \cite{cibulskis2011worldwide}.
 This standardisation step accounts for missed cases due to lack of treatment seeking, missing case reports, and cases that sought medical attention outside the public health systems \citep{battle2016treatment}.
 For reports where cases were not reported at the species level, national estimates of the ratio between \emph{P. falciparum} and \emph{Plasmodium vivax} cases were used to calculate \emph{P. falciparum} only cases. 
+For incidence rates we divide by 1000 to give the Annual Parasite Index (API).
 To minimise temporal effects we selected one year of surveillance data for each country. 
 We used annual surveillance data from 2013 for Madagascar (110 districts), 2015 for Colombia (952 municipalities), 2013 for Indonesia (244 regencies and cities) and 2009 for Senegal (34 departments).
 These years were selected as they had the most complete data in each case.
@@ -378,9 +379,9 @@ Figure~\ref{f:map} shows the input data and spatial out-of-sample predictions of
 
 Table \ref{t:results2} gives the correlation between observed and held out data (under random and spatial cross-validation) for experiment \emph{ii} (models Enviro, ML\textsubscript{g} and ML\textsubscript{l} + ML\textsubscript{g}).
 In six cases, Enviro was the best or tied best performing model.
-The ML\textsubscript{g} model was never the best performing model and only outpeforms Enviro in one case (spatial cross-validation in Madagascar).
+The ML\textsubscript{g} model was never the best performing model and only outperforms Enviro in one case (spatial cross-validation in Madagascar).
 In two cases ML\textsubscript{l} + ML\textsubscript{g} was the best performing model (spatial Colombia and spatial Madagascar).
-Comparing across Tables \ref{t:results} and \ref{t:results2} we can see that ML\textsubscript{g} outpeforms ML\textsubscript{l} once (spatial cross-validation in Senegal).
+Comparing across Tables \ref{t:results} and \ref{t:results2} we can see that ML\textsubscript{g} outperforms ML\textsubscript{l} once (spatial cross-validation in Senegal).
 In only two cases (Spatial Senegal and Spatial Indonesia) did ML\textsubscript{l} + ML\textsubscript{g} outperform ML\textsubscript{l}.
 
 
@@ -593,7 +594,7 @@ Senegal & ppr & 0.098 & 0.268& 0.205 &  0.126\\
 \section{Discussion}
 
 We have studied the predictive performance of disaggregation regression of malaria incidence when provided with different sets of covariates.
-Overall, experiment \emph{i} suggest that the predictions from the disaggregation models were better when using covariates created using predictions from machine learning models (trained on local prevalence points) than when using raw environmental covariates.
+Overall, experiment \emph{i} suggests that the predictions from the disaggregation models were better when using covariates created using predictions from machine learning models (trained on local prevalence points) than when using raw environmental covariates.
 This increased performance comes despite the prevalence data being on a different scale and being measurements of a different aspects of malaria transmission as well as the fact that the model we have used to translate between the two scales is imperfect.
 However, there was no clear best model between ML\textsubscript{l} and Enviro + ML\textsubscript{l}.
 Therefore, when using these methods, both of these models should be fitted and the model with the best predictive performace for a given dataset selected.
@@ -625,7 +626,7 @@ What is more surprising is that using both the ML\textsubscript{l} and ML\textsu
 Given that this approach of creating diverse predictions is a core element of stacking methodology we would expect this set of covariates to perform as well or better than just the ML\textsubscript{l} covariates.
 
 While the approach presented here is related to stacking, it differs in that we have not constrained the regression parameters to be positive nor included a sum-to-one constraint i.e.\thinspace the result is not simply a weighted average of the level zero model predictions.
-We did not include these constraints because the base models and the meta model are trained on response data on different scales.
+We did not include these constraints because the first stage and second stage models were trained on response data on different scales.
 However, given our priors, nearly all the fitted regression coefficients in models with only machine learning predictions were positive.
 Therefore, in practice these models are working in a way similar to standard stacking.
 However, the coefficients certainly do not sum to one, and fitted intercepts are very small to account for this.

@@ -73,8 +73,8 @@
 
 \begin{abstract}
 
-Maps of infection rate are one of the core tools needed for the control and elimination of malaria.
-Reliable routine surveillance data of malaria incidence is becoming more widely available.
+Maps of disease burden are one of the core tools needed for the control and elimination of malaria.
+Reliable routine surveillance data of malaria incidence, typically aggregated to administrative units, is becoming more widely available.
 Disaggregation regression is becoming an important model framework for estimating high resolution risk maps from these aggregated data.
 However, the aggregation of incidence over large, heterogeneous areas means that these data are underpowered for learning complex, non-linear relationships between the environment and malaria risk.
 In contrast, prevalence point-surveys are directly linked to local environmental conditions but are not common in many areas of the world.
@@ -111,7 +111,7 @@ Spatial statistics; Disaggregation regression; Stacking; Surveillance data
 
 High-resolution maps of malaria risk are vital for control and elimination \citep{weiss2019mapping, battle2019mapping}.
 However, mapping malaria in lower burden countries presents new challenges as traditional mapping of prevalence from cluster-level surveys \cite{weiss2019mapping,battle2019mapping, bhatt2017improved, bhatt2015effect} is often not effective for two reasons.
-Firstly, so few individuals are infected that most surveys will detect zero cases \citep{sturrock2016mapping}.
+Firstly, so few individuals are infected that most surveys will detect zero positives \citep{sturrock2016mapping}.
 Secondly, there is a lack of nationally representative prevalence surveys in low burden countries \citep{sturrock2016mapping, sturrock2014fine}. 
 Routine surveillance data of malaria case counts, often aggregated over administrative regions defined by geographic polygons, is becoming more reliable and more widely available \citep{sturrock2016mapping} and recent work has focussed on methods for estimating high-resolution malaria risk from these data \citep{sturrock2014fine, wilson2017pointless, law2018variational, taylor2017continuous, li2012log, johnson2019spatially}. 
 However, the aggregation of cases over space means that the data may be spatially uninformative, especially if the case counts are aggregated over large or heterogeneous areas, because it is unclear where within the polygon, and in which environments, the cases occurred. 
@@ -140,7 +140,7 @@ One important trade-off in spatial modelling is whether to use local data (with 
 For the application of malaria mapping, we can think about diversity of training data in this context and expect that stacking seperate models trained on local and global data will also increase the diversity of predictions in a useful way.
 
 
-To test the effectiveness of the proposed approach we used data from four countries: Madagascar, Colombia, Indonesia and Senegal.
+To test the effectiveness of the proposed approach we used data from four countries with relatively complete surveillance data: Madagascar, Colombia, Indonesia and Senegal.
 We focused our analysis on comparing the predictive performance of disaggregation regression when given different sets of covariates.
 Therefore we keep the structure of the disaggregation regression model the same and only vary the covariates provided to the model.
 In each country we fitted stage 1 machine learning models trained on prevalence data and raw environmental covariates.
@@ -168,7 +168,7 @@ As there were relatively few surveys in Colombia we used all points from South A
 
 The polygon incidence data (i.e. malaria incidence aggregated to administrative units) were collected from government reports \citep{mdg, sen, col, idn} and standardised using methods defined in \cite{cibulskis2011worldwide}.
 This standardisation step accounts for missed cases due to lack of treatment seeking, missing case reports, and cases that sought medical attention outside the public health systems \citep{battle2016treatment}.
-For reports where cases were not reported at the species level, national estimates of the ratio between \emph{P. falciparum} and \emph{Plasmodium vivax} cases were used to calculate \emph{P. falciparum} only cases. 
+For reports where cases were not reported at the species level, national estimates of the ratio between \emph{P. falciparum} and \emph{Plasmodium vivax} cases from the World Malaria Report were used to calculate \emph{P. falciparum} only cases \citep{world2016world}. 
 For incidence rates we divide by 1000 to give the Annual Parasite Index (API).
 To keep the analysis focused on spatial estimates we selected one year of surveillance data for each country. 
 We used annual surveillance data from 2013 for Madagascar (110 districts), 2015 for Colombia (952 municipalities), 2013 for Indonesia (244 regencies and cities) and 2009 for Senegal (34 departments).
@@ -236,7 +236,9 @@ This polygon-level likelihood is linked to the pixel-level incidence and prevale
 $$i_a = \frac{ \sum(i_b \mathrm{pop}_b)}{\sum  \mathrm{pop}_b} $$
 $$i_b = 2.616p_b - 3.596p_b^2 + 1.594p_b^3$$
 where the polynomial is  a function from a previously published model \citep{cameron2015defining}.
-The fact that the model passes through prevalence space ensures that the predictions from the machine learning models can be appropriately scaled.
+The fact that the model is explicit about the relationship between prevalence and incidence has two advantages.
+Firstly, predictions of prevalence can be easily made directly from the linear predictor of the model.
+Secondly, it means that the logit-transformed predictions from the machine learning models are correctly scaled.
 The linear predictor of the model is related to prevalence by a typical logit link function and includes: an intercept, $\beta_0$; covariates, $X$, with a vector of regression parameters, $\beta$; a spatial, Gaussian, random field, $u_b(\rho, \sigma_u)$; and an \emph{iid} random effect, $v_a(\sigma_v)$.
 $$p_b = \operatorname{logit}^{-1}\left(\beta_0 + \beta X  + u_b\left(\rho, \sigma_u\right) + v_a\left(\sigma_v\right)\right)$$
 The Gaussian spatial effect has a Mat\'ern covariance function and two hyperparameters: $\rho$, the nominal range (beyond which correlation is $< 0.1$) and $\sigma_u$, the marginal standard deviation.
@@ -326,11 +328,11 @@ This spatial cross-validation scheme is testing the ability of the different mod
 
 
 
-Table \ref{t:results} gives the correlation between observed and held out data (under random and spatial cross-validation) for experiment \emph{i} (models Enviro, ML\textsubscript{l} and Envir + ML\textsubscript{l}).
+Table \ref{t:results} gives the correlation between observed and held out data (under random and spatial cross-validation) for experiment \emph{i} (models Enviro, ML\textsubscript{l} and Enviro + ML\textsubscript{l}).
 Many of the differences in performance are rather marginal.
 Enviro was the best performing model in two cases (random cross-validation in Madagascar and Senegal).
 In one case, Enviro perfomed equally well as another model; under spatial cross-validation in Senegal Enviro and Enviro + ML\textsubscript{l} performed equally well.
-Of the remaining five cases, in two cases ML\textsubscript{l} performed best and in three cases Envir + ML\textsubscript{l} performed best.
+Of the remaining five cases, in two cases ML\textsubscript{l} performed best and in three cases Enviro + ML\textsubscript{l} performed best.
 The greatest benefits to using prediction from machine learning models instead of, or in combination with, the raw environmental variables occured under spatial cross-validation and in the cases when the Enviro model was particularly poor.
 
 \begin{table}[t!]
@@ -358,7 +360,7 @@ Country &  Cross-validation & Enviro &  Enviro + ML\textsubscript{l} &  ML\texts
   \includegraphics[width=\textwidth]{figs/cv1_l_scatter.png}
 \caption{
   Observed data against predictions for random cross-validation hold-out samples on a square root transformed scale. 
-  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Envir +  ML\textsubscript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubscript{l}: Machine learning models trained on local prevalence data only.
+  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Enviro +  ML\textsubscript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubscript{l}: Machine learning models trained on local prevalence data only.
 }
 \label{f:scatter1}
 \end{figure}
@@ -368,7 +370,7 @@ Country &  Cross-validation & Enviro &  Enviro + ML\textsubscript{l} &  ML\texts
   \includegraphics[width=\textwidth]{figs/cv2_l_scatter.png}
 \caption{
   Observed data against predictions for spatial cross-validation hold-out samples on a square root transformed scale.
-  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Envir +  ML\textsubscript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubscript{l}: Machine learning models trained on local prevalence data only.
+  There are 12 cases composed of 4 countries (COL:, Colombia, IDN: Indonesia, MDG: Madagascar, SEN: Senegal) and three sets of covariates (Envir: raw environmental covariates only, Enviro +  ML\textsubscript{l}: raw environmental covariates and machine learning covariates trained on local prevalence data combined, ML\textsubscript{l}: Machine learning models trained on local prevalence data only.
 }
 \label{f:scatter2}
 \end{figure}
@@ -400,7 +402,7 @@ In only two cases (Spatial Senegal and Spatial Indonesia) did ML\textsubscript{l
 Table~\ref{t:coverage} shows the out-of-sample coverage of the 80\% credible intervals for all models, countries and cross-validation schemes.
 The coverage in Colombia was very poor with no models achieving a coverage above 0.4.
 The coverage was acceptable in the other three countries with most values lying between 0.7 and 0.9.
-Overall there was a general tendancy for models to be slightly over confident.
+Overall there was a general tendency for models to be slightly over confident.
 
 We can examine the relationship between the RMSE of the machine learning models to their fitted regression coefficients (weights).
 These values are given in Table~\ref{t:mlresults}.
@@ -623,7 +625,7 @@ This suggests that better data coverage is more important than which specific mo
 
 % global ml models, local experts
 
-Overall, the models fitted using predictions from machine learning models trained on the global database of prevalence point-surveys were less good than those using either environmental data alone or than those using predictions from machine learning models trained on local data.
+Overall, the models fitted using predictions from machine learning models trained on the global database of prevalence point-surveys were worse than those using either environmental data alone or than those using predictions from machine learning models trained on local data.
 This in itself is not particularly surprising.
 However, it does indicate that continental scale models should consider using a mosaic of locally trained machine learning models for example.
 What is more surprising is that using both the ML\textsubscript{l} and ML\textsubscript{g} covariates together did not improve performance.

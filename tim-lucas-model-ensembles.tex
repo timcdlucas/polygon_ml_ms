@@ -179,7 +179,7 @@ Population rasters for the remaining years were created by linear interpolation.
 
 \subsection{Raw Environmental Covariates}
 
-We considered an initial suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included the annual mean and log standard deviation of land surface temperature, enhanced vegetation index, malaria parasite temperature suitability index, elevation, tasseled cap brightness, tasseled cap wetness, log accessibility to cities, log night lights and proportion of urban land cover \citep{weiss2014air, weiss2015re, weiss2018global}. 
+We considered an initial suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included the annual mean and log standard deviation of land surface temperature, enhanced vegetation index, malaria parasite temperature suitability index, elevation, tasseled cap brightness, tasseled cap wetness, log accessibility to cities, log night lights and proportion of urban land cover \citep{weiss2014air, weiss2015re, weiss2018global, gething2011modelling}. 
 Tasseled cap brightness and urban land cover were subsequently removed as they were highly correlated with other variables. 
 The covariates were standardised and centered to have a mean of zero and a standard deviation of one. 
 We refer to this set of transformed variables as the raw environmental covariates (even though some of the covariates are anthropogenic rather than environmental) to distinguish them from other covariates created from predictions from stage 1 machine learning models.
@@ -270,13 +270,15 @@ This analysis did not show any benefits to this approach so it was not considere
 
 
 All experiments involve comparing predictive performance of stage 2 disaggregation regression models when different combinations of covariates are used.
+After model fitting we made predictions over the study areas and reaggregated back to the administrative level of the surveillance data.
+Our primary performance metric was correlation between observed and aggregated predictions.
+We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
 We used the raw environmental covariates, centered and standardised, as a baseline stage 2 model (Figure~\ref{f:schem}).
 We subsequently refer to this model as Enviro.
 We then performed two experiments.
-In the first (\emph{i}) we tested whether using predictions from stage 1 machine learning models trained on local (i.e. within-country) prevalence data improved predictions (Figure~\ref{f:schem}).
-In the second (\emph{ii}) we tested whether using predictions from stage 1 machine learning models trained on global prevalence data improved predictions.
-Our primary performance metric was correlation between observed and predicted aggregated  data.
-We also examined the calibration of models by calculating the proportion of held out data that were within their 80\% credible intervals.
+In the first (experiment \emph{i}) we tested whether using predictions from stage 1 machine learning models trained on local (i.e. within-country) prevalence data improved predictions (Figure~\ref{f:schem}).
+In the second (experiment \emph{ii}) we tested whether using predictions from stage 1 machine learning models trained on global prevalence data improved predictions.
+
 
 
 \begin{table}[t!]
@@ -600,8 +602,9 @@ Senegal & ppr & 0.098 & 0.268& 0.205 &  0.126\\
 \section{Discussion}
 
 We have studied the predictive performance of disaggregation regression of malaria incidence when provided with different sets of covariates.
+In experiment \emph{i} we compared a baseline model that used only raw environmental covariates (Enviro) to two models that used predictions from machine learning models trained on local prevalence points (ML\textsubscript{l} and Enviro + ML\textsubscript{l}).
 Overall, experiment \emph{i} suggests that the predictions from the disaggregation models were better when using covariates created using predictions from machine learning models (trained on local prevalence points) than when using raw environmental covariates.
-This increased performance comes despite the prevalence data being on a different scale and being measurements of a different aspects of malaria transmission as well as the fact that the model we have used to translate between the two scales is imperfect.
+This increased performance comes despite the prevalence data being a different scale (a proportion instead of a rate) and being measurements of a different aspects of malaria transmission (prevalence rather than incidence) as well as the fact that the model we have used to translate between the two scales is imperfect.
 However, there was no clear best model between ML\textsubscript{l} and Enviro + ML\textsubscript{l}.
 Therefore, when using these methods, both of these models should be fitted and the model with the best predictive performace for a given dataset selected.
 Furthermore, many of the performance improvements are rather marginal. 
@@ -631,7 +634,7 @@ However, it does indicate that continental scale models should consider using a 
 What is more surprising is that using both the ML\textsubscript{l} and ML\textsubscript{g} covariates together did not improve performance.
 Given that this approach of creating diverse predictions is a core element of stacking methodology we would expect this set of covariates to perform as well or better than just the ML\textsubscript{l} covariates.
 
-While the approach presented here is related to stacking, it differs in that we have not constrained the regression parameters to be positive nor included a sum-to-one constraint i.e.\thinspace the result is not simply a weighted average of the level zero model predictions.
+While the approach presented here is related to stacking, it differs in that we have not constrained the regression parameters to be positive nor included a sum-to-one constraint, i.e.\thinspace the result is not simply a weighted average of the level zero model predictions.
 We did not include these constraints because the first stage and second stage models were trained on response data on different scales.
 However, given our priors, nearly all the fitted regression coefficients in models with only machine learning predictions were positive.
 Therefore, in practice these models are working in a way similar to standard stacking.
@@ -651,7 +654,7 @@ This extra modelling step can be seen as finding useful, non-linear transformati
 This view is important for understanding how the model will predict in areas with no incidence data; in this situation the data cannot inform the Gaussian random field and predictions are driven by this non-linear transformation of the raw environmental covariates.
 Training the machine learning models on local data (i.e. prevalence data from the same country or region as the incidence data) shows much better performance than when training the machine learning models on the full, global, dataset of prevalence point-surveys.
 More countries, particularly those with medium or low malaria burdens, are providing timely and accurate routine surveillance data of malaria cases.
-Therefore it may be expected that disaggregation regression may become more popular.
+Therefore it may be expected that disaggregation regression may become more popular and operationally relevant.
 We have here presented a method for improving the predictive performance of these models by using ancillary, prevalence point-survey data.
 
 

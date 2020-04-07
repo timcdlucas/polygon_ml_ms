@@ -12,3 +12,5 @@ Template_paper_ISI_2017/*
 elsarticle-template/*
 *.out
 *.spl
+.DS_Store
+*.toc

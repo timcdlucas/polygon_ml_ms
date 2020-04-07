@@ -6,11 +6,15 @@
  left=30mm,
  right=30mm,
  top=10mm,
- bottom=10mm
+ bottom=20mm
  }
 
 \usepackage{graphicx}
 \usepackage{amsmath}
+
+\renewcommand\thefigure{S\arabic{figure}} 
+\renewcommand\thetable{S\arabic{table}} 
+%% END MACROS SECTION
 
 \usepackage{subcaption}
 
@@ -47,37 +51,6 @@
 \begin{frontmatter}
 
 \title{Supporting information: Improving disaggregation models of malaria incidence by ensembling non-linear models of prevalence}
-
-\author[oxford]{Tim C. D. Lucas\corref{mycorrespondingauthor}}
-\cortext[mycorrespondingauthor]{Corresponding author}
-\ead{timcdlucas@gmail.com}
-\author[oxford]{Anita K. Nandi}
-\author[oxford]{Suzanne H. Keddie}
-%\author[oxford]{Katherine A. Twohig}
-\author[oxford]{Elisabeth G. Chestnutt}
-\author[oxford]{Rosalind E. Howes}
-%\author[oxford]{Michele Nguyen}
-\author[oxford]{Susan F. Rumisha}
-\author[oxford]{Rohan Arambepola}
-\author[oxford,idm]{Amelia Bertozzi-Villa}
-\author[oxford]{Andre Python}
-\author[oxford]{Tasmin L. Symons}
-\author[oxford]{Justin J. Millar}
-\author[oxford]{Punam Amratia}
-\author[oxford]{Penelope Hancock}
-\author[oxford]{Katherine E. Battle}
-\author[oxford]{Ewan Cameron}
-\author[oxford,telethon,curtin]{Peter W. Gething}
-\author[oxford]{Daniel J. Weiss}
-
-
-
-\address[oxford]{Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK}
-\address[idm]{Institute for Disease Modeling, Bellevue, WA, USA}
-\address[telethon]{Telethon Kids Institute, Perth Children’s Hospital, Perth, Australia}
-\address[curtin]{Curtin University, Perth, Australia}
-
-
 
 \end{frontmatter}
 
@@ -515,7 +488,7 @@ As ranger and GBM were tuned with random hyperparameter search, the plots become
 
 
 \clearpage
-\subsection{Hyperparameter optimiMDGtion}
+\subsection{Hyperparameter optimisation}
 
 As ranger and GBM were tuned with random hyperparameter search, the plots become difficult and are not included.
 
@@ -524,7 +497,7 @@ As ranger and GBM were tuned with random hyperparameter search, the plots become
   \centering
   \includegraphics[width=0.6\textwidth]{figs/SI/enetopt_mdg.png}
 \caption{
-  OptimiMDGtion for elastic net hyperparameters trained on the Madagascar dataset.
+  Optimisation for elastic net hyperparameters trained on the Madagascar dataset.
 }
 \end{figure}
 
@@ -534,7 +507,7 @@ As ranger and GBM were tuned with random hyperparameter search, the plots become
   \centering
   \includegraphics[width=0.6\textwidth]{figs/SI/ppropt_mdg.png}
 \caption{
-  OptimiMDGtion for PPR hyperparameters trained on the Madagascar dataset.
+  Optimisation for PPR hyperparameters trained on the Madagascar dataset.
 }
 
 \end{figure}

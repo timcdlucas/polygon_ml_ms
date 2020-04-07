@@ -40,48 +40,17 @@
 
 \title{Improving disaggregation models of malaria incidence by ensembling non-linear models of prevalence}
 
-\author[oxford]{Tim C. D. Lucas\corref{mycorrespondingauthor}}
-\cortext[mycorrespondingauthor]{Corresponding author}
-\ead{timcdlucas@gmail.com}
-\author[oxford]{Anita K. Nandi}
-\author[oxford]{Suzanne H. Keddie}
-%\author[oxford]{Katherine A. Twohig}
-\author[oxford]{Elisabeth G. Chestnutt}
-\author[oxford]{Rosalind E. Howes}
-%\author[oxford]{Michele Nguyen}
-\author[oxford]{Susan F. Rumisha}
-\author[oxford]{Rohan Arambepola}
-\author[oxford,idm]{Amelia Bertozzi-Villa}
-\author[oxford]{Andre Python}
-\author[oxford]{Tasmin L. Symons}
-\author[oxford]{Justin J. Millar}
-\author[oxford]{Punam Amratia}
-\author[oxford]{Penelope Hancock}
-\author[oxford]{Katherine E. Battle}
-\author[oxford]{Ewan Cameron}
-\author[oxford,telethon,curtin]{Peter W. Gething}
-\author[oxford]{Daniel J. Weiss}
-
-
-
-\address[oxford]{Malaria Atlas Project, Big Data Institute, University of Oxford, Oxford, UK}
-\address[idm]{Institute for Disease Modeling, Bellevue, WA, USA}
-\address[telethon]{Telethon Kids Institute, Perth Children’s Hospital, Perth, Australia}
-\address[curtin]{Curtin University, Perth, Australia}
-
-
 
 \begin{abstract}
 
-Maps of disease burden are one of the core tools needed for the control and elimination of malaria.
+Maps of disease burden are a core tool needed for the control and elimination of malaria.
 Reliable routine surveillance data of malaria incidence, typically aggregated to administrative units, is becoming more widely available.
-Disaggregation regression is becoming an important model framework for estimating high resolution risk maps from these aggregated data.
-However, the aggregation of incidence over large, heterogeneous areas means that these data are underpowered for learning complex, non-linear relationships between the environment and malaria risk.
+Disaggregation regression is an important model framework for estimating high resolution risk maps from aggregated data.
+However, the aggregation of incidence over large, heterogeneous areas means that these data are underpowered for estimating complex, non-linear relationships models.
 In contrast, prevalence point-surveys are directly linked to local environmental conditions but are not common in many areas of the world.
-A model that combines point surveys and aggregated surveillance data could have the benefits of both but must be able to account for the fact that these two data types measure different malariometric units.
 Here, we train multiple non-linear, machine learning models on \emph{Plasmodium falciparum} prevalence point-surveys.
-We then ensemble the predictions from these machine learning models with a geostatistical disaggregation regression model that uses malaria incidence, aggregated to administrative units, as response data.
-We find that, in four national case studies, using a disaggregation regression model to combine predictions from machine learning models trained on prevalence point-surveys improves model accuracy relative to a baseline disaggregation regression model that only uses linear effects of the raw environmental covariates.
+We then ensemble the predictions from these machine learning models with a disaggregation regression model that uses aggregated malaria incidences as response data.
+We find that using a disaggregation regression model to combine predictions from machine learning models improves model accuracy relative to a baseline model.
 
 \end{abstract}
 
@@ -218,7 +187,7 @@ An empirical logit was used rather than a standard logit as there were many pred
 These predicted surfaces were subsequently used as covariates in the stage 2 dissaggregation regression models (Figure~\ref{f:schem}).
 The experiments that follow in this paper assess the performance of disaggregation regression models when using the predictions from these machine learning models as covariates as compared to a baseline disaggregation regression model using only the raw environmental covariates.
 See the supplementary material for plots of the grid search hyperparameter performance, out-of-sample scatter plots and plots of the predicted surfaces.
-
+All code is available on \href{https://github.com/timcdlucas/polygon_ml}{github}.
 
 
 
@@ -661,6 +630,8 @@ We have here presented a method for improving the predictive performance of thes
 
 \section*{Acknowledgments}
 The authors acknowledge the National Malaria Control Programme of Madagascar for sharing their routine case data for this analysis.
+This work was funded by the Bill and Melinda Gates Foundation.
+
 
 \section*{Citations}
 \bibliography{Malaria} 

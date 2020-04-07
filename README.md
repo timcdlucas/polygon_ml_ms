@@ -7,6 +7,7 @@ The analysis is [here](https://map-fs1.ndph.ox.ac.uk/gitlab/timcdlucas/polygon_m
 
 The original WSC paper is [here](https://map-fs1.ndph.ox.ac.uk/gitlab/timcdlucas/polygon_ml_wsc) and the WSC analysis is [here](https://map-fs1.ndph.ox.ac.uk/gitlab/timcdlucas/polygon_machine_learn_wsc).
 Finally, the preprint is [here](https://www.biorxiv.org/content/10.1101/548719v1.abstract).
+Note that the preprint is similar to the WSC paper and quite different to the final paper submitted.
 I haven't decided whether I should replace that preprint with this document when ready or just leave it.
 
 

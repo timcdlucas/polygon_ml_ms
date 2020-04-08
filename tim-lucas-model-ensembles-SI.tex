@@ -85,12 +85,34 @@ It involves finding regression parameters $\beta$ in the model
 $$y_i = \beta_0 + \sum_{j=1}^r f_j(\beta_j X_i) $$
 where the $f_j$'s are smoothing functions, $X_i$ is the vector of covariates and $r$ is the number of smooth terms to be fitted (a hyperparameter selected by cross-validation). 
 The model is fitted iteratively $r$ times with the model being fitted to the residuals of the previous models at each iteration.
+We considered  $r$ß in the range 1 to 15.
 
 We fitted neural networks with a single hidden layer, logistic activation functions for the hidden units and a linear activation function for the output.
 This architecture, with $h$ hidden units and $c$ covariates, can be written as
 $$y_i = \beta_0 + \sum_h \beta_{ho} \operatorname{logit}^{-1}\left(\beta_{0h} + \sum_c \beta_{ih}X_{ic}\right)$$
 with $\beta_0$ being the intercept, $\beta_{0h}$ being the intercept for each hidden unit, $\beta_{ih}$ being the weights between the inputs and hidden units and $\beta_{ho}$ being the weights between the hidden units and the outputs.
+The nnet package optimises this model using back-propogation and includes an additional hyperparameter, 'decay', that is a penalty on the sum of the squares of the weights.
+We considered a grid of hyperparameters.
+For the number of hidden units we considered 15 equally spaced values between 1 and 29.
+We examined 15 values for $decay$ taken as 14 values spread evenly on a log10 scale between -4 and -1 and additionally considering $\lambda = 0$.
 
+
+The Random Forest algorithm creates an ensemble of regression trees.
+To control overfitting each tree is fitted to a bootstrap sample of the data.
+To further control overfitting, at each node of each tree, mtry random selected covariates are considered instead of the full number of covariates.
+For each node in a tree the covariate and split point is found which minimises the sum of the variances in the nodes.
+However, we consider two further variants of this rule.
+We consider "extremely randomised trees" in which the split point for each covariate is drawn uniformly randomly.
+We then consider "conditional inference trees" in which after a split point is chosen, a significance test is performed and the split point is only used if the data on each side of the split are significantly different (with a significance threshold of 0.5).
+The trees are gown until all nodes reach a minimum node size.
+The  split rule and the parameters mtry and the minimal node size are chosen by cross-validation.
+We considered a random search of 15 parameter sets.
+
+
+Finally, boosted regression trees also makes an ensemble of trees.
+The trees are built sequentially and for each successive tree, the data are weighted by the size of the residual between the observed data and the prediction from all the previous trees.
+The XGBoost implementation of boosted regression trees contains a number of hyperparameters: nrounds is the number of additive trees, max depth is the maximum depth of each tree, eta reduces the additional weight given to poorly predicted data points, gamma sets the minimum loss reduction needed for a split to be allowed, for each tree, a proportion colsamplebytree of covariates are considered, min_child_weight causes the growing of the tree to stop when a node has this many data points and finally subsample is a proportion of the data to randomly sample to use in training of each tree.
+Again we used a random search and considered 15 parameter sets.
 
 \clearpage
 \section{Global dataset Machine Learning}

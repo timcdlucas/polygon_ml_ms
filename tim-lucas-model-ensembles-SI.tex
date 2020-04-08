@@ -14,6 +14,8 @@
 
 \renewcommand\thefigure{S\arabic{figure}} 
 \renewcommand\thetable{S\arabic{table}} 
+
+ \DeclareMathOperator*{\argmin}{\arg\!\min}
 %% END MACROS SECTION
 
 \usepackage{subcaption}
@@ -56,6 +58,28 @@
 
 \clearpage
 \tableofcontents
+
+\section{Supplementary methods}
+
+\subsection{Extended methods for machine learning models}
+
+We trained five machine learning models to each prevalence dataset.
+These models were elastic net, projection pursuit regression, random forest, boosted regression trees, neural networks.
+All models were trained on untransformed prevalence data with any predictions below zero being set at zero.
+For tree based models, transforming the data makes almost no difference.
+For the other models, training on empirical logit transformed data was considered but as the final performance metric (correlation between predicted and observed polygon incidence data) was on an absolute scale it was deemed better to train the models on absolute scales.
+For all models, the sample size of each survey was used as a weight.
+
+Elastic net models are penalised, linear regression models.
+They find the regression parameters that optimise
+$$\hat{\beta} = \argmin_\beta \sum_{i=1}^N w_i(y_i - X_i\beta) ^ 2 + \lambda\left((1-\alpha)\beta^2 + \alpha|\beta|\right)$$
+where $\beta$ is a vector of regression parameters, $y_i$ is the prevalence response data, $X_i$ is a vector of environmental covariates and $w_i$ is the weight given by the sample size. 
+$\lambda$ is the penalty term and $\alpha$ controls the relative contribution of the l1 and l2 penalties.
+With $\alpha = 0$ the model collapses to ridge regression while with $\alpha = 1$ the model is equivalent to the LASSO.
+$\alpha$ and $\lambda$ are selected by a cross validation with candidate values given by a grid search.
+We examined 15 values for $\alpha$ taken evenly between 0.05 and 1.
+We examined 15 values for $\lambda$ taken as 14 values spread evenly on a log10 scale between -4 and -1 and additionally considering $\lambda = 0$ which gives the least squares estimate.
+
 
 
 \clearpage
@@ -433,7 +457,7 @@ As ranger and GBM were tuned with random hyperparameter search, the plots become
 
 
 \clearpage
-\subsection{Out-of-MDGmple scatter plots}
+\subsection{Out-of-sample scatter plots}
 
 
 \begin{figure}[h!]

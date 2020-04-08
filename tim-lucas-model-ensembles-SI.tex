@@ -64,7 +64,7 @@
 \subsection{Extended methods for machine learning models}
 
 We trained five machine learning models to each prevalence dataset.
-These models were elastic net, projection pursuit regression, random forest, boosted regression trees, neural networks.
+These models were elastic net, projection pursuit regression,  neural networks, random forest and boosted regression trees.
 All models were trained on untransformed prevalence data with any predictions below zero being set at zero.
 For tree based models, transforming the data makes almost no difference.
 For the other models, training on empirical logit transformed data was considered but as the final performance metric (correlation between predicted and observed polygon incidence data) was on an absolute scale it was deemed better to train the models on absolute scales.
@@ -80,6 +80,16 @@ $\alpha$ and $\lambda$ are selected by a cross validation with candidate values 
 We examined 15 values for $\alpha$ taken evenly between 0.05 and 1.
 We examined 15 values for $\lambda$ taken as 14 values spread evenly on a log10 scale between -4 and -1 and additionally considering $\lambda = 0$ which gives the least squares estimate.
 
+Projection pursuit regression fits a number of smooth functions to linear combinations of all the covariates. 
+It involves finding regression parameters $\beta$ in the model
+$$y_i = \beta_0 + \sum_{j=1}^r f_j(\beta_j X_i) $$
+where the $f_j$'s are smoothing functions, $X_i$ is the vector of covariates and $r$ is the number of smooth terms to be fitted (a hyperparameter selected by cross-validation). 
+The model is fitted iteratively $r$ times with the model being fitted to the residuals of the previous models at each iteration.
+
+We fitted neural networks with a single hidden layer, logistic activation functions for the hidden units and a linear activation function for the output.
+This architecture, with $h$ hidden units and $c$ covariates, can be written as
+$$y_i = \beta_0 + \sum_h \beta_{ho} \operatorname{logit}^{-1}\left(\beta_{0h} + \sum_c \beta_{ih}X_{ic}\right)$$
+with $\beta_0$ being the intercept, $\beta_{0h}$ being the intercept for each hidden unit, $\beta_{ih}$ being the weights between the inputs and hidden units and $\beta_{ho}$ being the weights between the hidden units and the outputs.
 
 
 \clearpage

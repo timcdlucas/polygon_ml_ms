@@ -93,7 +93,8 @@ In the second stage we combine predictions from these models by using them as co
 Unlike joint likelihood models \citep{wang2018generalized}, this method does not combine both prevalence and incidence data within one model.
 Instead the aim is to use the prevalence data to find useful non-linear transformations of the environmental covariates which are then subsequently used in the disaggregation regression models.
 
-This modelling scheme has similarities to previous stacking methods used for malaria mapping \citep{bhatt2017improved} and elsewhere \citep{wolpert1992stacked, sill2009feature, hao2019review, breiman1996stacked}.
+Stacking, or stacked generalization, uses a second-stage model to combine predictions from a number of modelsby training the second-stage model using out-of-samples predictions from the first-stage models  \citep{wolpert1992stacked} .
+The modelling scheme proposed here has similarities to stacking methods used for malaria mapping \citep{bhatt2017improved} and elsewhere \citep{wolpert1992stacked, sill2009feature, hao2019review, breiman1996stacked}.
 However, as the response data in the machine learning models and the disaggregation regression models are on different scales (prevalence is a proportion while incidence is a rate) we cannot simply take a weighted average of the predictions from the machine learning models as in a standard stacking scheme \citep{sill2009feature, hao2019review}.
 Instead the predictions need to be transformed to the incidence scale with a seperately fitted model \citep{cameron2015defining}.
 Applications in other disease contexts have used a similar stacking scheme where data from vector or wild-animal host species are used to train models, the predictions from which are then used as covariates in a final model \citep{pigott2014mapping, shearer2016estimating}.
@@ -143,7 +144,7 @@ To keep the analysis focused on spatial estimates we selected one year of survei
 We used annual surveillance data from 2013 for Madagascar (110 districts), 2015 for Colombia (952 municipalities), 2013 for Indonesia (244 regencies and cities) and 2009 for Senegal (34 departments).
 These years were selected as they had the most complete data in each case.
 
-Raster surfaces (i.e. population gridded to 5$ \times$ 5 km pixles) of population for the years 2005, 2010 and 2015, were created using data from WorldPop \citep{linard2012population,gaughan2013high,  sorichetta2015high} and from GPWv4 \citep{gpw4} where WorldPop did not have values. 
+Raster surfaces (i.e. population gridded to 5$ \times$ 5 km pixels) of population for the years 2005, 2010 and 2015, were created using data from WorldPop \citep{linard2012population,gaughan2013high,  sorichetta2015high} and from GPWv4 \citep{gpw4} where WorldPop did not have values. 
 Population rasters for the remaining years were created by linear interpolation. 
 
 \subsection{Raw Environmental Covariates}
@@ -573,9 +574,9 @@ Senegal & ppr & 0.098 & 0.268& 0.205 &  0.126\\
 We have studied the predictive performance of disaggregation regression of malaria incidence when provided with different sets of covariates.
 In experiment \emph{i} we compared a baseline model that used only raw environmental covariates (Enviro) to two models that used predictions from machine learning models trained on local prevalence points (ML\textsubscript{l} and Enviro + ML\textsubscript{l}).
 Overall, experiment \emph{i} suggests that the predictions from the disaggregation models were better when using covariates created using predictions from machine learning models (trained on local prevalence points) than when using raw environmental covariates.
-This increased performance comes despite the prevalence data being a different scale (a proportion instead of a rate) and being measurements of a different aspects of malaria transmission (prevalence rather than incidence) as well as the fact that the model we have used to translate between the two scales is imperfect.
+This increased performance comes despite the prevalence data being on a different scale (a proportion instead of a rate) and being measurements of a different aspects of malaria transmission (prevalence rather than incidence) as well as the fact that the model we have used to translate between the two scales is imperfect.
 However, there was no clear best model between ML\textsubscript{l} and Enviro + ML\textsubscript{l}.
-Therefore, when using these methods, both of these models should be fitted and the model with the best predictive performace for a given dataset selected.
+Therefore, when using these methods, both of these models should be fitted and the model with the best predictive performance for a given dataset selected.
 Furthermore, many of the performance improvements are rather marginal. 
 However, in a few cases such as Colombia and Madagascar under spatial cross-validation the performance boost is large.
 For example, using just environmental covariates in Madagascar under spatial cross-validation gives a correlation between observed and predicted data of 0.22.
@@ -609,6 +610,11 @@ However, given our priors, nearly all the fitted regression coefficients in mode
 Therefore, in practice these models are working in a way similar to standard stacking.
 However, the coefficients certainly do not sum to one, and fitted intercepts are negative to account for this.
 
+One drawback of using predictions from machine learnings models as covariates is that the uncertainties in the predictions are not propagated properly through to the final predictions.
+This could be handled with an appropriate error model \citep{richardson1993conditional}.
+Where the machine learning models explicitly provide estimates of uncertainty, these could be used to inform such models.
+In the absence of such individual-prediction estimates of uncertainty, the cross-validation error could instead be used to inform priors for error models.
+It is however worth noting that the environmental covariates used here are also modelled and therefore similar care would ideally be taken in characterising the uncertainty in their values. 
 
 Due to the low statistical power of typical aggregated incidence datasets, previous analyses using disaggregation regression used a small number of covariates \citep{sturrock2014fine}.
 However, as models such as Random Forest and elastic net can robustly handle high dimensional data, future work could include many more covariates in the machine learning models, potentially increasing predictive performance.

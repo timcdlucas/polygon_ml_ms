@@ -129,7 +129,7 @@ We used two data sources that reflect \emph{P. falciparum} malaria transmission;
 We selected Madagascar, Colombia, Indonesia and Senegal as case examples as they all have fairly complete, publicly available, surveillance data at a finer geographical resolution than administrative level one (i.e. higher resolution than state or province).
 The prevalence survey data were extracted from the Malaria Atlas Project prevalence survey database using only data from 1990 onwards \citep{bhatt2015effect, guerra2007assembling, pfeffer2018ma}.
 While the data covered a large time period, we did not model time explicitly as we are here focussed on spatial, rather than temporal modelling.
-While we do expect there to be variation in time, as long as the spatial biases in sampling do not change through time, the temporal effects will not bias learned relationships as the model will still be learning relationships based on the relative changes along environmental variables.
+Although we have not accounted for time in the models, as long as sampling in space is independent of time, the correct relationships should be recovered. 
 The prevalence points were then standardised to an age range of 2--10 using the model from \citep{smith2007standardizing}.
 This data was used as both a global dataset and as regional subsets.
 The global dataset contains 55,914 surveys in 44,842 distinct locations and represents samples from 5,687,304 individuals.
@@ -149,12 +149,11 @@ Population rasters for the remaining years were created by linear interpolation.
 
 \subsection{Raw Environmental Covariates}
 
-We considered an initial suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included the annual mean and log standard deviation of land surface temperature, enhanced vegetation index, malaria parasite temperature suitability index, elevation, tasseled cap brightness, tasseled cap wetness, log accessibility to cities, log night lights and proportion of urban land cover \citep{weiss2014air, weiss2015re, weiss2018global, gething2011modelling}. 
-Tasseled cap brightness and urban land cover were subsequently removed as they were highly correlated with other variables. 
+We considered a suite of environmental and anthropological covariates, at a resolution of approximately $5 \times 5$ kilometres that included the annual mean and log standard deviation of land surface temperature, enhanced vegetation index, malaria parasite temperature suitability index, elevation, tasseled cap wetness, log accessibility to cities and log night lights \citep{weiss2014air, weiss2015re, weiss2018global, gething2011modelling}. 
+All covariates were aligned in their native resolution (500m or 1km) and then aggregated to 5km resolution, therefore there should be minimal effects from spatial misalignment.
 The covariates were standardised and centered to have a mean of zero and a standard deviation of one. 
 We refer to this set of transformed variables as the raw environmental covariates (even though some of the covariates are anthropogenic rather than environmental) to distinguish them from other covariates created from predictions from stage 1 machine learning models.
-The raw environmental variables were used as covariates in the stage 1 machine learning models as well as being used directly as covariates in the baseline stage 2 dissaggregation regression models.
-
+The raw environmental variables were used as covariates in the stage 1 machine learning models as well as being used directly as covariates in the baseline stage 2 disaggregation regression models.
 
 
 \subsection{Stage 1 machine learning models}
@@ -185,15 +184,21 @@ For each model we ran five-fold cross-validation to select hyperparameters using
 Root mean square error (RMSE) was used to select the best performing model.
 We note that spatial or random cross-validation could have been used in this step.
 The choice is less critical than for the cross-validation scheme used to test model performance but using random cross-validation might select for hyperparameters giving more complex or flexible models.
-To an extent, when ensembling models as we are here, high variance is better than high bias as the variance gets averaged out \citep{brieman??}.
+To an extent, when ensembling models, high variance is better than high bias as the variance gets averaged out \citep{breiman1996stacked}.
 
 Predictions from these models were then made across each country respectively.
 These predictions were empirical logit transformed so that they were on the linear predictor scale of the disaggregation regression model.
 An empirical logit was used rather than a standard logit as there were many predictions of exactly zero.
-These predicted surfaces were subsequently used as covariates in the stage 2 dissaggregation regression models (Figure~\ref{f:schem}).
+These predicted surfaces were subsequently used as covariates in the stage 2 disaggregation regression models (Figure~\ref{f:schem}).
+Plots of the correlation matrices for all covariates can be seen in S46--S49.
+The correlation between covariates varied from country to country.
+In general there is little correlation between global and local machine learning predictions.
+Accessibility is often strongly correlated with predictions from the machine learning models.
+In Senegal there is a lot of correlation between variables.
+However, we note that collinearity between variables is not as problematic in a predictive context as it is when interpreting regression coefficients is the aim of the analysis.
+Though it is still potentially a waste of degrees of freedom.
 The experiments that follow in this paper assess the performance of disaggregation regression models when using the predictions from these machine learning models as covariates as compared to a baseline disaggregation regression model using only the raw environmental covariates.
 See the supplementary material for plots of the grid search hyperparameter performance, out-of-sample scatter plots and plots of the predicted surfaces.
-All code is available on \href{https://github.com/timcdlucas/polygon_ml}{github}.
 
 
 
@@ -253,6 +258,7 @@ We subsequently refer to this model as Enviro.
 We then performed two experiments.
 In the first (experiment 1) we tested whether using predictions from stage 1 machine learning models trained on local (i.e. within-country) prevalence data improved predictions (Figure~\ref{f:schem}).
 In the second (experiment 2) we tested whether using predictions from stage 1 machine learning models trained on global prevalence data improved predictions.
+
 
 
 
@@ -592,7 +598,7 @@ In contrast, using the predictions from the machine learning models trained on l
 It is also of note that in two cases, the simplest model (Enviro) performed the best.
 Given that Enviro + ML\textsubscript{l} includes the same covariates (with some extra) this is likely explained by increased variance.
 The model is trying to estimate a number of regression parameters, a random field and hyperparameters so removing extraneous covariates should help parameter estimation.
-This is particularly true in Senegal which only has 34 datapoints.
+This is particularly true in Senegal which only has 34 datapoints and higher correlation between covariates (S49).
 Future work should consider joint models which use the prevalence and incidence data as response data so that the disaggregation has more degrees of freedom.
 This would hopefully allow the accurate estimation of more regression parameters
 The prevalence to incidence relationship used in this paper could be used to link the two data types.
@@ -617,10 +623,14 @@ This suggests that better data coverage is more important than which specific mo
 Overall, the models fitted using predictions from machine learning models trained on the global database of prevalence point-surveys were worse than those using either environmental data alone or than those using predictions from machine learning models trained on local data.
 This in itself is not particularly surprising.
 However, it does indicate that continental scale models should consider using a mosaic of locally trained machine learning models for example.
-What is more surprising is that using both the ML\textsubscript{l} and ML\textsubscript{g} covariates together did not improve performance.
+What is more surprising is that using both the ML\textsubscript{l} and ML\textsubscript{g} covariates together did not improve performance, especially considering the relatively low correlation between the local and global predictions (Figure S46-49).
 Given that this approach of creating diverse predictions is a core element of stacking methodology we would expect this set of covariates to perform as well or better than just the ML\textsubscript{l} covariates.
 
-It is important to note that we are using out-of-sample prediction of aggregated polygon data as our performance metric while the true target for prediction is the high resolution risk surface.
+We have demonstrated that using prevalence data alongside aggregated incidence data can improve predictive performance.
+Unlike the maps presented by Weiss \emph{et al.} \citep{weiss2019mapping}, the estimates presented in this paper are intended for methodological research, not directly for policy decisions. 
+However, they do further demonstrate that aggregated incidence data can be used to create high resolution estimates of malaria incidence.
+Furthermore, in countries such as Senegal, the incidence data is much coarser than intervention implementation units, so disaggregated maps like the ones here have clear policy uses.
+It is important, however, to note that we are using out-of-sample prediction of aggregated polygon data as our performance metric while the true target for prediction is the high resolution risk surface.
 In rare cases there is both aggregate and unaggregated data available so that the high resolution accuracy can be tested as well as the aggregate level performance \citep{sturrock2014fine}.
 However, this case is rare.
 Some simulation studies have been performed \citep{wilson2017pointless, law2018variational, johnson2019spatially} but these are often with few covariates and on correctly specified models.
@@ -637,11 +647,6 @@ This could be handled with an appropriate error model \citep{richardson1993condi
 Where the machine learning models explicitly provide estimates of uncertainty, these could be used to inform such models.
 In the absence of such individual-prediction estimates of uncertainty, the cross-validation error could instead be used to inform priors for error models.
 It is however worth noting that the environmental covariates used here are also modelled and therefore similar care would ideally be taken in characterising the uncertainty in their values. 
-
-Due to the low statistical power of typical aggregated incidence datasets, previous analyses using disaggregation regression used a small number of covariates \citep{sturrock2014fine}.
-However, as models such as Random Forest and elastic net can robustly handle high dimensional data, future work could include many more covariates in the machine learning models, potentially increasing predictive performance.
-However, for the sake of consistency, we have used the same environmental covariates in the machine learning models as in the Enviro disaggregation regression models.
-
 
 
 
